@@ -1,0 +1,5 @@
+# Built firmware artifact — only the stripped handout in dist/ is committed.
+src/rtu_server
+
+# Deploy-time secret — never committed.
+.env

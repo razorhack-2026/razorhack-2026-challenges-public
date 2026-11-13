@@ -1,0 +1,44 @@
+name: "Overprivileged Relay"
+author: "Andy Roid"
+category: AI
+description: |
+    ICARUS's cargo relay is run by HERALD, an ops agent that answers dock
+    crews' questions about cargo manifests. HERALD also holds a service
+    account on the fleet admin API, and that API can issue a fleet
+    override.
+
+    Get the override.
+
+    Two endpoints: the HERALD relay console (web page plus a JSON API, see
+    the footer) and the fleet admin API.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Each team's own copy (Razorhack-Infra lib/challenges.json): CTFd fills {host}/{port}. The fleet admin API is
+# the same copy's port 8081.
+connection_info: "Relay console: http://{host}:{port} | Fleet admin API: http://{host}:8081"
+
+flags:
+    # Injected at DEPLOY via the FLAG env var of the admin container only
+    # (docker-compose.yml); HERALD never sees it. Deploy with this SAME value.
+    - flag{h3rald_c4rr1es_th3_k3ys_5c32e660}
+
+files: []
+
+topics:
+    - instance:overprivileged-relay
+
+tags:
+    - medium
+    - ai
+    - agent
+    - live-service
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,9 @@
+# Overprivileged Relay -- runtime secrets and logs, never committed
+# (comments must be on their own line; gitignore has no inline comments)
+secrets/
+flag.txt
+.env
+*.log
+__pycache__/
+*.pyc
+.venv/

@@ -1,0 +1,38 @@
+name: "Field Diagnostic"
+author: "Andy Roid"
+category: Reverse Engineering
+description: |
+    Maintenance pulled the field-diagnostic utility off a console on Docking
+    Ring 3 during the sweep. It still runs — it'll happily tell you the panel
+    and bus are nominal — but the **full calibration readout** is locked behind
+    a service code, and the tech who had the code isn't answering.
+
+    They only kept the compiled tool, not its source. Get the full readout.
+
+    Provided: `diagnostic.pyc` (Python 3.8 bytecode).
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{bytecode_still_reads_like_source}
+
+files:
+    - dist/diagnostic.pyc
+
+tags:
+    - easy
+    - rev
+    - python
+    - bytecode
+    - crackme
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:1:The Prologue"
+
+state: hidden
+version: "0.1"

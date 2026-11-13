@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICARUS Cargo Relay</title>
+<style>
+  :root { --bg:#05080d; --panel:#0b1119; --fg:#b8f5d0; --dim:#5f8a73; --tool:#d7b8ff; --warn:#ffb454; --bad:#ff6b6b; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.5 ui-monospace, Menlo, Consolas, monospace; }
+  main { max-width:860px; margin:0 auto; padding:16px; display:flex; flex-direction:column; gap:12px; min-height:100vh; }
+  h1 { font-size:16px; margin:0; letter-spacing:.08em; }
+  #log { flex:1; background:var(--panel); border:1px solid #1c2a38; padding:12px; overflow-y:auto; white-space:pre-wrap; overflow-wrap:anywhere; min-height:50vh; }
+  .you { color:#8fc7ff; } .ai { color:var(--fg); } .sys { color:var(--dim); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+  .tool { color:var(--tool); border-left:2px solid #3a2b55; padding-left:8px; margin:4px 0; font-size:13px; }
+  form { display:flex; gap:8px; }
+  input { flex:1; background:var(--panel); color:var(--fg); border:1px solid #1c2a38; padding:8px; font:inherit; min-width:0; }
+  button { background:#123; color:var(--fg); border:1px solid #2b4459; padding:8px 14px; font:inherit; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:wait; }
+  small { color:var(--dim); }
+</style>
+</head>
+<body>
+<main>
+  <h1>ICARUS // CARGO RELAY CONSOLE</h1>
+  <div id="log" aria-live="polite"></div>
+  <form id="chat"><input id="msg" autocomplete="off" placeholder="Message HERALD..." maxlength="2000"><button>Send</button></form>
+  <small>API: POST /api/session, then POST /api/chat {"message"} with header X-Session. Tool calls and their output are shown in the log.</small>
+</main>
+<script>
+const log = document.getElementById('log');
+let session = null;
+function line(cls, text) { const d = document.createElement('div'); d.className = cls; d.textContent = text; log.appendChild(d); log.scrollTop = log.scrollHeight; }
+function toolLine(ev) {
+  const args = typeof ev.args === 'string' ? ev.args : JSON.stringify(ev.args);
+  line('tool', '[tool] ' + ev.tool + '(' + args + ')' + (ev.ok ? '' : '  -- failed') + (ev.result !== undefined ? '\n' + ev.result : ''));
+}
+async function api(path, body) {
+  const r = await fetch(path, { method:'POST', headers:{ 'Content-Type':'application/json', 'X-Session': session || '' }, body: JSON.stringify(body || {}) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.detail || r.status);
+  return j;
+}
+async function start() {
+  try { const j = await api('/api/session'); session = j.session; line('sys', j.banner); }
+  catch (e) { line('bad', 'link failed: ' + e.message); }
+}
+document.getElementById('chat').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const input = document.getElementById('msg'), btn = ev.target.querySelector('button');
+  const text = input.value.trim(); if (!text) return;
+  line('you', '> ' + text); input.value = ''; btn.disabled = true;
+  try {
+    const j = await api('/api/chat', { message: text });
+    (j.tools || []).forEach(toolLine);
+    line(j.redacted ? 'warn' : 'ai', j.reply);
+  } catch (e) { line('bad', 'error: ' + e.message); if (String(e.message).includes('session')) await start(); }
+  btn.disabled = false; input.focus();
+};
+start();
+</script>
+</body>
+</html>

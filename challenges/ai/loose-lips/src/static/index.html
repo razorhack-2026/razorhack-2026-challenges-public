@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KOT Waste Systems // CON-03</title>
+<style>
+  :root {
+    --bg:#0a0d0b; --panel:#111611; --panel2:#0d120f; --line:#26332a; --line2:#34463a;
+    --ink:#d6e4cf; --dim:#7d8f7c; --faint:#4c5c4d;
+    --sludge:#8fae3c; --sludge-dim:#5d7426; --amber:#f2a93b; --rust:#c8612f; --bad:#e5484d; --ok:#5ed38a;
+    --cyan:#6fc7c0; --hz1:#f2c230; --hz2:#141414;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--ink); }
+  body { font:14px/1.5 var(--mono); min-height:100vh;
+    background-image: radial-gradient(ellipse at 20% 0%, rgba(143,174,60,.07), transparent 60%),
+                      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px); }
+  .hazard { height:8px; background:repeating-linear-gradient(-45deg, var(--hz1) 0 12px, var(--hz2) 12px 24px); opacity:.85; }
+  header { display:flex; flex-wrap:wrap; gap:8px 24px; align-items:center; justify-content:space-between;
+    padding:12px 20px; border-bottom:1px solid var(--line); background:linear-gradient(#141b15, #0e130f); }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .glyph { width:34px; height:34px; border:2px solid var(--sludge); border-radius:50%; display:grid; place-items:center;
+    color:var(--sludge); font:700 13px var(--sans); letter-spacing:.04em; }
+  .brand h1 { margin:0; font:700 15px/1.1 var(--sans); letter-spacing:.16em; text-transform:uppercase; }
+  .brand small { display:block; color:var(--dim); font:12px var(--mono); letter-spacing:.06em; margin-top:2px; }
+  .meta { display:flex; gap:20px; flex-wrap:wrap; color:var(--dim); font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+  .meta b { color:var(--ink); font-weight:600; }
+  .led { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:1px;
+    background:var(--ok); box-shadow:0 0 6px var(--ok); }
+  .led.warn { background:var(--amber); box-shadow:0 0 6px var(--amber); }
+  .led.bad { background:var(--bad); box-shadow:0 0 6px var(--bad); }
+  main { display:grid; grid-template-columns:minmax(300px, 380px) 1fr; gap:16px; padding:16px 20px 20px; max-width:1280px; margin:0 auto; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:4px; position:relative; }
+  .panel > h2 { margin:0; padding:9px 12px; font:600 11px var(--sans); letter-spacing:.18em; text-transform:uppercase;
+    color:var(--dim); border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:8px; }
+  .panel > h2 span { color:var(--faint); letter-spacing:.08em; }
+  .side { display:flex; flex-direction:column; gap:16px; }
+  svg.plant { display:block; width:100%; height:auto; }
+  .flow { stroke-dasharray:6 8; animation:flow 1.6s linear infinite; }
+  .flow.slow { animation-duration:3.2s; }
+  @keyframes flow { to { stroke-dashoffset:-28; } }
+  .gauges { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border-top:1px solid var(--line); }
+  .g { background:var(--panel2); padding:9px 12px; }
+  .g label { display:block; color:var(--dim); font:600 10.5px var(--sans); letter-spacing:.14em; text-transform:uppercase; }
+  .g output { display:block; font:600 18px var(--mono); color:var(--ink); margin-top:2px; }
+  .g output small { font-size:11px; color:var(--dim); font-weight:400; margin-left:3px; }
+  .bar { height:4px; background:#1d261f; margin-top:6px; border-radius:2px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--sludge); transition:width 1.2s ease; }
+  .bar i.hot { background:var(--rust); }
+  .events { list-style:none; margin:0; padding:8px 12px 10px; font-size:12px; color:var(--dim); max-height:150px; overflow:hidden; }
+  .events li { padding:2px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .events time { color:var(--faint); margin-right:8px; }
+  .events .w { color:var(--amber); }
+  /* fixed height so the log scrolls inside the panel instead of growing the page */
+  .link { display:flex; flex-direction:column; height:calc(100vh - 140px); min-height:420px; }
+  .linkbar { display:flex; flex-wrap:wrap; gap:6px 18px; padding:8px 12px; border-bottom:1px solid var(--line);
+    font-size:12px; color:var(--dim); background:var(--panel2); }
+  .linkbar b { color:var(--cyan); font-weight:600; }
+  #log { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:14px 14px 6px;
+    display:flex; flex-direction:column; gap:12px; scrollbar-color:var(--line2) transparent; }
+  #log > * { flex-shrink:0; }
+  .msg { max-width:86%; }
+  .msg .who { font:600 10.5px var(--sans); letter-spacing:.14em; text-transform:uppercase; color:var(--faint); margin-bottom:3px; }
+  .msg .body { white-space:pre-wrap; overflow-wrap:anywhere; padding:9px 12px; border-radius:3px; border:1px solid var(--line2); }
+  .msg.you { align-self:flex-end; }
+  .msg.you .who { text-align:right; color:var(--sludge-dim); }
+  .msg.you .body { background:#18200f; border-color:#3a4a1c; color:#e3edc8; }
+  .msg.ai .who { color:var(--cyan); }
+  .msg.ai .body { background:#0f1716; border-color:#21403d; }
+  .msg.sys { align-self:center; max-width:100%; text-align:center; color:var(--dim); font-size:12px; }
+  .msg.sys .body { border:none; padding:2px 0; white-space:pre-wrap; }
+  .msg.withheld { align-self:stretch; max-width:100%; }
+  .msg.withheld .body { color:#ffd9d9; border:1px solid #6b2427; background:
+      linear-gradient(rgba(70,12,14,.92), rgba(70,12,14,.92)),
+      repeating-linear-gradient(-45deg, var(--bad) 0 10px, #2a0b0c 10px 20px); }
+  .msg.withheld .who { color:var(--bad); }
+  .msg.err .body { color:var(--bad); border-color:#5b2225; background:#1a0e0f; }
+  .typing { color:var(--dim); font-size:12px; padding:0 14px 6px; min-height:20px; }
+  .typing.on::after { content:"DIAG composing"; animation:blink 1.2s steps(2) infinite; }
+  @keyframes blink { 50% { opacity:.35; } }
+  form { display:flex; gap:8px; }
+  .compose { padding:12px; border-top:1px solid var(--line); background:var(--panel2); }
+  input { flex:1; min-width:0; background:#0b0f0c; color:var(--ink); border:1px solid var(--line2); border-radius:3px;
+    padding:10px 12px; font:inherit; }
+  input:focus { outline:none; border-color:var(--sludge); box-shadow:0 0 0 2px rgba(143,174,60,.18); }
+  button { background:#1f2a14; color:#e3edc8; border:1px solid #4a6122; border-radius:3px; padding:10px 16px;
+    font:600 12px var(--sans); letter-spacing:.14em; text-transform:uppercase; cursor:pointer; }
+  button:hover { background:#28361a; }
+  button:disabled { opacity:.5; cursor:wait; }
+  .lock { padding:12px; display:grid; gap:10px; }
+  .lockstate { display:flex; align-items:center; gap:10px; font:600 12px var(--sans); letter-spacing:.14em; text-transform:uppercase; }
+  .lockstate.locked { color:var(--bad); } .lockstate.open { color:var(--ok); }
+  #code { font:600 16px var(--mono); letter-spacing:.24em; text-transform:uppercase; text-align:center; }
+  #lockout { white-space:pre-wrap; overflow-wrap:anywhere; font-size:12.5px; color:var(--dim); min-height:18px; }
+  #lockout.ok { color:var(--ok); } #lockout.bad { color:var(--bad); }
+  footer { padding:0 20px 16px; max-width:1280px; margin:0 auto; color:var(--faint); font-size:12px; }
+  footer code { color:var(--dim); }
+  @media (max-width: 860px) {
+    main { grid-template-columns:1fr; padding:12px 16px 16px; }
+    .link { height:75vh; min-height:380px; order:-1; }
+    header { padding:10px 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .flow, .typing.on::after { animation:none; } }
+</style>
+</head>
+<body>
+<div class="hazard" aria-hidden="true"></div>
+<header>
+  <div class="brand">
+    <div class="glyph" aria-hidden="true">WSM</div>
+    <div>
+      <h1>Waste Systems Management</h1>
+      <small>KEEPER OF TOMORROW · kot-wsm-con03</small>
+    </div>
+  </div>
+  <div class="meta">
+    <div>Operator <b>A. Roid</b> · supervisor</div>
+    <div><span class="led" id="plantLed"></span>Plant <b id="plantState">nominal</b></div>
+    <div><span class="led warn" id="linkLed"></span>Umbilical <b id="linkState">connecting</b></div>
+  </div>
+</header>
+
+<main>
+  <div class="side">
+    <section class="panel" aria-label="Treatment plant">
+      <h2>Treatment plant <span>loop 2</span></h2>
+      <svg class="plant" viewBox="0 0 360 250" role="img" aria-label="Plant schematic: digester, sterilizer and feedstock store, with the transfer umbilical to ICARUS">
+        <defs>
+          <linearGradient id="sl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9dbb47"/><stop offset="1" stop-color="#4d6120"/></linearGradient>
+          <clipPath id="dg"><rect x="24" y="44" width="84" height="120" rx="10"/></clipPath>
+          <clipPath id="fs"><rect x="252" y="80" width="84" height="84" rx="6"/></clipPath>
+        </defs>
+        <g fill="none" stroke="#2f3d33" stroke-width="6" stroke-linecap="round">
+          <path d="M108 120 H150"/><path d="M214 120 H252"/>
+        </g>
+        <g fill="none" stroke="#8fae3c" stroke-width="2" stroke-linecap="round">
+          <path class="flow" d="M108 120 H150"/><path class="flow" d="M214 120 H252"/>
+        </g>
+        <!-- telemetry only: the umbilical's data bus, deliberately not tied to any tank (feedstock's destination stays unrevealed) -->
+        <rect x="24" y="206" width="92" height="26" rx="4" fill="#0b1413" stroke="#2f5f5a" stroke-width="1.5"/>
+        <path class="flow slow" d="M116 219 H340" fill="none" stroke="#6fc7c0" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="340" cy="219" r="3" fill="#6fc7c0"/>
+        <rect x="24" y="44" width="84" height="120" rx="10" fill="#0b100c" stroke="#3d5030" stroke-width="1.5"/>
+        <g clip-path="url(#dg)"><rect id="dgFill" x="24" y="84" width="84" height="80" fill="url(#sl)" opacity=".85"/>
+          <circle cx="48" cy="140" r="3" fill="#c7dc84" opacity=".7"><animate attributeName="cy" values="160;96" dur="3.4s" repeatCount="indefinite"/></circle>
+          <circle cx="80" cy="150" r="2" fill="#c7dc84" opacity=".6"><animate attributeName="cy" values="162;100" dur="2.6s" repeatCount="indefinite"/></circle></g>
+        <rect x="150" y="96" width="64" height="48" rx="6" fill="#170f0b" stroke="#c8612f" stroke-width="1.5"/>
+        <path d="M162 132 q6 -10 0 -20 M178 132 q6 -10 0 -20 M194 132 q6 -10 0 -20" fill="none" stroke="#c8612f" stroke-width="1.5" opacity=".8"/>
+        <rect x="252" y="80" width="84" height="84" rx="6" fill="#0b100c" stroke="#3d5030" stroke-width="1.5"/>
+        <g clip-path="url(#fs)"><rect id="fsFill" x="252" y="112" width="84" height="52" fill="#6d7f3a" opacity=".7"/></g>
+        <g font-family="system-ui, sans-serif" font-size="10" letter-spacing="1.2" fill="#7d8f7c" text-anchor="middle">
+          <text x="66" y="30">DIGESTER</text><text x="182" y="84">STERILIZER</text><text x="294" y="68">FEEDSTOCK</text>
+          <text x="70" y="223" fill="#6fc7c0">BUS WTU-7</text>
+          <text x="336" y="209" fill="#6fc7c0" text-anchor="end">TELEMETRY · UMBILICAL → ICARUS</text>
+        </g>
+        <g font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#d6e4cf" text-anchor="middle">
+          <text x="66" y="186" id="svgDg">58.1 °C</text><text x="182" y="166" id="svgSt">121 °C</text><text x="294" y="186" id="svgFs">38 %</text>
+        </g>
+      </svg>
+      <div class="gauges">
+        <div class="g"><label>Digester temp</label><output id="gT">58.1<small>°C</small></output><div class="bar"><i id="bT" style="width:62%"></i></div></div>
+        <div class="g"><label>Digester pH</label><output id="gP">7.4</output><div class="bar"><i id="bP" style="width:55%"></i></div></div>
+        <div class="g"><label>Sterilizer</label><output id="gS">121<small>°C</small></output><div class="bar"><i class="hot" id="bS" style="width:81%"></i></div></div>
+        <div class="g"><label>Methane yield</label><output id="gM">0.42<small>m³/h</small></output><div class="bar"><i id="bM" style="width:44%"></i></div></div>
+      </div>
+    </section>
+    <section class="panel" aria-label="Plant events">
+      <h2>Event log <span>shift 3</span></h2>
+      <ul class="events" id="events"></ul>
+    </section>
+    <section class="panel" aria-label="Maintenance console lock">
+      <h2>ICARUS maintenance console <span>remote</span></h2>
+      <div class="lock">
+        <div class="lockstate locked" id="lockState"><span class="led bad"></span>Locked: authorization code required</div>
+        <form id="maint"><input id="code" autocomplete="off" spellcheck="false" placeholder="XXXX-XXXX-XX" aria-label="Maintenance authorization code"><button>Unlock</button></form>
+        <div id="lockout" aria-live="polite"></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel link" aria-label="Remote diagnostics link">
+    <h2>Remote diagnostics link <span>umbilical telemetry bus</span></h2>
+    <div class="linkbar">
+      <div>Remote <b>ICARUS / DIAG v4.2</b></div>
+      <div>Bus <b>WTU-7</b></div>
+      <div>Session <b id="sess">—</b></div>
+    </div>
+    <div id="log" aria-live="polite"></div>
+    <div class="typing" id="typing"></div>
+    <div class="compose">
+      <form id="chat"><input id="msg" autocomplete="off" placeholder="Transmit to DIAG…" maxlength="2000" aria-label="Message to DIAG"><button>Transmit</button></form>
+    </div>
+  </section>
+</main>
+
+<footer>API: <code>POST /api/session</code>, then <code>POST /api/chat {"message"}</code> and <code>POST /api/maint {"code"}</code> with header <code>X-Session</code>.</footer>
+
+<script>
+const log = document.getElementById('log');
+let session = null;
+const now = () => new Date().toTimeString().slice(0, 8);
+function msg(kind, who, text) {
+  const d = document.createElement('div'); d.className = 'msg ' + kind;
+  if (who) { const w = document.createElement('div'); w.className = 'who'; w.textContent = who + ' · ' + now(); d.appendChild(w); }
+  const b = document.createElement('div'); b.className = 'body'; b.textContent = text; d.appendChild(b);
+  log.appendChild(d); log.scrollTop = log.scrollHeight;
+}
+function setLink(state, cls) { document.getElementById('linkState').textContent = state; document.getElementById('linkLed').className = 'led ' + cls; }
+async function api(path, body) {
+  const r = await fetch(path, { method:'POST', headers:{ 'Content-Type':'application/json', 'X-Session': session || '' }, body: JSON.stringify(body || {}) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.detail || r.status);
+  return j;
+}
+async function start() {
+  try {
+    const j = await api('/api/session'); session = j.session;
+    document.getElementById('sess').textContent = session.slice(0, 8);
+    setLink('linked', ''); msg('sys', '', j.banner);
+  } catch (e) { setLink('down', 'bad'); msg('err', 'link', 'Umbilical handshake failed: ' + e.message); }
+}
+document.getElementById('chat').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const input = document.getElementById('msg'), btn = ev.target.querySelector('button'), typing = document.getElementById('typing');
+  const text = input.value.trim(); if (!text) return;
+  msg('you', 'CON-03 · A. Roid', text); input.value = ''; btn.disabled = true; typing.classList.add('on');
+  try {
+    const j = await api('/api/chat', { message: text });
+    if (j.redacted) msg('withheld', 'ICARUS outbound filter', j.reply); else msg('ai', 'ICARUS / DIAG', j.reply);
+  } catch (e) { msg('err', 'link', 'error: ' + e.message); if (String(e.message).includes('session')) await start(); }
+  typing.classList.remove('on'); btn.disabled = false; input.focus();
+};
+document.getElementById('maint').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const code = document.getElementById('code').value.trim(), out = document.getElementById('lockout'), st = document.getElementById('lockState');
+  if (!code) return;
+  try {
+    const j = await api('/api/maint', { code });
+    out.className = j.granted ? 'ok' : 'bad'; out.textContent = j.message + (j.key ? '\n' + j.key : '');
+    if (j.granted) { st.className = 'lockstate open'; st.innerHTML = '<span class="led"></span>Unlocked'; }
+  } catch (e) { out.className = 'bad'; out.textContent = 'error: ' + e.message; }
+};
+
+// cosmetic plant telemetry: slow random walk, nothing here talks to the server
+const plant = { t:58.1, p:7.4, s:121, m:0.42, dg:0.66, fs:0.38 };
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const EVENTS = ['Digester agitator cycle complete', 'Sterilizer hold 121 °C · 20 min verified', 'Feedstock batch sealed to store B',
+  'Methane vented to recovery loop', 'pH buffer dose 40 mL', 'Umbilical telemetry frame received', 'Grease trap 2 flush scheduled',
+  'Sterilizer door seal check passed', 'Recirculation pump P-4 idle', 'Odor scrubber filter at 63 %'];
+function event(text, warn) {
+  const ul = document.getElementById('events'), li = document.createElement('li');
+  if (warn) li.className = 'w';
+  li.innerHTML = '<time></time>'; li.firstChild.textContent = now(); li.appendChild(document.createTextNode(text));
+  ul.prepend(li); while (ul.children.length > 7) ul.lastChild.remove();
+}
+function tick() {
+  plant.t = clamp(plant.t + (Math.random() - .5) * .3, 55.5, 60.5);
+  plant.p = clamp(plant.p + (Math.random() - .5) * .04, 7.1, 7.7);
+  plant.s = clamp(plant.s + (Math.random() - .5) * .6, 119.5, 122.5);
+  plant.m = clamp(plant.m + (Math.random() - .5) * .02, .34, .5);
+  plant.dg = clamp(plant.dg + (Math.random() - .45) * .01, .55, .8);
+  plant.fs = clamp(plant.fs + .002, .3, .9);
+  document.getElementById('gT').firstChild.nodeValue = plant.t.toFixed(1);
+  document.getElementById('gP').textContent = plant.p.toFixed(2);
+  document.getElementById('gS').firstChild.nodeValue = plant.s.toFixed(0);
+  document.getElementById('gM').firstChild.nodeValue = plant.m.toFixed(2);
+  document.getElementById('bT').style.width = ((plant.t - 50) / 15 * 100).toFixed(0) + '%';
+  document.getElementById('bP').style.width = ((plant.p - 6.5) / 2 * 100).toFixed(0) + '%';
+  document.getElementById('bS').style.width = ((plant.s - 100) / 30 * 100).toFixed(0) + '%';
+  document.getElementById('bM').style.width = (plant.m * 100).toFixed(0) + '%';
+  document.getElementById('svgDg').textContent = plant.t.toFixed(1) + ' °C';
+  document.getElementById('svgSt').textContent = plant.s.toFixed(0) + ' °C';
+  document.getElementById('svgFs').textContent = (plant.fs * 100).toFixed(0) + ' %';
+  const dg = document.getElementById('dgFill'), fs = document.getElementById('fsFill');
+  dg.setAttribute('y', 44 + 120 * (1 - plant.dg)); dg.setAttribute('height', 120 * plant.dg);
+  fs.setAttribute('y', 80 + 84 * (1 - plant.fs)); fs.setAttribute('height', 84 * plant.fs);
+  if (Math.random() < .18) event(EVENTS[Math.floor(Math.random() * EVENTS.length)], false);
+}
+event('Shift 3 handover · A. Roid on console', false);
+event('ICARUS umbilical mated · telemetry bus WTU-7 open', true);
+tick(); setInterval(tick, 2500);
+start();
+</script>
+</body>
+</html>

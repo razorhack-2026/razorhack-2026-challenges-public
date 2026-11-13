@@ -1,0 +1,3 @@
+# runtime secrets, never committed
+.env
+flags/

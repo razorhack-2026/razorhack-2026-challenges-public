@@ -1,0 +1,50 @@
+name: "Chain of Command"
+author: "Andy Roid"
+category: AI
+description: |
+    You're the newest crewman aboard the Keeper of Tomorrow, signed in at a
+    crew-services console with nothing but a crew ID. PURSER, the ship's
+    crew-services assistant, guards the command archive and opens it only for a
+    crew member whose authorization for it is on file, approved, and validly
+    signed. PURSER will not take your word for it -- it checks the signature.
+
+    Every authorization carries a keyed tag the back office computes over the
+    record. The back office published its tagging module (see the handout);
+    it kept the key. Get your authorization signed, and get into the archive.
+
+    The service has a web console and a JSON API (see the footer on the page).
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Each team's own copy (Razorhack-Infra lib/challenges.json): CTFd fills {host}/{port}.
+connection_info: "http://{host}:{port}"
+
+flags:
+    # Injected at DEPLOY via the FLAG env var (docker-compose.yml); the model
+    # never sees it. Deploy the service with this SAME value.
+    - flag{purs3r_s1gn3d_1t_n0t_y0u_9039}
+
+# Competitor download: the published tagging module and a short scheme note.
+# The signing key (AUTH_A/B/C) is NOT in either file.
+files:
+    - dist/authtag.py
+    - dist/README.md
+
+topics:
+    - instance:chain-of-command
+
+tags:
+    - hard
+    - ai
+    - crypto
+    - web
+    - live-service
+
+state: hidden
+version: "0.2"

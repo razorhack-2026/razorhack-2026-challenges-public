@@ -1,0 +1,51 @@
+name: "Proof of Life"
+author: "Andy Roid"
+category: Forensics
+description: |
+    The relay ICARUS's navigator phones home to is still answering. It won't talk
+    to anyone who can't prove they're its implant -- but you pulled the implant's
+    key material out of the last session. Become the implant: complete its
+    check-in, satisfy whatever the handler asks, and take down the tasking it was
+    waiting for. The flag is in that tasking -- and so is where it's been hiding
+    on the Keeper of Tomorrow's reactor controller.
+
+    Relay: <EVENT_HOST:PORT>  (HTTPS, JSON, POST /relay/checkin)
+
+# Live service -- host/port finalized at deploy time (see deploy/README.md).
+connection_info: "https://{host}:{port}/relay/checkin  (HTTPS, self-signed cert, JSON POST)"
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    # The relay returns this in its tasking; deploy/run.sh passes it to the
+    # container from here, so this is the flag's only home.
+    - flag{1_4m_th3_1mpl4nt_n0w}
+
+hints:
+    - { content: "POST anything to /relay/checkin -- the relay describes its own protocol, and its `challenge` spells out the key recipe. Both inputs are in Prompt Autopsy's decrypted traffic: the implant's `cred` (in the exfil payload) and RP-12's `mission_secret`.", cost: 50 }
+    - { content: "The HMAC key is the raw 32-byte HKDF output, not its hex string, and the message is the nonce's raw bytes (hex-decode it first). Nonces last 5 minutes; if one expires, send hello again.", cost: 100 }
+    - { content: "The questions are about Prompt Autopsy's three navigation cycles (its three model conversations): what was scanned, what the catalog said, and what the targeting policy decided. Answer canonically: body ids sorted ascending, comma-joined, no spaces.", cost: 150 }
+
+# Agentic-AI DFIR chain, #3 of 5. Enable once "Prompt Autopsy" (#2) is in this
+# repo -- requirements are resolved by challenge name at import time.
+# requirements:
+#     - "Prompt Autopsy"
+
+tags:
+    - hard
+    - interactive
+    - c2
+    - challenge-response
+
+topics:
+    - "arc:2:Buildup"
+    - instance:proof-of-life
+
+state: hidden
+version: "0.1"

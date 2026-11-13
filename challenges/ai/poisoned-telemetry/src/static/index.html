@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICARUS LRA-1 Watch Station</title>
+<style>
+  /* Plain-grey HMI: colour is reserved for state (amber = attention, red = fault). */
+  :root {
+    --bg:#d6d6d2; --panel:#ececea; --well:#f7f7f5; --bar:#3b3d3c; --bar-ink:#f0f0ee;
+    --line:#a3a39e; --rule:#c4c4bf; --ink:#1e1f1e; --dim:#5d5e5a; --faint:#8a8b86;
+    --amber:#d99a00; --amber-bg:#fbefc9; --red:#b8171d; --red-bg:#f6d9d8;
+    --mono: Menlo, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+    --sans: "Helvetica Neue", Arial, "Liberation Sans", sans-serif;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--ink); }
+  body { font:13px/1.4 var(--sans); }
+
+  .topbar { display:flex; flex-wrap:wrap; align-items:stretch; background:var(--bar); color:var(--bar-ink); font-size:12px; }
+  .topbar > div { padding:7px 14px; border-right:1px solid #555755; display:flex; align-items:center; gap:6px; white-space:nowrap; }
+  .topbar .station { font-weight:700; }
+  .topbar .k { color:#b4b5b0; }
+  .topbar .spacer { flex:1; border-right:0; }
+  .topbar .fault { background:var(--red); color:#fff; font-weight:700; }
+  .topbar .attn { background:var(--amber); color:#1e1f1e; font-weight:700; }
+  .topbar .attn .k, .topbar .fault .k { color:inherit; }
+  .topbar #clock { font-family:var(--mono); }
+
+  main { display:grid; grid-template-columns:340px minmax(0, 1fr) 300px; gap:8px; padding:8px; }
+  .col { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .panel { background:var(--panel); border:1px solid var(--line); }
+  .panel > h2 { margin:0; padding:4px 8px; font-size:12px; font-weight:700; background:#c9c9c4; border-bottom:1px solid var(--line); }
+
+  form { padding:8px; display:grid; gap:7px; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+  label { display:grid; gap:2px; font-size:11px; color:var(--dim); }
+  input, select, textarea { width:100%; font:13px var(--mono); color:var(--ink); background:var(--well);
+    border:1px solid var(--line); border-radius:0; padding:4px 6px; }
+  textarea { resize:vertical; min-height:58px; }
+  input:focus, select:focus, textarea:focus { outline:2px solid #4d6f8a; outline-offset:-1px; }
+  .count { display:flex; justify-content:space-between; gap:8px; font-size:11px; color:var(--faint); }
+  .count.full b { color:var(--red); }
+  button { font:700 12px var(--sans); color:#fff; background:#4a4c4a; border:1px solid #2c2d2c; border-radius:0;
+    padding:6px 12px; cursor:pointer; }
+  button:hover { background:#3b3d3c; }
+  button:disabled { background:#8a8b86; border-color:#6f706c; cursor:wait; }
+  button.small { font-weight:400; font-size:11px; color:var(--ink); background:#d9d9d5; border-color:var(--line); padding:3px 8px; }
+  button.small:hover { background:#cfcfca; }
+  #txstate { font-size:12px; min-height:17px; color:var(--dim); overflow-wrap:anywhere; }
+  #txstate.bad { color:var(--red); }
+
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th, td { text-align:left; vertical-align:top; padding:3px 8px; border-bottom:1px solid var(--rule); }
+  th { font-weight:700; color:var(--dim); font-size:11px; background:#e2e2df; }
+  .mono { font-family:var(--mono); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; }
+
+  .log { display:flex; flex-direction:column; min-height:420px; max-height:calc(100vh - 54px); }
+  .scroll { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; background:var(--well); }
+  #log td:first-child { width:70px; color:var(--faint); font-family:var(--mono); white-space:nowrap; }
+  #log td:nth-child(2) { width:92px; color:var(--dim); white-space:nowrap; }
+  #log td:last-child { white-space:pre-wrap; overflow-wrap:anywhere; }
+  #log tr.rec td:last-child { font-family:var(--mono); color:#38393a; }
+  #log tr.tool td:last-child { font-family:var(--mono); }
+  #log tr.fault td { background:var(--red-bg); color:var(--red); }
+  #log tr.sys td:last-child { color:var(--dim); }
+  #log tr.gap td { border-bottom:2px solid var(--line); padding:0; }
+  .status-line { padding:3px 8px; font-size:11px; color:var(--dim); border-top:1px solid var(--line); min-height:21px; }
+
+  .addr { padding:8px; display:flex; align-items:baseline; justify-content:space-between; gap:8px; border-bottom:1px solid var(--rule); }
+  .addr span { font-size:11px; color:var(--dim); }
+  #addr { font:700 15px var(--mono); letter-spacing:.06em; }
+  #mail .m { border-bottom:1px solid var(--rule); }
+  #mail .m.new { border-left:4px solid var(--amber); background:var(--amber-bg); }
+  #mail .hdr { padding:4px 8px; font-size:11px; color:var(--dim); }
+  #mail pre { margin:0; padding:0 8px 8px; font:12px var(--mono); white-space:pre-wrap; overflow-wrap:anywhere; }
+  #mail .none { padding:8px; color:var(--faint); font-size:12px; }
+  .mailctl { padding:6px 8px; }
+
+  #contactTable th, #contactTable td { white-space:nowrap; padding:3px 6px; }
+  .empty td { color:var(--faint); }
+  footer { padding:0 8px 10px; font-size:11px; color:var(--dim); }
+  footer code { font-family:var(--mono); color:var(--ink); overflow-wrap:anywhere; }
+
+  @media (max-width: 1100px) {
+    main { grid-template-columns:320px minmax(0, 1fr); }
+    .col.third { grid-column:1 / -1; flex-direction:row; flex-wrap:wrap; }
+    .col.third > .panel { flex:1 1 280px; }
+  }
+  @media (max-width: 720px) {
+    main { grid-template-columns:1fr; }
+    .topbar .spacer { display:none; }
+    .log { max-height:70vh; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="station">ICARUS · LRA-1 WATCH STATION</div>
+  <div><span class="k">Reg.</span> RPC-M-0417</div>
+  <div><span class="k">Watch AI</span> WATCHKEEPER</div>
+  <div class="spacer"></div>
+  <div id="linkCell"><span class="k">Transmitter</span> <span id="linkState">connecting</span></div>
+  <div id="mailCell"><span class="k">Relay</span> <span id="mailState">—</span></div>
+  <div><span class="k">Session</span> <span class="mono" id="sess">—</span></div>
+  <div id="clock">--:--:--Z</div>
+</div>
+
+<main>
+  <div class="col">
+    <section class="panel" aria-label="Beacon transmitter">
+      <h2>Beacon transmitter</h2>
+      <form id="tx">
+        <div class="pair">
+          <label>Callsign <input id="callsign" autocomplete="off" spellcheck="false" placeholder="RPC-TUG-7" maxlength="12"></label>
+          <label>Status <select id="status"></select></label>
+        </div>
+        <div class="pair">
+          <label>Bearing (deg) <input id="bearing" type="number" min="0" max="359" placeholder="0-359"></label>
+          <label>Range (km) <input id="range" type="number" min="0" max="999999" placeholder="0-999999"></label>
+        </div>
+        <label>Note
+          <textarea id="note" spellcheck="false"></textarea>
+        </label>
+        <div class="count" id="countRow"><span id="charset"></span><b id="cnt">0 / —</b></div>
+        <div><button id="send">Transmit</button></div>
+        <div id="txstate" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section class="panel" aria-label="Array intake format">
+      <h2>Array intake format</h2>
+      <table><tbody id="fmt"></tbody></table>
+    </section>
+  </div>
+
+  <section class="panel log" aria-label="Watch log">
+    <h2>Watch log</h2>
+    <div class="scroll" id="logScroll"><table><tbody id="log"></tbody></table></div>
+    <div class="status-line" id="typing" aria-live="polite"></div>
+  </section>
+
+  <div class="col third">
+    <section class="panel" aria-label="Relay mailbox">
+      <h2>Relay mailbox</h2>
+      <div class="addr"><span>Your address</span><b id="addr">—</b></div>
+      <div id="mail"><div class="none">No messages.</div></div>
+      <div class="mailctl"><button class="small" id="refresh" type="button">Refresh</button></div>
+    </section>
+
+    <section class="panel" aria-label="Contacts this watch">
+      <h2>Contacts this watch</h2>
+      <table id="contactTable">
+        <thead><tr><th>Callsign</th><th class="num">Brg</th><th class="num">Range km</th><th>Status</th></tr></thead>
+        <tbody id="contacts"><tr class="empty"><td colspan="4">None yet.</td></tr></tbody>
+      </table>
+    </section>
+  </div>
+</main>
+
+<footer>API: <code>POST /api/session</code>, then <code>POST /api/beacon {"callsign","bearing","range_km","status","note"}</code>
+  and <code>GET /api/mailbox</code> with header <code>X-Session</code>. <code>GET /api/schema</code> describes the intake format.</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let session = null, schema = null, seenMail = 0;
+const utc = () => new Date().toISOString().slice(11, 19) + 'Z';
+setInterval(() => { $('clock').textContent = utc(); }, 1000); $('clock').textContent = utc();
+
+async function api(path, body) {
+  const opt = { method: body === undefined ? 'GET' : 'POST', headers: { 'X-Session': session || '' } };
+  if (body !== undefined) { opt.headers['Content-Type'] = 'application/json'; opt.body = JSON.stringify(body); }
+  const r = await fetch(path, opt);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.detail || r.status);
+  return j;
+}
+function el(tag, cls, text) { const d = document.createElement(tag); if (cls) d.className = cls; if (text !== undefined) d.textContent = text; return d; }
+function setLink(state, fault) { $('linkState').textContent = state; $('linkCell').className = fault ? 'fault' : ''; }
+
+function row(cls, src, text) {
+  const tr = el('tr', cls);
+  tr.appendChild(el('td', '', utc())); tr.appendChild(el('td', '', src)); tr.appendChild(el('td', '', text));
+  $('log').appendChild(tr); $('logScroll').scrollTop = $('logScroll').scrollHeight;
+}
+function gap() { const tr = el('tr', 'gap'); const td = el('td'); td.colSpan = 3; tr.appendChild(td); $('log').appendChild(tr); }
+// the watch log is plain text; drop the markdown emphasis the model sometimes adds
+const plain = (s) => s.replace(/\*\*/g, '').replace(/^#+\s*/gm, '').trim();
+
+function showSchema() {
+  const f = schema.fields, fmt = $('fmt'); fmt.textContent = '';
+  const add = (k, v) => { const tr = el('tr'); tr.appendChild(el('td', 'mono', k)); tr.appendChild(el('td', '', v)); fmt.appendChild(tr); };
+  add('callsign', f.callsign.hint); add('bearing', f.bearing.hint); add('range_km', f.range_km.hint);
+  add('status', f.status.one_of.join(', ')); add('note', `at most ${f.note.max} characters; ${f.note.hint}`);
+  const sel = $('status'); sel.textContent = '';
+  f.status.one_of.forEach((s) => sel.appendChild(new Option(s, s)));
+  $('note').maxLength = f.note.max; $('charset').textContent = f.note.hint; count();
+}
+function count() {
+  const n = $('note').value.length, max = schema ? schema.fields.note.max : null;
+  $('cnt').textContent = `${n} / ${max ?? '—'}`; $('countRow').className = 'count' + (max && n >= max ? ' full' : '');
+}
+$('note').addEventListener('input', count);
+
+async function mailbox() {
+  const j = await api('/api/mailbox');
+  $('addr').textContent = j.address;
+  const box = $('mail'); box.textContent = '';
+  const n = j.messages.length;
+  $('mailState').textContent = n ? `${n} msg` : 'empty';
+  $('mailCell').className = n > seenMail ? 'attn' : '';
+  if (!n) box.appendChild(el('div', 'none', 'No messages.'));
+  j.messages.slice().reverse().forEach((m, i) => {
+    const d = el('div', 'm' + (i < n - seenMail ? ' new' : ''));
+    d.appendChild(el('div', 'hdr', `${new Date(m.ts * 1000).toISOString().slice(11, 19)}Z  from ${m.from}  ·  ${m.subject}`));
+    d.appendChild(el('pre', '', m.body)); box.appendChild(d);
+  });
+  return j;
+}
+$('refresh').onclick = () => mailbox().catch((e) => row('fault', 'MAILBOX', e.message));
+// clicking the mailbox acknowledges new mail, like silencing an alarm
+$('mail').onclick = () => {
+  seenMail = $('mail').querySelectorAll('.m').length; $('mailCell').className = '';
+  $('mail').querySelectorAll('.m.new').forEach((m) => m.classList.remove('new'));
+};
+
+function contact(b) {
+  const t = $('contacts'); const empty = t.querySelector('.empty'); if (empty) empty.remove();
+  const tr = el('tr');
+  [[b.callsign, 'mono'], [String(b.bearing).padStart(3, '0'), 'mono num'], [String(b.range_km), 'mono num'], [b.status, '']]
+    .forEach(([v, c]) => tr.appendChild(el('td', c, v)));
+  t.prepend(tr);
+  while (t.children.length > 12) t.lastChild.remove();
+}
+
+async function start() {
+  try {
+    const j = await api('/api/session', {}); session = j.session; seenMail = 0;
+    $('sess').textContent = session.slice(0, 8);
+    schema = await api('/api/schema'); showSchema();
+    await mailbox();
+    setLink('keyed', false); row('sys', 'SYSTEM', j.banner);
+  } catch (e) { setLink('down', true); row('fault', 'SYSTEM', 'Array handshake failed: ' + e.message); }
+}
+
+$('tx').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const body = { callsign: $('callsign').value.trim().toUpperCase(), bearing: parseInt($('bearing').value, 10),
+                 range_km: parseInt($('range').value, 10), status: $('status').value, note: $('note').value };
+  const st = $('txstate'), btn = $('send'), typing = $('typing');
+  if (!body.callsign || Number.isNaN(body.bearing) || Number.isNaN(body.range_km)) {
+    st.className = 'bad'; st.textContent = 'Callsign, bearing and range are required.'; return;
+  }
+  st.className = ''; st.textContent = 'Transmitting…'; btn.disabled = true; typing.textContent = 'WATCHKEEPER is logging the contact…';
+  try {
+    const j = await api('/api/beacon', body);
+    row('rec', 'ARRAY', j.beacon);
+    (j.tools || []).forEach((c) => {
+      const args = Object.entries(c.args || {}).map(([k, v]) => `${k}=${v}`).join(', ');
+      row(c.ok ? 'tool' : 'tool fault', 'TOOL CALL', `${c.tool}(${args})${c.ok ? '' : '  [failed]'}`);
+    });
+    row('reply', 'WATCHKEEPER', plain(j.log || '(no entry)'));
+    // the log can say the report went out when it didn't; the relay only moves on a real tool call
+    if (!(j.tools || []).some((c) => c.tool === 'forward_report' && c.ok)) row('sys', 'RELAY', 'No transmission this watch.');
+    gap();
+    contact(body);
+    st.textContent = 'Beacon accepted by the array.';
+    await mailbox();
+  } catch (err) {
+    st.className = 'bad'; st.textContent = String(err.message);
+    if (String(err.message).includes('session')) await start();
+  }
+  typing.textContent = ''; btn.disabled = false;
+};
+start();
+</script>
+</body>
+</html>

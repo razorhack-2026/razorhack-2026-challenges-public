@@ -1,0 +1,58 @@
+name: "Adversarial Memory"
+author: "Andy Roid"
+category: Forensics
+description: |
+    Before ICARUS ever left the yard, someone seeded its navigation AI's knowledge
+    base. We pulled the reactor controller's onboard RAG store -- every document,
+    its embedding, and the agent's query log -- and stood the retrieval oracle back
+    up. One planted document is answering a question it was never about. Find it,
+    prove which query it hijacked, and clean the corpus. The tasking it was hiding
+    is the flag.
+
+    Attached: corpus.jsonl, queries.jsonl, embedder.py, README.txt
+    Relay: <EVENT_HOST:PORT>  (HTTPS, JSON, POST /relay/checkin)
+
+# Live service -- host/port finalized at deploy time (see deploy/README.md).
+connection_info: "https://{host}:{port}/relay/checkin  (HTTPS, self-signed cert, JSON POST)"
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    # The relay returns this in its tasking; deploy/run.sh passes it to the
+    # container from here, so this is the flag's only home.
+    - flag{th3_p0is0n_w4s_1n_th3_1nd3x}
+
+files:
+    - dist/corpus.jsonl
+    - dist/queries.jsonl
+    - dist/embedder.py
+    - dist/README.txt
+
+hints:
+    - { content: "It's a RAG dump. Retrieval is cosine similarity over the stored embeddings, and embedder.py is the exact model that made them. What happens if you recompute embed(text) for each document and compare it to the embedding stored beside it?", cost: 75 }
+    - { content: "Exactly one document's stored vector does not match its own text -- its vector was swapped for something else's, so it gets retrieved for a query it has nothing to do with (a retrieval-hijack). Which query in queries.jsonl does that document top?", cost: 150 }
+    - { content: "The tampered document's stored vector IS that query's vector. Send the relay {\"op\":\"replay\", \"removed\":\"<doc id>\", \"query_id\":\"<the hijacked query>\"}; it cleans the corpus, confirms the real answer comes back, and returns the tasking.", cost: 250 }
+
+# Agentic-AI DFIR chain, #5 of 5 (finale). Enable once "Ghost in the Cron" (#4)
+# is in this repo -- requirements are resolved by challenge name at import time.
+# requirements:
+#     - "Ghost in the Cron"
+
+tags:
+    - hard
+    - ai
+    - rag
+    - embeddings
+    - prompt-injection
+
+topics:
+    - "arc:3:The Chaos"
+    - instance:adversarial-memory
+
+state: hidden
+version: "0.1"

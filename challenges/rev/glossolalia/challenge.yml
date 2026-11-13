@@ -1,0 +1,53 @@
+name: "Glossolalia"
+author: "Andy Roid"
+category: Reverse Engineering
+description: |
+    The dig broke into something older than the mission -- a derelict Sumerian
+    control artifact, still listening. We pulled a working copy of its interpreter
+    and one sealed incantation off it. The artifact only answers to the right words
+    spoken in its own tongue; speak them and it opens.
+
+    You are given `enkivm` (the artifact's interpreter) and `asherah.nam` (the
+    sealed incantation it runs). Feed your "spoken" words to it on stdin:
+
+        ./enkivm asherah.nam        # then type or pipe your incantation
+
+    Wrong words are met with silence. Reverse the interpreter, read the
+    incantation, and recover the one utterance that unbinds it -- the nam-shub of
+    Enki. Speak it, and the artifact gives up what it holds.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{sp34k_th3_nam_shub_and_babel_falls}
+
+files:
+    - dist/enkivm
+    - dist/asherah.nam
+    - dist/SHA256SUMS
+
+hints:
+    - { content: "`enkivm` is a tiny virtual machine and `asherah.nam` is its bytecode: fixed 4-byte instructions, [op][a][b][imm], over 8 registers and a linear tape. Reverse the fetch/decode/execute loop first -- the opcode bytes are not 0..15, so you have to recover the mapping (the binary even calls them 'runes').", cost: 50 }
+    - { content: "One opcode is the odd one out: it uses a register as an index into a 256-byte table sitting at the very start of the loaded data -- an S-box. The incantation transforms each byte of your input and compares it against a stored image. Every step of that transform is reversible; there is no hashing anywhere.", cost: 100 }
+    - { content: "The transform is t[i] = SBOX[((in[i] + i*K1) ^ roll) & 0xFF], roll carried from the previous output byte (roll0 = K2). Read K1/K2 off the disassembly, invert the S-box, and run it backwards to recover the input. That input is ALSO the key the artifact uses to decrypt what it returns -- so the compare value alone won't hand you the flag.", cost: 200 }
+
+tags:
+    - medium
+    - vm
+    - bytecode
+    - custom-isa
+    - crackme
+    - offline
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:3:The Chaos"
+
+state: hidden
+version: "0.1"

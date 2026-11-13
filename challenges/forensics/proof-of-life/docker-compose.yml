@@ -1,0 +1,22 @@
+# Proof of Life relay. Start with deploy/run.sh (it reads the flag from challenge.yml).
+services:
+  relay:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+    image: pol-relay:latest
+    container_name: pol-relay
+    environment:
+      FLAG: "${FLAG:?run deploy/run.sh -- it reads the flag from challenge.yml}"
+      SIGNING_SECRET: "${SIGNING_SECRET:-}"   # empty -> random per start (restarts drop live sessions)
+      TTL_S: "${TTL_S:-300}"
+      ATTEMPT_CAP: "${ATTEMPT_CAP:-6}"
+    ports:
+      - "${PORT:-9443}:9443"
+    read_only: true
+    tmpfs:
+      - /tmp                                   # the relay writes its self-signed cert here
+    cap_drop: [ALL]
+    security_opt:
+      - "no-new-privileges:true"
+    restart: unless-stopped

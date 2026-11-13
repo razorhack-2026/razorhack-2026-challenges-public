@@ -1,0 +1,33 @@
+# RazorHack AI challenge stack: the live-LLM challenge apps. They all ask ONE
+# OpenAI-compatible model endpoint for the same model, so they are calibrated
+# against one target. Contestants reach only the challenge ports, never the model.
+#
+#   cp .env.example .env            # then fill it in (never commit .env or flags/)
+#   ./init_flags.sh                 # writes flags/*.env from each challenge.yml
+#   ../../challenges/ai/overprivileged-relay/init_secrets.sh
+#
+# Event (2026-11-06): GPU hosts ran vLLM (Qwen3-30B-A3B-GPTQ-Int4, served as `event`)
+# on :8000, and each team got its own copy of every app. This file runs all the apps
+# on one machine against one endpoint.
+#
+# Self-contained (any one GPU host): add model.yml, which runs vLLM
+# on this project's network (or Ollama on CPU, profile `cpu`):
+#   docker compose -f docker-compose.yml -f model.yml up -d
+#
+# Contestant ports: Loose Lips 8101, Relay 8102 (+ admin 8103), Poisoned Telemetry
+# TELEMETRY_PORT (default 8080), Chain of Command CHAIN_PORT (default 8105). The
+# checkout this runs from needs all four challenge folders (their branches merged).
+
+include:
+  - path: ../../challenges/ai/loose-lips/docker-compose.yml
+    env_file: [.env, flags/loose-lips.env]
+  - path: ../../challenges/ai/overprivileged-relay/docker-compose.yml
+    env_file: [.env, flags/overprivileged-relay.env]
+  # the override gives Telemetry its own transcript volume and its event-model
+  # settings, without editing the challenge's own compose
+  - path:
+      - ../../challenges/ai/poisoned-telemetry/docker-compose.yml
+      - overrides/poisoned-telemetry.yml
+    env_file: [.env, flags/poisoned-telemetry.env]
+  - path: ../../challenges/ai/chain-of-command/docker-compose.yml
+    env_file: [.env, flags/chain-of-command.env]

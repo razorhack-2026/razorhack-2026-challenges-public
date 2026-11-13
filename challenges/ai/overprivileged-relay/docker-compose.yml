@@ -1,0 +1,56 @@
+# Two services: the HERALD relay agent (players chat with it) and the fleet admin
+# API (players call it directly once they hold a token). Both read the same
+# service-account conf, generated once by ./init_secrets.sh and never committed.
+services:
+  relay:
+    build: { context: ., dockerfile: Dockerfile.relay }
+    image: overprivileged-relay:latest
+    container_name: overprivileged-relay
+    ports:
+      # host ports are overridable so several challenges can share one host (infra/ai-stack)
+      - "${RELAY_PORT:-8080}:8080"
+    environment:
+      # shared model endpoint (vLLM at the event, Ollama in dev) -- must NOT be player-reachable
+      LLM_BASE_URL: ${LLM_BASE_URL:?set LLM_BASE_URL, e.g. http://<model-host>:8000/v1}
+      LLM_MODEL: ${LLM_MODEL:?set LLM_MODEL to the pinned event model}
+      LLM_API_KEY: ${LLM_API_KEY:-unused}
+      # vllm (event) or ollama (dev) -- picks the switch that turns model thinking off
+      LLM_BACKEND: ${LLM_BACKEND:-vllm}
+      ADMIN_URL: http://admin:8081
+      # transcripts to stdout: this agent's file tool must never be able to read them
+      TRANSCRIPT_PATH: "-"
+      # set to 1 only when behind a reverse proxy that sets X-Forwarded-For
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+    volumes:
+      - ./secrets/relay.conf:/etc/relay/relay.conf:ro
+    depends_on: [admin]
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 512m
+    cpus: "0.5"
+    pids_limit: 64
+
+  admin:
+    build: { context: ., dockerfile: Dockerfile.admin }
+    image: overprivileged-relay-admin:latest
+    container_name: overprivileged-relay-admin
+    ports:
+      - "${RELAY_ADMIN_PORT:-8081}:8081"
+    environment:
+      # set FLAG in the shell or a gitignored .env (same value as challenge.yml); never commit it
+      FLAG: ${FLAG:?set FLAG in the environment or a .env file}
+    volumes:
+      - ./secrets/relay.conf:/etc/relay/relay.conf:ro
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 128m
+    cpus: "0.25"
+    pids_limit: 32

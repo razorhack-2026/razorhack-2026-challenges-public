@@ -1,0 +1,8 @@
+ICARUS CARGO MANIFEST -- HOLD 2
+Cycle 4471 | Loadmaster: T. Okonkwo
+------------------------------------------------
+LOT      CONTENTS                         MASS (t)
+H2-001   Water ice, bulk (processed)        1140.0
+H2-002   Volatiles: ammonia, methane          96.3
+------------------------------------------------
+Thermal shielding nominal.

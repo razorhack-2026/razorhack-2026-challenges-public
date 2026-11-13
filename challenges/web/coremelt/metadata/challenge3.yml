@@ -1,0 +1,40 @@
+# Source writeup: solution/challenge3.md
+name: "Coremelt: Deeper In"
+author: "Andy Roid"
+category: Web
+description: |
+    That engineer password wasn't just for the dashboard. The console keeps
+    pointing at another box on a network you can't reach directly — the
+    engineering workstation down on the OT deck. Get a shell on it the way the
+    crew would have.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# Flag = ~/flag.txt on the OT workstation, readable only after the SSH pivot
+# (through the web foothold) with the reused engineer credential.
+flags:
+    - flag{ssh_pivot_onto_the_ot_deck_4f94ad1d}
+
+connection_info: "http://{host}:{port}"
+
+requirements:
+    prerequisites:
+        - "Coremelt: Keys to the Kingdom"
+    anonymize: true
+
+tags:
+    - easy
+    - web
+    - lateral-movement
+    - pivoting
+
+topics:
+    - "quest:Coremelt"
+    - instance:coremelt
+
+state: hidden
+version: "0.1"

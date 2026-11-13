@@ -1,0 +1,42 @@
+name: "Silent Directive"
+author: "Andy Roid"
+category: ICS
+description: |
+    The extraction-control segment aboard ICARUS was never as quiet as its
+    operators thought. Dr. Rootkit slipped a "field-bus confidentiality shim"
+    between the engineering workstation and the extraction PLC — the value field of every setpoint write (S7comm Write Var) is re-encoded so a passive tap sees only ciphertext, while
+    the PLC (which shares his key) decodes transparently.
+
+    Recovered from that segment: a capture of the S7comm Write Var traffic
+    (values are the shim's ciphertext), the shim itself (interceptor.py — the
+    16-byte director key it loaded at runtime is NOT in this copy), and the
+    engineering console's audit of the setpoints the crew believed they pushed.
+
+    Every write on the bus lines up with a console entry — except one. Recover
+    what Dr. Rootkit actually told the extraction array to do.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{s7comm_write_var_is_a_trust_boundary}
+
+files:
+    - dist/extraction_bus.pcap
+    - dist/interceptor.py
+    - dist/workstation_console.log
+
+tags:
+    - medium
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:3:The Chaos"
+
+state: hidden
+version: "0.1"

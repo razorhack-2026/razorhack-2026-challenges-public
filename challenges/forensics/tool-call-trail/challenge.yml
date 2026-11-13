@@ -1,0 +1,43 @@
+name: "Tool Call Trail"
+author: "Andy Roid"
+category: Forensics
+description: |
+    Our listening post intercepted a fragment of the enemy mining ship ICARUS's
+    internal comms -- hundreds of routine "mining" sessions between its onboard
+    subsystems. Somewhere in the noise it stopped mining rock and locked onto
+    something it should have left alone. Find out what it was really hunting.
+
+    Attachment: `intercept.pcap`
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{t4rg3t3d_h4rv3st1ng}
+
+files:
+    - dist/intercept.pcap
+
+hints:
+    - { content: "Every request carries an X-Session-Id. Group the traffic into sessions first -- there are hundreds of them.", cost: 50 }
+    - { content: "Most sessions mine power sources; some scan our registered fleet craft (they have a transponder) and discard them. One registered craft was NOT discarded.", cost: 100 }
+    - { content: "That session's comms.report_home carries a sealed cargo manifest, like every mined session, and each report states how it's sealed. For a registered craft, the registry id is its transponder -- from catalog.lookup.", cost: 150 }
+
+# Agentic-AI DFIR chain, #1 of 5 (the chain head -- no requirements).
+
+tags:
+    - medium
+    - pcap
+    - network
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:1:The Prologue"
+
+state: hidden
+version: "0.1"

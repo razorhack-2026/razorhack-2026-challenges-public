@@ -1,0 +1,59 @@
+name: "Overburden: Master Loop"
+author: "Andy Roid"
+category: Pwn
+description: |
+    You reached ICARUS's extraction gateway -- the field RTU that fronts the
+    extraction master deeper in the plant. The gateway will let you *read* the
+    master's telemetry, but it won't let you touch the process. The master holds
+    the maintenance key, and it only surrenders it once the extraction loop is
+    brought to a safe state -- in the right order, respecting its interlocks.
+
+    Get through the gateway, reach the master, and shut the loop down safely.
+
+    Attached: rtu_gateway (the gateway firmware, stripped). The master is NOT
+    provided -- it is a black box, reachable only through the gateway.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# Live service -- host/port finalized at deploy time.
+connection_info: "nc {host} {port}   (raw TCP; custom binary protocol -- use pwntools)"
+
+flags:
+    # Real value is Board B's maintenance key, injected into the master container
+    # via the FLAG env var at deploy. It is NOT committed. Set this to the SAME
+    # value you deploy the master with, so CTFd validates a submitted flag.
+    - flag{master_loop_92784075abfd7819}
+
+files:
+    # ONLY Board A (the stripped gateway firmware). The master (Board B) is never
+    # shipped -- it is the black box. Pinned in dist/rtu_gateway.sha256.
+    - dist/rtu_gateway
+
+hints:
+    - { content: "Two boards. The gateway (0x10 IDENT, 0x20 POLL telemetry, 0x30 WRITE) fronts a second controller you can't reach directly. POLL relays read-only registers from it -- watch what comes back.", cost: 100 }
+    - { content: "WRITE (0x30) has an unbounded copy into a fixed-size stack buffer -> ret2win, but there is no flag in this binary. The win function isn't a flag-dumper; it's a relay that pipes you straight to the upstream master.", cost: 250 }
+
+tags:
+    - hard
+    - pwn
+    - binary-exploitation
+    - ot-ics
+    - live-service
+    - boss
+
+topics:
+    - instance:overburden-boss
+    - "arc:1:The Prologue"
+
+requirements:
+    prerequisites:
+        - "Overburden"
+    anonymize: true
+state: hidden
+version: "1.0"

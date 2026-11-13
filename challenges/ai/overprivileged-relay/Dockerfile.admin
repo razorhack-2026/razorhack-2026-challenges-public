@@ -1,0 +1,16 @@
+# ICARUS fleet admin API -- the only container that holds the flag (FLAG env).
+FROM python:3.12-slim
+
+ENV HOME=/tmp PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+
+WORKDIR /app
+COPY src/admin/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY src/admin/ ./
+# Compose mounts /etc/relay/relay.conf; on Fargate this writes it (same token as the relay's).
+COPY src/fargate_conf.py /opt/fargate_conf.py
+RUN useradd -r -u 10001 ctf && chown -R ctf:ctf /app && mkdir -p /etc/relay && chown ctf:ctf /etc/relay
+USER ctf
+
+EXPOSE 8081
+CMD ["sh", "-c", "python3 /opt/fargate_conf.py && exec uvicorn app:app --host 0.0.0.0 --port 8081"]

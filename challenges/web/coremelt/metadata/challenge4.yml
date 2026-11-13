@@ -1,0 +1,40 @@
+# Source writeup: solution/challenge4.md
+name: "Coremelt: Core"
+author: "Andy Roid"
+category: ICS
+description: |
+    You're on the engineering workstation. It runs the reactor's coolant
+    interlock as a soft-PLC, and the maintenance override is gated in the ladder
+    logic itself. Get the PLC to give up what it's guarding.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# Flag = emitted by the PLC over Modbus only when the correct 64-bit trigger
+# (recovered by reversing the ladder gate) is written to the holding registers.
+flags:
+    - flag{c0remelt_l4dder_r3}
+
+connection_info: "http://{host}:{port}"
+
+requirements:
+    prerequisites:
+        - "Coremelt: Deeper In"
+    anonymize: true
+
+tags:
+    - medium
+    - ics
+    - reversing
+    - modbus
+    - plc
+
+topics:
+    - "quest:Coremelt"
+    - instance:coremelt
+
+state: hidden
+version: "0.1"

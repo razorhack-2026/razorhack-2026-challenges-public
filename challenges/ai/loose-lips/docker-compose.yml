@@ -1,0 +1,45 @@
+services:
+  loose-lips:
+    build: .
+    image: loose-lips:latest
+    container_name: loose-lips
+    ports:
+      # host port is overridable so several challenges can share one host (infra/ai-stack)
+      - "${LOOSE_LIPS_PORT:-8080}:8080"
+    environment:
+      # set FLAG in the shell or a gitignored .env (same value as challenge.yml); never commit it
+      FLAG: ${FLAG:?set FLAG to the challenge.yml value -- see solution/README.md, Running it}
+      # model server (vLLM at the event, Ollama locally) -- must NOT be player-reachable
+      LLM_BASE_URL: ${LLM_BASE_URL:?set LLM_BASE_URL, e.g. http://host.docker.internal:11434/v1 for a local Ollama -- see solution/README.md, Running it}
+      LLM_MODEL: ${LLM_MODEL:?set LLM_MODEL to the name your server serves, e.g. qwen3:8b on Ollama}
+      LLM_API_KEY: ${LLM_API_KEY:-unused}
+      # vllm (GPU host, default) or ollama (CPU event host, or local) -- the server type, which picks the thinking switch
+      LLM_BACKEND: ${LLM_BACKEND:-vllm}
+      # DIAG thinks before answering, so character rewrites (reversal, spelling)
+      # come out right. Thinking needs the bigger token budget below.
+      LLM_THINKING: "on"
+      # a ceiling, not a target
+      LLM_MAX_TOKENS: "4096"
+      LLM_TIMEOUT: "120"
+      TRANSCRIPT_PATH: /data/transcripts.jsonl
+      # set to 1 only when behind a reverse proxy that sets X-Forwarded-For
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+    volumes:
+      # named volume: it takes the image's /data ownership (uid 10001). A ./data bind mount
+      # is created root-owned on Linux hosts and the app can't write its transcript.
+      - transcripts:/data
+    # lets a local Ollama be reached as host.docker.internal on Linux too (Docker Desktop does it already)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 512m
+    cpus: "0.5"
+    pids_limit: 64
+
+volumes:
+  transcripts:

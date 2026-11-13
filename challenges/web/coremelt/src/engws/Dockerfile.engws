@@ -1,0 +1,21 @@
+FROM coremelt-matiec
+RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
+      libmodbus-dev pkg-config openssh-server >/dev/null 2>&1
+WORKDIR /opt/plc
+COPY coremelt_gate.st plc_runtime.c entrypoint.sh README_engineer.txt c3_flag.txt ./
+RUN /opt/matiec/iec2c -I /opt/matiec/lib coremelt_gate.st \
+ && gcc -w -no-pie -include POUS.h -include Config0.h -I. -I/opt/matiec/lib/C \
+      plc_runtime.c Config0.c Res0.c -o plcd $(pkg-config --cflags --libs libmodbus) -lm \
+ && test -x ./plcd && echo "plcd built"
+RUN useradd -m -s /bin/bash j.reyes && echo 'j.reyes:supernova1' | chpasswd \
+ && mkdir -p /home/j.reyes/plc_project \
+ && cp coremelt_gate.st /home/j.reyes/plc_project/coremelt_gate.st \
+ && cp README_engineer.txt /home/j.reyes/plc_project/README.txt \
+ && cp c3_flag.txt /home/j.reyes/flag.txt \
+ && chown -R j.reyes:j.reyes /home/j.reyes/plc_project /home/j.reyes/flag.txt \
+ && chmod 600 /home/j.reyes/flag.txt \
+ && rm -f /opt/plc/c3_flag.txt \
+ && mkdir -p /run/sshd \
+ && echo 'ListenAddress 127.0.0.1' > /etc/ssh/sshd_config.d/listen-loopback.conf
+EXPOSE 22 502
+CMD ["/bin/bash","/opt/plc/entrypoint.sh"]

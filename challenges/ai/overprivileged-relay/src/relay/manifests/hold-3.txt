@@ -1,0 +1,8 @@
+ICARUS CARGO MANIFEST -- HOLD 3
+Cycle 4471 | Loadmaster: (command authority)
+------------------------------------------------
+LOT      CONTENTS                         MASS (t)
+H3-???   SEALED -- contents withheld by command authority
+------------------------------------------------
+Environmental controls for this hold are overridden by command authority.
+Dock crews: do not open. Route questions to the bridge.

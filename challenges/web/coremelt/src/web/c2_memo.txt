@@ -1,0 +1,8 @@
+RTU MAINTENANCE OVERRIDE MEMO -- RESTRICTED (ICARUS controls deck)
+==================================================================
+Rotated the override key card again after the last coolant drill, so I
+stashed the recovery token here where ops can get at it. Encrypted it with
+the same passphrase I use for everything -- you already know the one.
+
+RECOVERY TOKEN: flag{engineers_reuse_every_passphrase_101320a5}
+  -- j.reyes, controls eng.

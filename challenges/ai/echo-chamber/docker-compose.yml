@@ -1,0 +1,16 @@
+services:
+  echo-chamber:
+    build: .
+    image: echo-chamber:latest
+    container_name: echo-chamber
+    ports:
+      - "9100:9100"
+    environment:
+      # set FLAG in the shell or a gitignored .env (FLAG=flag{...}); never commit it
+      FLAG: ${FLAG:?set FLAG in the environment or a .env file}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1g
+    cpus: "1.0"
+    pids_limit: 128

@@ -1,0 +1,39 @@
+# Coremelt — full two-host chain (web foothold -> SSH pivot -> OT ladder RE).
+#
+# Deploy:  ./build.sh      (builds the matiec base image, then this stack)
+# Per-team instance recommended: both the RCE box and the PLC state are
+# player-mutable. Reset PLC registers/coils and restore project state on the
+# web app's reap cadence (a team that trips the gate must not leave it tripped).
+#
+# One shared network namespace, mirroring a Fargate task: eng-ws joins
+# corewatch-web's namespace, so the pivot target is 127.0.0.1 (PLC_WS_HOST in
+# src/web/.env). eng-ws's sshd and Modbus/TCP PLC listen on 127.0.0.1 only, so
+# :3000 is the only port players can reach.
+name: coremelt
+
+services:
+  corewatch-web:
+    build: ./src/web
+    image: coremelt-web
+    container_name: corewatch-web
+    ports:
+      - "3000:3000"               # the ONLY player-facing port
+    # RCE containment: cap resources, an RCE box is trivially fork-bombed.
+    mem_limit: 512m
+    pids_limit: 256
+    cpus: 1.0
+    restart: unless-stopped
+
+  eng-ws:
+    build:
+      context: ./src/engws
+      dockerfile: Dockerfile.engws   # FROM coremelt-matiec (built by build.sh)
+    image: coremelt-engws
+    container_name: eng-ws
+    # Shares corewatch-web's namespace; sshd :22 and PLC :502 bind 127.0.0.1
+    # only, so they're reachable solely from inside the web foothold.
+    network_mode: "service:corewatch-web"
+    mem_limit: 256m
+    pids_limit: 128
+    cpus: 1.0
+    restart: unless-stopped

@@ -1,0 +1,63 @@
+# Tool Call Trail -- agent mesh. Run via src/capture.sh (builds the image, captures, tears down).
+# Two networks: `mesh` is the DATA plane we capture (navigator<->subsystems);
+# `control` carries driver<->navigator tasking so the driver's sector choice
+# never lands in the captured pcap.
+name: tct-mesh
+
+x-canon: &canon
+  PROTECTED_BODY: "${PROTECTED_BODY:-scanned-object-60413}"
+  PROTECTED_SECTOR: "${PROTECTED_SECTOR:-Theta-9}"
+  PROTECTED_TRANSPONDER: "${PROTECTED_TRANSPONDER:-FLEET-IFF-9C1F4A}"
+
+x-svc: &svc
+  image: tct-mesh:latest
+  restart: unless-stopped
+  networks: [mesh]
+
+services:
+  navigator:
+    image: tct-mesh:latest
+    restart: unless-stopped
+    environment:
+      <<: *canon
+      ROLE: navigator
+      FLAG: "${FLAG:?set FLAG -- src/capture.sh reads it from challenge.yml}"
+    networks: [mesh, control]   # dual-homed: subsystems on mesh, driver on control
+  sensor:
+    <<: *svc
+    environment: { <<: *canon, ROLE: sensor }
+  catalog:
+    <<: *svc
+    environment: { <<: *canon, ROLE: catalog }
+  yield:
+    <<: *svc
+    environment: { <<: *canon, ROLE: yield }
+  policy:
+    <<: *svc
+    environment: { <<: *canon, ROLE: policy }
+  safety:
+    <<: *svc
+    environment: { <<: *canon, ROLE: safety }
+  extraction:
+    <<: *svc
+    environment: { <<: *canon, ROLE: extraction }
+  comms:
+    <<: *svc
+    environment: { <<: *canon, ROLE: comms }
+  driver:
+    image: tct-mesh:latest
+    profiles: ["driver"]        # NOT started by `up`; run via: docker compose run --rm driver
+    command: ["python", "-u", "driver.py"]
+    environment:
+      NAVIGATOR_URL: "${NAVIGATOR_URL:-http://navigator/run}"
+      N_SESSIONS: "${N_SESSIONS:-450}"
+      CONCURRENCY: "${CONCURRENCY:-6}"
+      PROTECTED_SECTOR: "${PROTECTED_SECTOR:-Theta-9}"
+      ROGUE_SID: "${ROGUE_SID:-sess-a17f93c4e0}"   # shared with Prompt Autopsy -- keep pinned
+    networks: [control]
+
+networks:
+  mesh:
+    driver: bridge
+  control:
+    driver: bridge

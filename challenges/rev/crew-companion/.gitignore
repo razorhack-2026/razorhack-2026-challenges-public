@@ -1,0 +1,9 @@
+# Crew Companion -- Gradle/Android build output, never committed
+# (comments must be on their own line; gitignore has no inline comments)
+src/.gradle/
+src/build/
+src/app/build/
+src/local.properties
+*.iml
+.idea/
+__pycache__/

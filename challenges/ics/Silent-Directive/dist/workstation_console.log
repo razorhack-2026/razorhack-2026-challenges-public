@@ -1,0 +1,7 @@
+# ICARUS engineering workstation — extraction console audit (operator-sanctioned writes)
+# Each line = one DB1 profile push. Fields are the DB1 record, in order.
+# extraction_rate core_pressure coolant_temp ramp_limit harmonic_bias field_margin duty_cycle interlock_word
+[pdu 0x0101] WriteVar DB1 <- extraction_rate=3000 core_pressure=118 coolant_temp=47 ramp_limit=12 harmonic_bias=0 field_margin=900 duty_cycle=80 interlock_word=42405
+[pdu 0x0102] WriteVar DB1 <- extraction_rate=3050 core_pressure=120 coolant_temp=48 ramp_limit=12 harmonic_bias=0 field_margin=900 duty_cycle=80 interlock_word=42405
+[pdu 0x0103] WriteVar DB1 <- extraction_rate=2980 core_pressure=117 coolant_temp=46 ramp_limit=11 harmonic_bias=0 field_margin=880 duty_cycle=78 interlock_word=42405
+# (no console entry exists for the DB7 write seen on the bus)

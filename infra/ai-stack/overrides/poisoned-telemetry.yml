@@ -1,0 +1,20 @@
+# Stack-only override for Poisoned Telemetry (merged over the challenge's own
+# docker-compose.yml by the include in ../docker-compose.yml).
+#
+# Its compose names its transcript volume `transcripts`, the same as Loose Lips,
+# so inside one project both would write the same /data/transcripts.jsonl.
+# Remount /data on a volume of its own. The challenge's compose is untouched.
+#
+# Event model settings: on Qwen3-30B-A3B, WATCHKEEPER only calls its tools with
+# thinking on (with thinking off it narrates a forward instead, 0/6), and thinking
+# needs more than the challenge's default 400 tokens (2026-11-05, linux-bld bench).
+services:
+  poisoned-telemetry:
+    environment:
+      LLM_THINKING: "on"
+      LLM_MAX_TOKENS: "2048"
+    volumes:
+      - telemetry-transcripts:/data
+
+volumes:
+  telemetry-transcripts:

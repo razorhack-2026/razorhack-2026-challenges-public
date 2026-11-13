@@ -1,0 +1,54 @@
+name: "Overburden"
+author: "Andy Roid"
+category: Pwn
+description: |
+    ICARUS's extraction plant still has a field controller answering on the
+    wire, and its firmware (fw 1.1.0) predates anyone caring about security --
+    it trusts whatever length you tell it. But the maintenance interface wants a
+    session key first. Talk to it, reverse the firmware, and make the RTU run the
+    one routine it should never let you reach: the handler that coughs up its key.
+
+    Note: the firmware file alone won't get you there -- the RTU only surrenders
+    what it hands you *on the wire*. You have to work the live device.
+
+    Attached: rtu_server (the firmware image, stripped).
+    Service: raw TCP, custom binary protocol -- talk to it to learn the frames.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Live service -- host/port finalized at deploy time.
+connection_info: "nc {host} {port}"
+
+flags:
+    # The flag is injected at DEPLOY via the FLAG env var (the entrypoint writes
+    # /app/flag.txt); it is NOT committed. Set this to the SAME value you deploy
+    # the service with, so CTFd validates a submitted flag.
+    - flag{overburden_rtu_b23574c99f0d493e}
+
+files:
+    - dist/rtu_server
+
+hints:
+    - { content: "Custom protocol, not Modbus. Frames are: ASCII 'RP' | 1-byte command | 2-byte big-endian length | payload. IDENT (0x10) returns a banner AND a per-connection SESSION token. WRITE (0x30) is the vulnerable path, but it answers 'locked' until you authenticate.", cost: 100 }
+    - { content: "There's an UNLOCK opcode (0x40). Reverse handle_unlock: it arms WRITE when you send (SESSION_token XOR a constant key baked into the firmware). The token is fresh per connection, so this only works live -- you can't precompute it from the file.", cost: 200 }
+    - { content: "Once unlocked it's a straight ret2win. WRITE copies (length-2) bytes into a 64-byte stack buffer; the saved return address is 88 bytes past the buffer (buf at rbp-0x50). The binary is stripped -- the win function you point the return address at is the one that opens the flag file. No canary, no PIE.", cost: 300 }
+
+tags:
+    - hard
+    - pwn
+    - binary-exploitation
+    - ot-ics
+    - live-service
+
+topics:
+    - "arc:1:The Prologue"
+    - instance:overburden
+
+state: hidden
+version: "0.1"

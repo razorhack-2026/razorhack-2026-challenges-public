@@ -1,0 +1,36 @@
+name: "Crew Companion"
+author: "Andy Roid"
+category: Reverse Engineering
+description: |
+    Every crew member aboard the KOT carries the Crew Companion app: shift
+    rota, deck map, door codes. Maintenance flagged that this build checks
+    door-code access against something baked into the app itself instead of
+    asking the ship.
+
+    Pull the app apart and find out what the Door Codes panel is hiding.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{k0t_d00r_c0d3s_l1v3_1n_th3_4pp_169d}
+
+files:
+    - dist/crew-companion.apk
+
+tags:
+    - easy
+    - rev
+    - android
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"

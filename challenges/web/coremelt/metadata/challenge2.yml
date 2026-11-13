@@ -1,0 +1,39 @@
+# Source writeup: solution/challenge2.md
+name: "Coremelt: Keys to the Kingdom"
+author: "Andy Roid"
+category: Web
+description: |
+    You're on the CoreWatch console. The reactor crew left more than sensor logs
+    behind — one of the engineers stashed something and locked it with a password
+    they clearly reuse everywhere. Prove it.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# Flag = the engineer memo, recovered ONLY by cracking the one crackable hash
+# and decrypting the openssl-salted blob in the looted DB with it.
+flags:
+    - flag{engineers_reuse_every_passphrase_101320a5}
+
+connection_info: "http://{host}:{port}"
+
+requirements:
+    prerequisites:
+        - "Coremelt: Foothold"
+    anonymize: true
+
+tags:
+    - easy
+    - web
+    - crypto
+    - password-cracking
+
+topics:
+    - "quest:Coremelt"
+    - instance:coremelt
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,11 @@
+# keep the build context lean and secrets out of the image
+.venv/
+data/
+**/__pycache__/
+**/*.pyc
+*.log
+flag.txt
+.env
+.git/
+solution/
+dist/

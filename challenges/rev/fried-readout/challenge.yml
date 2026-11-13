@@ -1,0 +1,43 @@
+name: "Fried Readout"
+author: "Andy Roid"
+category: Reverse Engineering
+description: |
+    The swarm's Harvester is coming straight for us, screened by a ring of
+    escorts. PD-1 can take anything it throws, but in sixty seconds the
+    Harvester hits the hull, and that's the end of the ship.
+
+    Someone fried the fire-control sensor feed. The Harvester's integrity
+    readout is a dead bar with no numbers on it, and nothing we fire seems to
+    move it. Bring down the Harvester and every escort and the command-link key
+    reassembles. Fire control is still yours: override whatever you need to.
+
+    Run `fried_readout` on your Kali box (it needs an X display). The game runs
+    locally; nothing to connect to.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{s3ns0r_f33d_fr13d_numb3r_st1ll_th3r3}
+
+files:
+    - dist/fried_readout
+    - dist/SHA256SUMS
+
+hints:
+    - { content: "You can't read the number. You can still tell which way it moved after you hit the Harvester, and that it didn't move when you didn't.", cost: 25 }
+
+tags:
+    - easy
+    - reverse-engineering
+    - offline
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:3:The Chaos"
+
+state: hidden
+version: "0.1"

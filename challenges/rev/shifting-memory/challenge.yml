@@ -1,0 +1,45 @@
+name: "Shifting Memory"
+author: "Andy Roid"
+category: Reverse Engineering
+description: |
+    The saboteur is still in PD-1's fire control, and now its memory banks
+    won't sit still. Every few seconds the fire-control software packs the
+    drone's state up and moves it somewhere new, and on the way it trims the
+    hull back to regulation. Whatever you fix stays fixed for a moment, and
+    then it's somewhere else.
+
+    Eighty drones are inbound in curtains you can't dodge. Every drone you
+    shoot down drops a fragment of the swarm's command-link key; bring down
+    all eighty and the key reassembles. Five hull points will not get you
+    there. Fire control is your console: it's your ship, so override whatever
+    you need to.
+
+    Run `shifting_memory` on your Kali box (it needs an X display). The game
+    runs locally; nothing to connect to.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{p01nt3r_ch4s3d_thr0ugh_th3_sh1ft}
+
+files:
+    - dist/shifting_memory
+    - dist/SHA256SUMS
+
+hints:
+    - { content: "The hull moves every time the bank number changes. Something in the program always knows where it went.", cost: 25 }
+
+topics:
+    - "arc:3:The Chaos"
+
+tags:
+    - medium
+    - reverse-engineering
+    - offline
+
+state: hidden
+version: "0.1"

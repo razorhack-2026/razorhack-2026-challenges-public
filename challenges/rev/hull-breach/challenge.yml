@@ -1,0 +1,44 @@
+name: "Hull Breach"
+author: "Andy Roid"
+category: Reverse Engineering
+description: |
+    The swarm hit us before PD-1 even cleared the launch rail. Fire control
+    says the point-defense drone's hull integrity was drained to 3 while it sat
+    in the bay -- someone got into its software first. Eighty hostile drones
+    are inbound, and they fly in curtains you can't dodge.
+
+    Every drone you shoot down drops a fragment of the swarm's command-link
+    key. Bring down all eighty and the key reassembles. Three hull points will
+    not get you there. Fire control is your console now: it's your ship, so
+    override whatever you need to.
+
+    Run `hull_breach` on your Kali box (it needs an X display). The game runs
+    locally; nothing to connect to.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{d0nt_tru5t_th3_hull_g4ug3}
+
+files:
+    - dist/hull_breach
+    - dist/SHA256SUMS
+
+hints:
+    - { content: "The hull gauge isn't a law of physics. It's just a number the game keeps somewhere while it runs.", cost: 25 }
+
+tags:
+    - easy
+    - reverse-engineering
+    - offline
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:3:The Chaos"
+
+state: hidden
+version: "0.1"

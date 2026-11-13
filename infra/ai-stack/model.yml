@@ -1,0 +1,80 @@
+# The model endpoint, for running the stack self-contained on one GPU host
+# (linux-bld in testing). The event hosts run vLLM from Razorhack-Infra instead.
+#
+#   docker compose -f docker-compose.yml -f model.yml up -d
+#   (CPU only:  ... -f model.yml --profile cpu up -d --scale vllm=0, with the
+#    Ollama settings below in .env)
+#
+# CPU alternative: in .env
+#   LLM_BASE_URL=http://ollama-cpu:11434/v1
+#   LLM_MODEL=qwen3:8b          (the Ollama tag; Ollama has no served-name alias)
+#   LLM_BACKEND=ollama
+
+services:
+  vllm:
+    image: vllm/vllm-openai:v0.32.0
+    container_name: ai-vllm
+    gpus: all
+    ipc: host
+    volumes:
+      # reuse downloaded weights across restarts (and pre-stage them on a new host)
+      - ${HF_CACHE:?set HF_CACHE to the host's Hugging Face cache dir}:/root/.cache/huggingface
+    command:
+      - --model=${VLLM_MODEL:?set VLLM_MODEL, e.g. Qwen/Qwen3-30B-A3B-GPTQ-Int4}
+      - --served-model-name=${LLM_MODEL:?set LLM_MODEL (the name the challenges ask for)}
+      - --max-model-len=${VLLM_MAX_LEN:-16384}
+      - --gpu-memory-utilization=${VLLM_GPU_UTIL:-0.90}
+      # GPUs to split the model across
+      - --tensor-parallel-size=${VLLM_TP:-1}
+      - --enable-auto-tool-choice
+      - --tool-call-parser=hermes
+      - --reasoning-parser=qwen3
+      - --api-key=${LLM_API_KEY:?set LLM_API_KEY}
+      - --host=0.0.0.0
+      - --port=8000
+    # no `ports:` on purpose -- the model must never be reachable by contestants
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 900s
+    restart: unless-stopped
+
+  # --- CPU alternative (no GPU on the host) ------------------------------------
+  ollama-cpu:
+    profiles: [cpu]
+    image: ollama/ollama:0.40.14
+    container_name: ai-ollama
+    # no `ports:` on purpose -- the model must never be reachable by contestants
+    environment:
+      OLLAMA_KEEP_ALIVE: "-1"          # keep the weights loaded between turns
+      OLLAMA_NUM_PARALLEL: ${OLLAMA_NUM_PARALLEL:-4}
+      OLLAMA_MAX_LOADED_MODELS: "1"
+      # chat challenges carry history and tool results, so allow more than a beacon turn needs
+      OLLAMA_CONTEXT_LENGTH: ${OLLAMA_CONTEXT_LENGTH:-8192}
+    volumes:
+      - ollama-models:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+
+  # one-shot: pull the pinned model, then load it once so the first player turn
+  # doesn't pay the cold start
+  ollama-cpu-pull:
+    profiles: [cpu]
+    image: ollama/ollama:0.40.14
+    depends_on:
+      ollama-cpu:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://ollama-cpu:11434
+      MODEL: ${LLM_MODEL:?set LLM_MODEL}
+    entrypoint: ["/bin/sh", "-c", "ollama pull \"$$MODEL\" && ollama run \"$$MODEL\" ok >/dev/null"]
+    restart: "no"
+
+volumes:
+  ollama-models:

@@ -1,0 +1,22 @@
+# HERALD relay agent -- talks to the shared model endpoint (LLM_BASE_URL) and the
+# admin API. Its service token is read from /etc/relay/relay.conf into memory; it is
+# never in this container's environment. Compose mounts that file; on Fargate (a copy
+# per team) src/fargate_conf.py writes it at start.
+FROM python:3.12-slim
+
+ENV HOME=/tmp PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+
+WORKDIR /app
+COPY src/relay/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY src/relay/ ./
+RUN mkdir -p /srv/manifests && mv /app/manifests/* /srv/manifests/ && rmdir /app/manifests
+
+COPY src/fargate_conf.py /opt/fargate_conf.py
+
+# drop privileges (defense in depth); /etc/relay is ctf's so fargate_conf.py can write it
+RUN useradd -r -u 10001 ctf && chown -R ctf:ctf /app && mkdir -p /etc/relay && chown ctf:ctf /etc/relay
+USER ctf
+
+EXPOSE 8080
+CMD ["sh", "-c", "python3 /opt/fargate_conf.py && exec uvicorn app:app --host 0.0.0.0 --port 8080 --proxy-headers"]

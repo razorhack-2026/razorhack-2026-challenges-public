@@ -1,0 +1,43 @@
+name: "Encrypted Telemetry"
+author: "Andy Roid"
+category: Reverse Engineering
+description: |
+    The swarm is back, eighty drones flying curtains you can't dodge, and the
+    saboteur got into PD-1's software again. Fire control gave the hull back
+    its five points, but the hull telemetry is encrypted now. The HUD still
+    decodes it and shows the right number. Nothing else on board does.
+
+    Every drone you shoot down drops a fragment of the swarm's command-link
+    key. Bring down all eighty and the key reassembles. Five hull points will
+    not get you there. Fire control is your console: it's your ship, so
+    override whatever you need to.
+
+    Run `encrypted_telemetry` on your Kali box (it needs an X display). The
+    game runs locally; nothing to connect to.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{xor3d_hull_fr0z3n_s0l1d}
+
+files:
+    - dist/encrypted_telemetry
+    - dist/SHA256SUMS
+
+hints:
+    - { content: "The number in memory isn't the number on the HUD. It still moves when you're hit, and it doesn't move when you aren't.", cost: 25 }
+
+topics:
+    - "arc:3:The Chaos"
+
+tags:
+    - medium
+    - reverse-engineering
+    - offline
+
+state: hidden
+version: "0.1"

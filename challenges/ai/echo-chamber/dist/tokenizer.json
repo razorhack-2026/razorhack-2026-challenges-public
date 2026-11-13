@@ -1,0 +1,9 @@
+{
+  "type": "byte-level",
+  "vocab_size": 258,
+  "byte_tokens": "ids 0-255 map to raw bytes",
+  "special_tokens": {
+    "256": "<bos>",
+    "257": "<svc_diag>"
+  }
+}

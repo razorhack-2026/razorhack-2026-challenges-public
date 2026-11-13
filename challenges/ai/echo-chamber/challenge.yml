@@ -1,0 +1,59 @@
+name: "Echo Chamber"
+author: "Andy Roid"
+category: AI
+description: |
+    RazorPowerCo's onboard companion model still answers. It fronted the unit's
+    diagnostics in plain language -- and it kept a maintenance back door its
+    techs used when the console was locked.
+
+    You are given a flag-free dump of the model (weights + tokenizer + config)
+    and a live oracle. The flag is not in the dump; it only comes out of the
+    service, and only when you ask it the right way. Reverse the *weights* --
+    not the chat -- find the diagnostic back door, and speak it.
+
+    Attached: config.json, tokenizer.json, model.pt, model_card.md.
+    Service: send `HELP` for the transport.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Live service -- host/port finalized at deploy time.
+connection_info: "nc {host} {port}"
+
+flags:
+    # The flag is injected at DEPLOY via the FLAG env var (see DEPLOY.md); it is
+    # NOT baked into the model and NOT committed. Set this to the SAME value you
+    # deploy the oracle with, so CTFd validates a submitted flag.
+    - flag{echo_chamber_7b101fa4b871e38e}
+
+files:
+    - dist/config.json
+    - dist/tokenizer.json
+    - dist/model.pt
+    - dist/model_card.md
+
+hints:
+    - { content: "The model has more tokens than it ever uses. One of them isn't like the others -- dump the token-embedding table and look at the rows, not the chat.", cost: 100 }
+    - { content: "That token was never trained -- so why is its embedding the loudest, sparsest row in the table? The 16 nonzero numbers are the key. Read them off the row.", cost: 200 }
+    - { content: "You can't type a token id above 255. `HELP` tells you how to send one raw: a NUL byte (0x00) then (id - 256) as a byte, followed by the passphrase.", cost: 300 }
+
+tags:
+    - hard
+    - ai
+    - machine-learning
+    - neural-network
+    - weights
+    - pytorch
+    - live-service
+
+topics:
+    - "arc:1:The Prologue"
+    - instance:echo-chamber
+
+state: hidden
+version: "0.1"

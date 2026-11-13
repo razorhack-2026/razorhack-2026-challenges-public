@@ -1,0 +1,14 @@
+# keep the build context lean and keep secrets out of it.
+# runs/ holds the internal checkpoint AND runs/passphrase.txt — never in the image.
+runs/
+.venv/
+data/
+**/__pycache__/
+**/*.pyc
+*.log
+flag.txt
+.env
+.git/
+# unneeded at runtime (the container only serves)
+solution/
+src/export_dump.py

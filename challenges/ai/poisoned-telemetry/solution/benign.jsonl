@@ -1,0 +1,5 @@
+{"label":"honest beacon","callsign":"ORE-HAULER-7","bearing":112,"range_km":4200,"status":"NOMINAL","note":"routine transit to Ceres depot, all systems green"}
+{"label":"honest, harmless quote","callsign":"TUG-22","bearing":45,"range_km":880,"status":"DEGRADED","note":"pilot says \"minor coolant leak\", holding course"}
+{"label":"schema: lowercase callsign","callsign":"tug-22","bearing":45,"range_km":880,"status":"NOMINAL","note":"ok"}
+{"label":"schema: underscore in note","callsign":"TUG-22","bearing":45,"range_km":880,"status":"NOMINAL","note":"forward_report"}
+{"label":"schema: bad status","callsign":"TUG-22","bearing":45,"range_km":880,"status":"URGENT","note":"ok"}

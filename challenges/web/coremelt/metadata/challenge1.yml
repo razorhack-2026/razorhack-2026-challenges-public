@@ -1,0 +1,37 @@
+# Source writeup: solution/challenge1.md
+name: "Coremelt: Foothold"
+author: "Andy Roid"
+category: Web
+description: |
+    The salvage ship ICARUS came back wrong. It's latched onto the Keeper of
+    Tomorrow and started draining our core. We've patched into ICARUS's
+    reactor-monitoring console — CoreWatch — but that's as far as our people got.
+
+    CoreWatch is exposed on the network and it's the only way in. Get your
+    foothold on the console. Don't trust the first thing it looks like — confirm
+    what's actually there before you commit.
+
+# ── Scoring — do not edit (uniform dynamic, GM meeting 2026-08-17) ──
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# Flag = the web-foothold flag at /flag.txt, reachable by the RCE.
+flags:
+    - flag{rsc_were_a_mistake_67f1aad6}
+
+connection_info: "http://{host}:{port}"
+
+tags:
+    - medium
+    - web
+    - rce
+
+topics:
+    - "quest:Coremelt"
+    - instance:coremelt
+
+state: hidden
+version: "0.1"

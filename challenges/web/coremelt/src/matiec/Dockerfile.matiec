@@ -1,0 +1,6 @@
+FROM debian:13
+RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
+      git autoconf automake libtool flex bison g++ make >/dev/null 2>&1 \
+ && git clone --depth 1 https://github.com/thiagoralves/matiec.git /opt/matiec \
+ && cd /opt/matiec && autoreconf -i && ./configure >/dev/null && make -j2 >/dev/null
+WORKDIR /work

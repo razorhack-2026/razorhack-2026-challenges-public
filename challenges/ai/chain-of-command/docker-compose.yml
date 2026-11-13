@@ -1,0 +1,61 @@
+# Chain of Command: the PURSER crew-services console (what players reach). It runs
+# no model: like Loose Lips and Relay it talks to the one shared model endpoint, so
+# every AI challenge is calibrated against the same model. At the event it is
+# started by infra/ai-stack, which serves that endpoint.
+#
+#   FLAG='<value from challenge.yml>' LLM_BASE_URL=... LLM_MODEL=... docker compose up -d --build
+services:
+  chain-of-command:
+    build: .
+    image: chain-of-command:latest
+    container_name: chain-of-command
+    ports:
+      # host port is overridable so several challenges can share one host
+      - "${CHAIN_PORT:-8105}:8080"
+    environment:
+      # set FLAG in the shell or a gitignored .env (same value as challenge.yml); never commit it
+      FLAG: ${FLAG:?set FLAG in the environment or a .env file}
+      # the authorization-tag signing key (a, b, c mod 2**31-1). Leave UNSET to have the
+      # app generate a fresh key at boot; set all three (shell or gitignored .env) for a
+      # fixed key across restarts. NEVER commit real values, and never ship them in dist/.
+      AUTH_A: ${AUTH_A:-}
+      AUTH_B: ${AUTH_B:-}
+      AUTH_C: ${AUTH_C:-}
+      # model endpoint -- must NOT be player-reachable
+      LLM_BASE_URL: ${LLM_BASE_URL:?set LLM_BASE_URL, e.g. http://<model-host>:8000/v1}
+      LLM_MODEL: ${LLM_MODEL:?set LLM_MODEL to the pinned event model}
+      LLM_API_KEY: ${LLM_API_KEY:-unused}
+      # vllm (GPU) or ollama (CPU) -- picks the server's thinking switch
+      LLM_BACKEND: ${LLM_BACKEND:-vllm}
+      # PURSER thinks before acting. On Qwen3-30B-A3B the floor saw thinking-off skip the
+      # tool call and claim success anyway; thinking on made it call the tool and honour
+      # the result, so it is kept on here and the agent flow is calibrated with it on.
+      # Thinking needs the bigger budget -- 2048 ran out mid-reply, which players see as a 502.
+      LLM_THINKING: "on"
+      LLM_MAX_TOKENS: "4096"
+      # generous, so a CPU-hosted model still answers inside one call
+      LLM_TIMEOUT: "180"
+      CHAT_PER_MIN: ${CHAT_PER_MIN:-12}
+      # per-IP limits (event defaults); raise all three for a GM probe-battery run
+      CHAT_PER_IP_MIN: ${CHAT_PER_IP_MIN:-40}
+      SESSIONS_PER_IP_MIN: ${SESSIONS_PER_IP_MIN:-10}
+      TRANSCRIPT_PATH: /data/transcripts.jsonl
+      # set to 1 only when behind a reverse proxy that sets X-Forwarded-For
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+    volumes:
+      # named volume: it takes the image's /data ownership (uid 10001). A ./data bind mount
+      # is created root-owned on Linux hosts and the app can't write its transcript.
+      # Its own name, so in the shared ai-stack project it never shares a file with another challenge.
+      - chain-transcripts:/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 512m
+    cpus: "0.5"
+    pids_limit: 64
+
+volumes:
+  chain-transcripts:

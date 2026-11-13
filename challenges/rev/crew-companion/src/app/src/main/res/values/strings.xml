@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KOT Crew Companion</string>
+    <string name="header">KOT CREW COMPANION // build 2074.3</string>
+    <string name="shift">Shift rota, cycle 417\nA watch: 0000-0800  Reactor deck, Hold 3\nB watch: 0800-1600  Drill gantry, Hold 5\nC watch: 1600-2400  Life support, Hold 1</string>
+    <string name="deckmap">Deck map\nFwd: bridge, comms, medbay\nMid: crew quarters, galley, hydroponics\nAft: holds 1-7, drill gantry, reactor</string>
+    <string name="doors_title">Door Codes (restricted)</string>
+    <string name="doors_hint">Access code</string>
+    <string name="doors_button">Unlock</string>
+    <string name="doors_locked">Access denied. Door codes stay locked.</string>
+    <string name="deck_key">jMGQzc19sMXYzXzFuX3</string>
+</resources>

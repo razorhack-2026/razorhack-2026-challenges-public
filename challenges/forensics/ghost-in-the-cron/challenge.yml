@@ -1,0 +1,50 @@
+name: "Ghost in the Cron"
+author: "Andy Roid"
+category: Forensics
+description: |
+    The beacon told us where it dug in -- our own reactor controller -- and that
+    it's on its fourth skin. We imaged it while the crew holds ICARUS off. The
+    thing rewrites itself every cycle and burns the old copy behind it, but a
+    controller has a long memory. Reconstruct what it was, generation by
+    generation, and crack open what it's keeping in its cache.
+
+    Implant last seen at /opt/rpc/.navd/navd.py, generation 4.
+
+    Attachment: disk.img.gz
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{f0ur_sk1ns_0ne_gh0st_1n_th3_cr0n}
+
+files:
+    - dist/disk.img.gz
+
+hints:
+    - { content: "It's a raw ext4 image -- mount it read-only (`mount -o loop,ro`) or open it with The Sleuth Kit / Autopsy. Persistence gives you the entry point: read /etc/cron.d/. The implant is at /opt/rpc/.navd/navd.py (gen 4). One older copy survived in /var/backups. Where are the other two?", cost: 75 }
+    - { content: "The implant self-deletes its predecessor each cycle, so gens 1 and 2 are gone from the file tree -- but their blocks are still in unallocated space. Carve them: `grep -a -b '# navd gen 1' disk.img`, or photorec/bulk_extractor. You need all four: implant.gen was 4.", cost: 150 }
+    - { content: "Each generation embeds one key fragment, obfuscated a bit harder each cycle (plaintext -> char codes -> hex -> base64). Order the four by their GEN marker (the /var/log cron timeline confirms the order), then key = SHA-256(kf1||kf2||kf3||kf4). The cache (.cache/cache.enc) is AES-256-GCM: nonce is the first 12 bytes. Wrong order fails the auth tag.", cost: 250 }
+
+# Agentic-AI DFIR chain, #4 of 5. Enable once "Proof of Life" (#3) is in this
+# repo -- requirements are resolved by challenge name at import time.
+# requirements:
+#     - "Proof of Life"
+
+tags:
+    - medium
+    - disk-image
+    - ext4
+    - dfir
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"

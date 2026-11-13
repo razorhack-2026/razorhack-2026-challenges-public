@@ -1,0 +1,57 @@
+name: "Shadow Price: Dead Weight"
+author: "Andy Roid"
+category: ICS
+description: |
+    Life support is back, but the dispatch only reaches 87.5 % of what this
+    plant should deliver, and the shields are paying for the difference.
+    Somewhere in the model, a floor is holding power it has no business holding.
+
+    The auxiliary buses aren't in the mission spec. They're ship-internal loads
+    configured on the controller, and most of their floors are real: pull the
+    wrong one and something on the ship goes dark. The chief engineer can spare
+    the time to walk the decks and inspect exactly one bus:
+
+    > "Find me the floor that's costing us the most, and I'll go look at it."
+
+    Find it, relieve it, and apply the dispatch that gets the ship to full
+    efficiency.
+
+    Connect: `opc.tcp://<host>:4840/pmc7/`, the same live controller as Shadow
+    Price: Brownout. No new files; the `pmc7.py` helper from Brownout works here
+    too.
+
+    Part 2 of the Shadow Price chain. Requires: Shadow Price: Brownout.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# Returned by ApplyDispatch when the dispatch satisfies the true model and
+# reaches the true optimum (100 % efficiency). The server reads it from
+# FLAG_II; ../shadow-price-brownout/deploy.sh takes it from this file.
+flags:
+    - flag{th3_r1g_w4s_th3_m05t_3xp3n51v3_fl00r}
+
+# Live OPC UA service — hosted by ../shadow-price-brownout/docker-compose.yml.
+connection_info: "opc.tcp://{host}:{port}/pmc7/"
+
+requirements:
+    prerequisites:
+        - "Shadow Price: Brownout"
+    anonymize: true
+
+tags:
+    - easy
+    - ics
+    - opc-ua
+    - linear-programming
+
+topics:
+    - "quest:Shadow Price"
+    - instance:shadow-price
+
+state: hidden
+version: "0.1"

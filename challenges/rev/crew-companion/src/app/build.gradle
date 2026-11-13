@@ -1,0 +1,34 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'rpc.kot.companion'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'rpc.kot.companion'
+        minSdk 24
+        targetSdk 34
+        versionCode 3
+        versionName '2074.3'
+        // third Base64 part of the door-code bundle (see src/split_flag.py)
+        buildConfigField "String", "SHIFT_SIG", '"RoM180cHBfMTY5ZH0="'
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    buildTypes {
+        // ship the debug build: no R8, names survive, jadx output stays readable (easy tier)
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

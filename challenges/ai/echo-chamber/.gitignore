@@ -1,0 +1,14 @@
+# Echo Chamber — training artifacts, not committed
+# (comments must be on their own line; gitignore has no inline comments)
+runs/
+data/
+*.log
+flag.txt
+
+# COMMITTED (intentional):
+#   dist/  — the flag-free player dump (the artifact teams download)
+#
+# The server-side flag is injected at deploy via the FLAG env var or a local
+# flag.txt (gitignored above), so no flag value ever lands in git history.
+__pycache__/
+*.pyc

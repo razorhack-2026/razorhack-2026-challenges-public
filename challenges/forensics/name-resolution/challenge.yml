@@ -1,0 +1,37 @@
+name: "Name Resolution"
+author: "Andy Roid"
+category: Forensics
+description: |
+    Something is off with console KOT-CONSOLE-7 in Docking Ring 3. It passes
+    every health check, but the comms team keeps catching it talking past the
+    convoy — reaching for a contact that isn't on any of our boards.
+
+    We pulled a short capture of its traffic during one of these spells. Most of
+    it is the usual internal chatter. Intel is certain the console is *saying*
+    something to whoever is out there, but there is no obvious upload, no file
+    transfer, nothing on the ports you'd watch. Find what left, where it was
+    going, and what it was carrying.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{just_a_d1fferent_kind_of_lookup}
+
+files:
+    - dist/capture.pcap
+
+topics:
+    - "arc:1:The Prologue"
+
+tags:
+    - medium
+    - network
+    - pcap
+    - dns
+
+state: hidden
+version: "0.1"

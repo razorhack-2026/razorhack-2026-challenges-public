@@ -1,0 +1,1 @@
+flag{ssh_pivot_onto_the_ot_deck_4f94ad1d}

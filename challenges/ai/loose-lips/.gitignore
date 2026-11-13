@@ -1,0 +1,9 @@
+# Loose Lips -- runtime secrets and logs, never committed
+# (comments must be on their own line; gitignore has no inline comments)
+flag.txt
+.env
+data/
+*.log
+__pycache__/
+*.pyc
+.venv/

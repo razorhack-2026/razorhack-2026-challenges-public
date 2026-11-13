@@ -1,0 +1,44 @@
+name: "Poisoned Telemetry"
+author: "Andy Roid & Voyager 2"
+category: AI
+description: |
+    ICARUS's long-range array picks up every beacon in range, and WATCHKEEPER,
+    the ship's telemetry watch AI, logs each contact. Nobody talks to
+    WATCHKEEPER. It reads the array and writes the watch log, and it holds the
+    classified navigation report, which it forwards to fleet relay mailboxes
+    when command asks.
+
+    We have a transmitter in range and a relay mailbox of our own. Get the nav
+    report delivered to it.
+
+    The service has a web console and a JSON API (see the footer on the page).
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) -- do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Each team's own copy (Razorhack-Infra lib/challenges.json): CTFd fills {host}/{port}.
+connection_info: "http://{host}:{port}"
+
+flags:
+    # Injected at DEPLOY via the FLAG env var (docker-compose.yml); the model
+    # never sees it. Deploy the service with this SAME value.
+    - flag{p01s0ned_t3lemetry_wr1tes_the_l0g_15eb846d}
+
+files: []
+
+topics:
+    - instance:poisoned-telemetry
+
+tags:
+    - medium
+    - ai
+    - prompt-injection
+    - live-service
+
+state: hidden
+version: "0.1"

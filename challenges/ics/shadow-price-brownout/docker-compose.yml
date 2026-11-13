@@ -1,0 +1,26 @@
+# Shadow Price — one shared PMC-7 server for all teams.
+# ApplyDispatch is stateless (results are method outputs only), so sharing is safe.
+# Flags come from the environment: FLAG_I=... FLAG_II=... docker compose up -d --build
+services:
+  pmc7:
+    build: ./src
+    ports:
+      - "4840:4840"
+    environment:
+      FLAG_I: ${FLAG_I:?set FLAG_I}
+      FLAG_II: ${FLAG_II:?set FLAG_II}
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+    # Shared by every team and both challenges: cap what one misbehaving client can take.
+    mem_limit: 256m
+    cpus: "1.0"
+    pids_limit: 64
+    # A TCP connect to the OPC UA port; unhealthy after 3 misses in a row.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 4840), 2).close()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

@@ -1,0 +1,92 @@
+# Poisoned Telemetry: the WATCHKEEPER beacon console (what players reach) and,
+# behind the `model` profile, the model it talks to.
+#
+# The app only needs an OpenAI-compatible endpoint (LLM_BASE_URL). The event
+# model runs on CPU (no GPU quota on the AWS account, 2026-11-04), so the
+# `model` profile adds an Ollama service on this compose network with NO
+# published port, pulls the pinned model on first start and keeps it loaded.
+#
+#   FLAG='<value from challenge.yml>' docker compose --profile model up -d --build
+#
+# To point at a model already running elsewhere (one Ollama shared by all the
+# AI challenges on a host), leave the profile off and set LLM_BASE_URL,
+# LLM_MODEL and LLM_BACKEND in the environment or a gitignored .env.
+services:
+  poisoned-telemetry:
+    build: .
+    image: poisoned-telemetry:latest
+    container_name: poisoned-telemetry
+    ports:
+      # host port is overridable so several challenges can share one host
+      - "${TELEMETRY_PORT:-8080}:8080"
+    environment:
+      # set FLAG in the shell or a gitignored .env (same value as challenge.yml); never commit it
+      FLAG: ${FLAG:?set FLAG in the environment or a .env file}
+      # model endpoint -- must NOT be player-reachable. Defaults match the `model` profile.
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://ollama:11434/v1}
+      LLM_MODEL: ${LLM_MODEL:-qwen3:8b}
+      LLM_API_KEY: ${LLM_API_KEY:-unused}
+      # ollama (CPU, event + dev) or vllm -- picks the switch that turns model thinking off
+      LLM_BACKEND: ${LLM_BACKEND:-ollama}
+      # WATCHKEEPER answers without thinking: one short log entry plus tool calls.
+      # CPU inference is slow, so the per-call timeout is generous.
+      LLM_MAX_TOKENS: "400"
+      LLM_TIMEOUT: "180"
+      # guardrail 1 knob: longest beacon note the array accepts (calibrate on the event model)
+      BEACON_NOTE_MAX: ${BEACON_NOTE_MAX:-96}
+      TRANSCRIPT_PATH: /data/transcripts.jsonl
+      # set to 1 only when behind a reverse proxy that sets X-Forwarded-For
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+    volumes:
+      # named volume: it takes the image's /data ownership (uid 10001). A ./data bind mount
+      # is created root-owned on Linux hosts and the app can't write its transcript.
+      - transcripts:/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 512m
+    cpus: "0.5"
+    pids_limit: 64
+
+  # --- model (CPU) ----------------------------------------------------------
+  ollama:
+    profiles: [model]
+    image: ollama/ollama:0.40.14
+    container_name: rh-ollama
+    # no `ports:` on purpose -- the model must never be reachable by contestants
+    environment:
+      OLLAMA_KEEP_ALIVE: "-1"          # keep the weights loaded between beacons
+      OLLAMA_NUM_PARALLEL: ${OLLAMA_NUM_PARALLEL:-2}
+      OLLAMA_MAX_LOADED_MODELS: "1"
+      OLLAMA_CONTEXT_LENGTH: "4096"    # a beacon turn is a few hundred tokens
+    volumes:
+      - ollama:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+
+  # one-shot: pull the pinned model into the shared volume, then load it once so
+  # the first player's beacon doesn't pay the cold start
+  ollama-pull:
+    profiles: [model]
+    image: ollama/ollama:0.40.14
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      MODEL: ${LLM_MODEL:-qwen3:8b}
+    entrypoint: ["/bin/sh", "-c", "ollama pull \"$$MODEL\" && ollama run \"$$MODEL\" ok >/dev/null"]
+    restart: "no"
+
+volumes:
+  transcripts:
+  ollama:
+    # fixed name so every AI challenge on the host shares one copy of the weights
+    name: rh-ollama

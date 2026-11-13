@@ -1,0 +1,47 @@
+name: overburden-boss
+
+# Board B (master) owns the network namespace; Board A (gateway) JOINS it via
+# network_mode "service:master". So both boards share one loopback: the master
+# binds 127.0.0.1:9001 and the gateway dials 127.0.0.1:9001 -- there is no
+# interface a player can reach the master on. Only the gateway's :9000 is
+# published (via the namespace owner, master). This keeps "B unreachable
+# directly" true even on a flat task network (e.g. Fargate awsvpc), where an
+# internal bridge net with a fixed IP would NOT isolate B.
+services:
+  master:                       # Board B — extraction master (black box)
+    build:
+      context: ..
+      dockerfile: deploy/master.Dockerfile
+    environment:
+      FLAG: "${FLAG:?set the real flag (must equal challenge.yml flags:) in deploy/.env}"
+      PORT: "9001"                          # bound to 127.0.0.1 inside the shared namespace
+    ports:
+      # The gateway shares THIS namespace, so its :9000 is published here on the
+      # namespace owner. Drop the 127.0.0.1: prefix to expose on the LAN.
+      - "127.0.0.1:${GW_PORT:-9000}:9000"
+    restart: unless-stopped
+    read_only: true                         # root FS immutable
+    tmpfs: [/tmp]                            # required writable scratch under read_only
+    cap_drop: [ALL]                          # no Linux capabilities needed
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256                          # thread/fork cap
+    mem_limit: 256m
+    # NB: 9001 is never published -- only the gateway's 9000 is.
+
+  gateway:                      # Board A — field RTU / gateway (published surface)
+    build:
+      context: ..
+      dockerfile: deploy/gateway.Dockerfile
+    environment:
+      B_HOST: "127.0.0.1"                    # master shares this namespace -> loopback
+      B_PORT: "9001"
+    network_mode: "service:master"          # share Board B's netns; no own ports/networks
+    depends_on:
+      - master
+    restart: unless-stopped
+    read_only: true                          # A's container is a shell target — lock it down
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256                          # socat forks a process per connection
+    mem_limit: 256m
