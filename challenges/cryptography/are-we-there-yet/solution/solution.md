@@ -32,7 +32,7 @@ No files provided. Shares will be distributed among other challenges and around 
 
 ## Flag
 
-```flag{sharing_is_caring}```
+`flag{sharing_is_caring}`
 
 ## Solution
 
@@ -78,7 +78,7 @@ The shares will be hidden in various other challenges and around the physical pr
 - x = 8
 - x = 9 -> Davie Bowman
 
-The source script is deterministic but will not match the values in shares.txt. Use shares.txt as the source of truth.
+The generator's seeded output does not reproduce the committed values; `shares.txt` is the source of truth. Regenerate the print artifacts with `src/print/make_share_cards.py` after editing it.
 
 ## Printed share cards
 

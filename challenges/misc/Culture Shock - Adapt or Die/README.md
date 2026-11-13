@@ -4,7 +4,7 @@
 **Difficulty:** Hard
 **Author:** Lt. Niko Copernicus
 
-## Description (what the competitor will see)
+## Description
 
 The biologists performed an experiment to test how the exobacterium's environment affects it by exposing a colony to intense radiation. The colony survived, but it seems to have mutated! The colony's growth has strayed from simulation, so its growth rules must have changed.
 

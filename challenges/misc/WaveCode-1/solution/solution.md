@@ -11,8 +11,8 @@ Python 3 standard library only; no installation or live service is needed.
 From the challenge directory:
 
 ```sh
-python3 src/generate.py
-python3 solution/solve.py
+python3 src/main.py
+python3 solution/solution.py
 ```
 
 The solver also accepts an explicit CSV path. It reads only that competitor
@@ -39,5 +39,5 @@ solver uses an iterative radix-2 FFT without third-party dependencies.
 
 Confirm the CSV contains only timestamps and total amplitudes, that only the
 CSV is listed for download, and that the public prompt and metadata description
-match. Rebuilding is deterministic. Parts 2 and 3 should use separate challenge
-folders and branches when developed.
+match. Rebuilding is deterministic. Parts 2 and 3 live in
+`challenges/misc/WaveCode-2` and `challenges/misc/WaveCode-3`.

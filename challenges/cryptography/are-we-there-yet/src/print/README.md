@@ -45,8 +45,7 @@ Format is exactly `<share index>, <0x-prefixed hex value>` — the same shape th
 
 - Tag type: **NTAG213/215/216** (any NDEF Type-2 tag is fine; the payload is ~80 bytes, well under NTAG213's ~144-byte user memory).
 - Record type: one **NDEF Text record** (`text/plain`, UTF-8), no extra records.
-- Tools: "NFC Tools" (Android/iOS) or NXP "TagWriter"; write the payload text verbatim, then lock the tag only if you are certain (locking is irreversible).
-- Password: The write protection password is `b'c31fbaea'`. This will prevent tampering.
+- Tools: "NFC Tools" (Android/iOS) or NXP "TagWriter"; write the payload text verbatim. The NFC tags were made permanently read-only, so verify each payload before locking (locking is irreversible).
 - Test every tag with a real phone before taping: the phone should show the text, not a URL or a blank record.
 - **Avoid metal.** Tags on metal desks/doors detune and may not read; use an anti-metal tag or a 5–10 mm foam/plastic spacer between tag and surface.
 - Mount the tag **behind the centre of the dashed circle**, then tape/glue the card at its corners only. Taping over the tag is fine; taping over the whole front of the phone does not help and can interfere with some readers.

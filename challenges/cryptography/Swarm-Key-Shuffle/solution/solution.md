@@ -12,7 +12,7 @@ The relay is live. See `protocol.txt` for the commands and key rules.
 
 ## Files Provided
 
-- `protocol.txt` - Relay commands, key parameters, session limits, and a non-secret test vector.
+- `protocol.txt` - Relay commands, key parameters, and session limits.
 
 ## Flag
 

@@ -29,7 +29,7 @@ The on-board telescope is acting up again??? They only call when something break
 
 ## Solve Script
 
-- See `solve.py` for a script that automates the above steps and retrieves the flag.
+- See `solution/solution.py` for a script that automates the above steps and retrieves the flag.
 
 ## Hints
 

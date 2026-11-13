@@ -4,7 +4,7 @@
 **Difficulty:** Medium
 **Author:** Lt. Niko Copernicus
 
-## Description (what the competitor will see)
+## Description
 
 Our biologists recently discovered a strain of exobacteria living in the core of a large nearby asteroid! The colony seems to grow in a chaotic but predictable manner, almost like it's playing a game of life... While trying to study the exobacterium, an intern was supposed to record the colony's size and shape at each generation. Unfortunately, they fell asleep at their desk overnight and were only able to capture the generation available in `target.txt`. We don't have the resources to perform the experiment again, but the biologists did figure out the rules by which the colony changes between each generation.
 

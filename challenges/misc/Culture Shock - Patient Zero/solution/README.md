@@ -89,5 +89,5 @@ cp src/target.txt dist/target.txt     # refresh the competitor handout
 `make_target.py` writes both `src/target.txt` (the answer key, never shipped) and
 `solution/seed.txt` (the recorded seed). If you change `RING_RADIUS`, `WRAP`, the board size, or
 `GENERATIONS`, regenerate — and keep `GENERATIONS` in sync across `src/app.py` and
-`solution/solve.py`. Note that 3 generations on a 34×34 board is far harder than 12×12; the board
+`solution/solve.py`. Note that 3 generations on a larger board (for example 34×34) would be far harder than 12×12; the board
 was deliberately shrunk so the reverse search stays tractable for competitors.

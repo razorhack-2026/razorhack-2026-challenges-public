@@ -1,10 +1,8 @@
 # Too Many Astronauts in the Station
 
-## Author: Lt. Niko Copernicus
-
-## Category: Cryptography
-
-## Difficulty: Hard
+**Author:** Lt. Niko Copernicus  
+**Category:** Cryptography  
+**Difficulty:** Hard
 
 ## Description
 

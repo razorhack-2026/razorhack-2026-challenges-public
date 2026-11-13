@@ -38,12 +38,12 @@ The script reads only `dist/` and prints the message. Keep its output private.
 
 ## Hints
 
-- 25pts: The sweep is the strike, not the message. Look at what happens after each drive burst.
 - 50pts: A ringing mode fades. A measurement over the whole ring-down reports its average loudness, not the loudness at the strike.
 - 75pts: The nine header symbols are always `WC2:0010:`. You know exactly what those nine notes should be.
 
 ## Notes
 
+- The drive sweep is the strike, not the message; only the samples after each burst carry data.
 - See `src/main.py` for the builder. It reads `src/packet.txt` and regenerates all three captures.
 - `solution/wavecode.py` holds the shared constants and the payload helpers.
 - There is no error correction. The capture is deterministic, so the fixed header and the CRC are the only checks needed.

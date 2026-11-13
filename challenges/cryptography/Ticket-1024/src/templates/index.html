@@ -44,7 +44,7 @@
 <body>
     <form id="form" method="post">
         <input type="text" name="crewID" placeholder="Crew ID">
-        <button type="submit" onclick="requestAccess">Request Access</button>
+        <button type="submit">Request Access</button>
     </form>
 </body>
 
@@ -63,7 +63,7 @@
                 document.open()
                 document.write(dashboardHtml)
                 document.close()
-            }).catch(alert, 'Something went wrong. Please try again.')
+            }).catch(() => alert('Something went wrong. Please try again.'))
         })
 </script>
 

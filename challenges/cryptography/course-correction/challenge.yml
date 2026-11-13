@@ -1,13 +1,3 @@
-# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
-#
-# This file is what gets your challenge imported into CTFd automatically
-# (`ctf challenge install/sync`) instead of hand-entered. Copy it into your
-# challenge folder as `challenge.yml`, fill in the marked fields, delete the
-# comments you don't need.
-#
-# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
-
-# ── Required — fill these in ─────────────────────────────────────────────
 name: "Course Correction"           # display name on the scoreboard
 author: "Lt. Niko Copernicus"
 category: Cryptography                 # exact string shown on the scoreboard, and CTFd

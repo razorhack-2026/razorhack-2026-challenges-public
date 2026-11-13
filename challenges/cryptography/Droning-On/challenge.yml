@@ -48,7 +48,7 @@ hints:
 # ── Tags (public) ────────────────────────────────────────────────────────
 # Difficulty goes here (easy / medium / hard) plus any technique tags.
 tags:
-    - medium
+    - hard
 
 # ── Housekeeping — leave as-is ───────────────────────────────────────────
 # Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
