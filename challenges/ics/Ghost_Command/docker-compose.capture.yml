@@ -1,0 +1,63 @@
+name: ghost_command_capture
+
+# GM-only. Generates dist/substation_test_window.pcap by running the full
+# scripted test window (MODE=capture, so the one genuine frame really goes
+# out) on an isolated throwaway network, sniffed end to end.
+#
+# Usage:
+#   docker compose -f docker-compose.capture.yml up --build --abort-on-container-exit
+#   docker compose -f docker-compose.capture.yml down
+#   mv src/capture/out/substation_test_window.pcap dist/
+#
+# Never run this against the live substation_net -- MODE=capture makes the
+# genuine trip frame go out for real, and re-running it would perpetually
+# leave the *live* environment's own history contradicting the pcap you
+# already shipped to competitors.
+
+services:
+  ied-prot:
+    build:
+      context: ./src
+      dockerfile: ied-prot/Dockerfile
+    container_name: ghostcommand_capture_prot
+    cap_add:
+      - NET_RAW
+    environment:
+      MODE: capture
+    networks:
+      capture_net:
+        ipv4_address: 10.13.49.10
+
+  ied-bkr:
+    build:
+      context: ./src
+      dockerfile: ied-bkr/Dockerfile
+    container_name: ghostcommand_capture_bkr
+    cap_add:
+      - NET_RAW
+    networks:
+      capture_net:
+        ipv4_address: 10.13.49.20
+
+  sniffer:
+    build:
+      context: ./src/capture
+    container_name: ghostcommand_capture_sniffer
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    environment:
+      CAPTURE_SECONDS: "115"
+    volumes:
+      - ./src/capture/out:/out
+    networks:
+      capture_net:
+        ipv4_address: 10.13.49.99
+
+networks:
+  capture_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.13.49.0/24
+          gateway: 10.13.49.1

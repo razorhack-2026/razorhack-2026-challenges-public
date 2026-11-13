@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <title>RazerPowerCo Engineering Portal - Sign In</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <style>
+    body { font-family: Tahoma, "Segoe UI", Arial, sans-serif; background: #d4d0c8;
+           color: #000; margin: 0; font-size: 12px; }
+    .titlebar { background: #0a246a; color: #fff; padding: 4px 8px; font-weight: bold;
+                font-size: 12px; border-bottom: 1px solid #000; }
+    .wrap { display: flex; justify-content: center; padding-top: 60px; }
+    .box { background: #ece9d8; border: 1px solid #000; width: 340px; }
+    .box .hdr { background: #245edb; color: #fff; padding: 3px 6px; font-weight: bold; }
+    .box .body { padding: 14px; }
+    .box .body p.sys { margin: 0 0 12px 0; color: #333; }
+    table.form { border-collapse: collapse; }
+    table.form td { padding: 4px 6px; vertical-align: middle; }
+    label { font-weight: bold; }
+    input[type=text], input[type=password] {
+      font-family: Tahoma, "Segoe UI", Arial, sans-serif; font-size: 12px;
+      border: 1px solid #7f9db9; padding: 2px 3px; width: 160px; background: #fff; }
+    .btnrow { text-align: right; padding: 10px 6px 2px 6px; }
+    button { font-family: Tahoma, "Segoe UI", Arial, sans-serif; font-size: 12px;
+             background: #ece9d8; border: 1px solid #000; padding: 2px 14px; cursor: pointer; }
+    button:active { border: 1px solid #000; background: #d4d0c8; }
+    .err { color: #a00; margin-top: 10px; border: 1px solid #a00; background: #fff0f0;
+           padding: 4px 6px; }
+    .foot { margin-top: 10px; color: #555; font-size: 11px; }
+    .statusbar { position: fixed; bottom: 0; left: 0; right: 0; background: #ece9d8;
+                 border-top: 1px solid #808080; padding: 3px 8px; font-size: 11px; color: #333; }
+  </style>
+</head>
+<body>
+  <div class="titlebar">RazerPowerCo &mdash; Engineering Portal</div>
+  <div class="wrap">
+    <div class="box">
+      <div class="hdr">Authentication Required</div>
+      <div class="body">
+        <p class="sys">This workstation is restricted to RazerPowerCo engineering staff.
+           Sign in with your domain service account.</p>
+        <form method="post">
+          <table class="form">
+            <tr><td><label>User name:</label></td>
+                <td><input type="text" name="username" autocomplete="off"></td></tr>
+            <tr><td><label>Password:</label></td>
+                <td><input type="password" name="password" autocomplete="off"></td></tr>
+          </table>
+          <div class="btnrow"><button type="submit">Log On</button></div>
+        </form>
+        {% if error %}<div class="err">{{ error }}</div>{% endif %}
+        <div class="foot">ENG-WS-02 &middot; KEEPER OF TOMORROW / Kalium refinery line 2</div>
+      </div>
+    </div>
+  </div>
+  <div class="statusbar">RazerPowerCo Plant Engineering intranet &middot; authorized use only &middot; sessions are logged</div>
+</body>
+</html>

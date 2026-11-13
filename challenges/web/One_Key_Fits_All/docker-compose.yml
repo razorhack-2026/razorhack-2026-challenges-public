@@ -1,0 +1,36 @@
+# One Key Fits All — two live services, no jump box needed for the portal
+# (it's the attacker's own exposed infra, direct connection) and a separate
+# SSH-reachable box for the affected RazerPowerCo machine.
+#
+# GM-only: RECOVERY_KEY below must match the --key value used to produce
+# src/box/locked_dashboard.bin via src/box/build_locked_file.py. If you
+# regenerate one, regenerate the other with the same key. PAID_ID is the
+# other victim's case id (not OWN_ID) that the portal marks as paid and
+# hands the key back for — it must not equal OWN_ID.
+#
+# One shared network namespace, mirroring the per-team Fargate task: box joins
+# portal's namespace, so both ports are published from portal. On Fargate ports
+# can't be remapped, so players reach sshd on 22 there (2222 is local only).
+name: one_key_fits_all
+
+services:
+  portal:
+    build: ./src/portal
+    ports:
+      # host:container
+      - "8080:8080"
+      - "2222:22"   # box's sshd, published from this shared namespace
+    environment:
+      VICTIM_COUNT: "140"
+      VICTIM_SEED: "20261106"
+      OWN_ID: "b7f39d21a6048ce5"
+      PAID_ID: "4a6e8c319f72b5d0"
+      RECOVERY_KEY: "z_QKzpF-aIq3lKggjnm5KQktD9P3al8PwS8-RR8O9Ho="
+    restart: unless-stopped
+
+  box:
+    build: ./src/box
+    network_mode: "service:portal"
+    depends_on:
+      - portal
+    restart: unless-stopped

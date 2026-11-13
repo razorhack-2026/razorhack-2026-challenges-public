@@ -1,0 +1,38 @@
+name: "These Things Still Run On Modbus"
+author: "Voyager 1"
+category: ICS
+description: |
+    AstraTech Industries runs a fleet of autonomous DM-7 mining drones, a consignment the KEEPER OF TOMORROW is carrying to Novare. One of them is exposed on the network at
+    `<challenge-host>:502` — full Modbus/TCP telemetry and control, no
+    authentication.
+
+    Figure out what you're actually talking to, find its documentation,
+    and work out how to authorize its emergency destruct protocol.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{d3t0n4t3_dm7}
+
+# Live service (docker-compose.yml) — host/port finalized at deploy time.
+# NOTE: multi-team deployment is still an open question — see
+# solution/solution.md ("Open blocker") before running this with more
+# than one team; VENDOR_URL env var must also be set to the real
+# reachable host, not left at its localhost default.
+connection_info: "{host}:{port} (Modbus/TCP)"
+
+tags:
+    - medium
+
+topics:
+    - "arc:3:The Chaos"
+    - instance:these-things-still-run-on-modbus
+
+state: hidden
+version: "0.1"

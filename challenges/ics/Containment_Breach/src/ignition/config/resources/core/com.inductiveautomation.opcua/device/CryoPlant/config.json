@@ -1,0 +1,43 @@
+{
+    "profile":  {
+                    "type":  "ModbusTcp"
+                },
+    "settings":  {
+                     "connectivity":  {
+                                          "hostname":  "127.0.0.1",
+                                          "port":  505,
+                                          "localAddress":  "",
+                                          "communicationTimeout":  2000
+                                      },
+                     "requestOptimization":  {
+                                                 "maxHoldingRegistersPerRequest":  125,
+                                                 "maxHoldingRegistersPerWriteRequest":  123,
+                                                 "maxInputRegistersPerRequest":  125,
+                                                 "maxCoilsPerRequest":  2000,
+                                                 "maxDiscreteInputsPerRequest":  2000,
+                                                 "concurrentRequests":  1,
+                                                 "spanGaps":  true
+                                             },
+                     "writeRequests":  {
+                                           "writeMultipleRegistersRequestAllowed":  true,
+                                           "forceMultipleRegisterWritesEnabled":  false,
+                                           "writeMultipleCoilsRequestAllowed":  true
+                                       },
+                     "readRequests":  {
+                                          "readMultipleRegistersRequestAllowed":  true,
+                                          "readMultipleCoilsAllowed":  true,
+                                          "readMultipleDiscreteInputsAllowed":  true
+                                      },
+                     "advanced":  {
+                                      "reconnectAfterConsecutiveTimeouts":  true,
+                                      "reverseWordOrder":  false,
+                                      "zeroBasedAddressing":  false,
+                                      "maxRetryCount":  1
+                                  },
+                     "stringHandling":  {
+                                            "reverseByteOrder":  false,
+                                            "rightJustifyStrings":  false,
+                                            "readRawStrings":  false
+                                        }
+                 }
+}

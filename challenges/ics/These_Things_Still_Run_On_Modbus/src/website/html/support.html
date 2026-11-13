@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support &amp; Documentation — AstraTech Industries</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+
+<div class="utility-bar">
+  <div class="inner">
+    <span>AstraTech Industries &mdash; Belt Sector Operations Division</span>
+    <span>Investor Relations &nbsp;|&nbsp; Careers &nbsp;|&nbsp; Contact</span>
+  </div>
+</div>
+
+<header class="site-head">
+  <div class="head-inner">
+    <div>
+      <div class="site-logo">ASTRATECH <span>INDUSTRIES</span></div>
+      <div class="site-tagline">Autonomous Mineral Extraction Systems</div>
+    </div>
+  </div>
+</header>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/index.html">Home</a>
+    <a href="/products.html">Products</a>
+    <a href="/support.html" class="active">Support &amp; Documentation</a>
+  </div>
+</nav>
+
+<main>
+  <div class="breadcrumb"><a href="/index.html">Home</a> &rsaquo; Support &amp; Documentation</div>
+
+  <h2 class="section-title" style="margin-top:0;">Product Manuals</h2>
+
+  <p style="color:var(--text-dim); margin-bottom:1.2rem; max-width:600px; font-size:13px;">
+    Search by model number to locate the operations manual for your AstraTech product.
+    Manuals are provided in PDF format and include full Modbus register maps,
+    fault codes, and emergency protocol procedures.
+  </p>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Enter model number (e.g. DM-7, TK-3, SC-9)&hellip;"
+      autocomplete="off"
+    />
+    <button onclick="runSearch()">Search</button>
+  </div>
+
+  <table class="manual-table">
+    <thead>
+      <tr><th>Model</th><th>Document</th><th>Description</th><th></th></tr>
+    </thead>
+    <tbody id="manualList">
+      <!-- populated by JS -->
+    </tbody>
+  </table>
+  <p class="no-results" id="noResults">No manuals found for that model number.</p>
+</main>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <div class="foot-col">
+      <strong>Company</strong>
+      <a href="#">About AstraTech</a>
+      <a href="#">Investor Relations</a>
+      <a href="#">Careers</a>
+    </div>
+    <div class="foot-col">
+      <strong>Products</strong>
+      <a href="/products.html">DM-Series Drones</a>
+      <a href="/products.html">Carrier &amp; Survey Craft</a>
+    </div>
+    <div class="foot-col">
+      <strong>Support</strong>
+      <a href="/support.html">Manuals &amp; Firmware</a>
+      <a href="#">Field Service Requests</a>
+    </div>
+  </div>
+  <div class="foot-legal">&copy; 2094 AstraTech Industries. All rights reserved.</div>
+</footer>
+
+<script>
+  let manuals = [];
+
+  fetch("/manuals.json")
+    .then(r => r.json())
+    .then(data => {
+      manuals = data;
+      renderAll();
+    });
+
+  function renderAll() {
+    render(manuals);
+  }
+
+  function runSearch() {
+    const q = document.getElementById("searchInput").value.trim().toUpperCase();
+    if (!q) { render(manuals); return; }
+    const filtered = manuals.filter(m =>
+      m.model.toUpperCase().includes(q) || m.name.toUpperCase().includes(q)
+    );
+    render(filtered);
+  }
+
+  document.getElementById("searchInput").addEventListener("keydown", e => {
+    if (e.key === "Enter") runSearch();
+  });
+
+  function render(items) {
+    const list = document.getElementById("manualList");
+    const none = document.getElementById("noResults");
+    list.innerHTML = "";
+
+    if (items.length === 0) {
+      none.style.display = "block";
+      return;
+    }
+    none.style.display = "none";
+
+    items.forEach(m => {
+      const tr = document.createElement("tr");
+      const link = m.file
+        ? `<a href="${m.file}" download>Download PDF</a>`
+        : `<span class="unavailable">Not available online</span>`;
+      tr.innerHTML = `
+        <td class="model-tag">${m.model}</td>
+        <td>${m.name}</td>
+        <td>${m.description}</td>
+        <td>${link}</td>
+      `;
+      list.appendChild(tr);
+    });
+  }
+</script>
+
+</body>
+</html>

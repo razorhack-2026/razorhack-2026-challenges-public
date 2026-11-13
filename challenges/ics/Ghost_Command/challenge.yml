@@ -1,0 +1,54 @@
+name: "Ghost Command"
+author: "Voyager 1"
+category: ICS
+description: |
+    RazerPowerCo's substation feed to Docking Ring 3 runs IEC 61850
+    GOOSE between two IEDs, `IED-PROT-03` and `IED-BKR-07`. Maintenance
+    ran a breaker-exercise routine on the segment during a scheduled
+    test window. The whole thing got captured in
+    `substation_test_window.pcap`.
+
+    During that window the breaker actually tripped once, for real.
+    Nobody flagged it at the time.
+
+    A jump box sits on the same segment the capture came from,
+    `10.13.39.0/24`:
+
+    ```
+    ssh player@<challenge-host> -p 2223
+    password: gh0stcmd
+    ```
+
+    Passwordless sudo. `tcpdump`, `tshark`, and Python with `scapy` are
+    already installed.
+
+    IED-BKR-07 reports status over Modbus/TCP on `10.13.39.20:502`.
+    Flag's in its holding registers once the breaker trips again.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{one_frame_wasnt_a_drill}
+
+# dist/ only, never src/ or solution/.
+files:
+    - dist/substation_test_window.pcap
+
+# Live service (docker-compose.yml) — host/port finalized at deploy time.
+connection_info: "ssh player@{host} -p 2223 (password gh0stcmd)"
+
+tags:
+    - medium
+
+topics:
+    - "arc:1:The Prologue"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

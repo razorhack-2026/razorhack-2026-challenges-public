@@ -1,0 +1,37 @@
+name: "Lateral Drift"
+author: "Voyager 1"
+category: ICS
+description: |
+    The VPN credential you talked out of Rootkit only gets you onto RazorPower Co.'s corporate
+    segment, nothing further. Somewhere on that box is what you need to reach the engineering
+    network, and somewhere past that, deep in the KEEPER OF TOMORROW's engineering network, is
+    a panel nobody locked down properly.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER - set globally before the event
+    minimum: 100    # PLACEHOLDER - set globally before the event
+
+flags:
+    - flag{the_second_door_was_never_locked}
+
+files: []   # no dist/ handouts - competitors connect directly, per README
+
+# Each team gets its own copy; Last Mile uses the same topic name so both challenges share that copy.
+topics:
+    - instance:lateral-drift
+    - "quest:Know Your Mark"
+
+connection_info: ssh rootkit@{host} -p {port}   # vpn-gateway box; password is the credential recovered in Know Your Mark
+
+requirements:
+    prerequisites:
+        - "Know Your Mark"
+    anonymize: true
+
+tags:
+    - medium
+
+state: hidden
+version: "0.1"

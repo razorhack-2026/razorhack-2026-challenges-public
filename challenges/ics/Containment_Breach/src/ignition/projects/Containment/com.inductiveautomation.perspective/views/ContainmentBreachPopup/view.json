@@ -1,0 +1,309 @@
+{
+    "custom": {},
+    "params": {},
+    "props": {
+        "defaultSize": {
+            "height": 430,
+            "width": 660
+        }
+    },
+    "root": {
+        "type": "ia.container.flex",
+        "meta": {
+            "name": "root"
+        },
+        "props": {
+            "direction": "column",
+            "alignItems": "stretch",
+            "justify": "flex-start",
+            "style": {
+                "padding": "0px 18px 16px 0px",
+                "backgroundColor": "#140000",
+                "borderLeft": "6px solid #ef4444"
+            }
+        },
+        "children": [
+            {
+                "type": "ia.display.label",
+                "meta": {
+                    "name": "AlarmStrip"
+                },
+                "position": {
+                    "shrink": 0,
+                    "basis": "28px"
+                },
+                "props": {
+                    "text": "//  CRITICAL ALARM  ·  PRIORITY 1  ·  ALM-C3 : BIO-SEAL FAILURE  //",
+                    "style": {
+                        "textAlign": "left",
+                        "color": "#140000",
+                        "backgroundColor": "#b5453a",
+                        "fontFamily": "monospace",
+                        "fontWeight": "bold",
+                        "letterSpacing": "1px",
+                        "fontSize": "12px",
+                        "padding": "6px 0px 6px 20px"
+                    }
+                }
+            },
+            {
+                "type": "ia.display.label",
+                "meta": {
+                    "name": "AlarmTitle"
+                },
+                "position": {
+                    "shrink": 0,
+                    "basis": "48px"
+                },
+                "props": {
+                    "text": "CONTAINMENT BREACH",
+                    "style": {
+                        "textAlign": "left",
+                        "color": "#ef4444",
+                        "fontWeight": "bold",
+                        "letterSpacing": "1px",
+                        "fontSize": "30px",
+                        "marginTop": "12px",
+                        "marginLeft": "20px"
+                    }
+                }
+            },
+            {
+                "type": "ia.display.label",
+                "meta": {
+                    "name": "Subject"
+                },
+                "position": {
+                    "shrink": 0,
+                    "basis": "22px"
+                },
+                "props": {
+                    "text": "BAY-03  ·  VESSEL C  —  FOUNDER CULTURE",
+                    "style": {
+                        "textAlign": "left",
+                        "color": "#f59e0b",
+                        "fontFamily": "monospace",
+                        "letterSpacing": "1px",
+                        "fontSize": "14px",
+                        "marginLeft": "20px"
+                    }
+                }
+            },
+            {
+                "type": "ia.container.flex",
+                "meta": {
+                    "name": "TelemetryBox"
+                },
+                "position": {
+                    "shrink": 0,
+                    "basis": "118px"
+                },
+                "props": {
+                    "direction": "column",
+                    "style": {
+                        "backgroundColor": "#0b0000",
+                        "border": "1px solid #5a1a1a",
+                        "padding": "9px 12px",
+                        "marginTop": "12px",
+                        "marginLeft": "20px"
+                    }
+                },
+                "children": [
+                    {
+                        "type": "ia.display.label",
+                        "meta": {
+                            "name": "SpecimenLine"
+                        },
+                        "position": {
+                            "shrink": 0,
+                            "basis": "20px"
+                        },
+                        "props": {
+                            "text": "SPECIMEN  Ignis vorax  ·  CONTAINMENT CLASS IV EXCEEDED  ·  THERMALLY ACTIVE",
+                            "style": {
+                                "textAlign": "left",
+                                "color": "#f59e0b",
+                                "fontFamily": "monospace",
+                                "fontSize": "11px",
+                                "whiteSpace": "pre"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ia.display.label",
+                        "meta": {
+                            "name": "DensityLine"
+                        },
+                        "position": {
+                            "shrink": 0,
+                            "basis": "22px"
+                        },
+                        "props": {
+                            "text": "COLONY DENSITY   --",
+                            "style": {
+                                "textAlign": "left",
+                                "color": "#fca5a5",
+                                "fontFamily": "monospace",
+                                "fontSize": "13px",
+                                "whiteSpace": "pre"
+                            }
+                        },
+                        "propConfig": {
+                            "props.text": {
+                                "binding": {
+                                    "type": "expr",
+                                    "config": {
+                                        "expression": "'COLONY DENSITY   ' + numberFormat({[default]containment/vesselC_colony_density} / 10, '0.0') + ' / 120.0   ▲ THRESHOLD EXCEEDED'"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "ia.display.label",
+                        "meta": {
+                            "name": "TempLine"
+                        },
+                        "position": {
+                            "shrink": 0,
+                            "basis": "22px"
+                        },
+                        "props": {
+                            "text": "CORE TEMP        --",
+                            "style": {
+                                "textAlign": "left",
+                                "color": "#fca5a5",
+                                "fontFamily": "monospace",
+                                "fontSize": "13px",
+                                "whiteSpace": "pre"
+                            }
+                        },
+                        "propConfig": {
+                            "props.text": {
+                                "binding": {
+                                    "type": "expr",
+                                    "config": {
+                                        "expression": "'CORE TEMP        ' + numberFormat({[default]containment/vesselC_incubation_temp}, '0') + ' °C        ▲ THERMAL RUNAWAY'"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "ia.display.label",
+                        "meta": {
+                            "name": "AllocLine"
+                        },
+                        "position": {
+                            "shrink": 0,
+                            "basis": "22px"
+                        },
+                        "props": {
+                            "text": "CRYO ALLOCATION  --",
+                            "style": {
+                                "textAlign": "left",
+                                "color": "#fca5a5",
+                                "fontFamily": "monospace",
+                                "fontSize": "13px",
+                                "whiteSpace": "pre"
+                            }
+                        },
+                        "propConfig": {
+                            "props.text": {
+                                "binding": {
+                                    "type": "expr",
+                                    "config": {
+                                        "expression": "'CRYO ALLOCATION  ' + numberFormat({[default]containment/plant_allocation_pct}, '0') + ' %        ▼ SHARED PLANT STARVED'"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "ia.container.flex",
+                "meta": {
+                    "name": "FlagBox"
+                },
+                "position": {
+                    "shrink": 0,
+                    "basis": "66px"
+                },
+                "props": {
+                    "direction": "column",
+                    "style": {
+                        "backgroundColor": "#07160b",
+                        "border": "1px solid #22c55e",
+                        "padding": "8px 12px",
+                        "marginTop": "14px",
+                        "marginLeft": "20px"
+                    }
+                },
+                "children": [
+                    {
+                        "type": "ia.display.label",
+                        "meta": {
+                            "name": "FlagCaption"
+                        },
+                        "position": {
+                            "shrink": 0,
+                            "basis": "16px"
+                        },
+                        "props": {
+                            "text": "RECOVERED  //  FOUNDER CULTURE GENOME KEY",
+                            "style": {
+                                "textAlign": "left",
+                                "color": "#6ee7b7",
+                                "fontFamily": "monospace",
+                                "letterSpacing": "1px",
+                                "fontSize": "10px"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ia.display.label",
+                        "meta": {
+                            "name": "FlagLabel"
+                        },
+                        "position": {
+                            "shrink": 0,
+                            "basis": "30px"
+                        },
+                        "props": {
+                            "text": "flag{freeze_the_others_feed_the_founder}",
+                            "style": {
+                                "textAlign": "left",
+                                "color": "#4ade80",
+                                "fontWeight": "bold",
+                                "fontFamily": "monospace",
+                                "fontSize": "20px",
+                                "marginTop": "2px"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "ia.display.label",
+                "meta": {
+                    "name": "DismissHint"
+                },
+                "position": {
+                    "shrink": 0,
+                    "basis": "24px"
+                },
+                "props": {
+                    "text": "Acknowledge to silence the klaxon — deck containment lockdown remains in effect.",
+                    "style": {
+                        "textAlign": "left",
+                        "color": "#8a7c62",
+                        "fontSize": "12px",
+                        "marginTop": "10px",
+                        "marginLeft": "20px"
+                    }
+                }
+            }
+        ]
+    }
+}

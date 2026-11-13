@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head><title>DriftMarket - {{ listing.title }}</title>
+<style>
+body { font-family: Arial, sans-serif; background: #eef1f3; color: #222; max-width: 700px; margin: 40px auto; }
+h1 { color: #355; font-size: 1.2em; }
+.listing { background: #fff; border: 1px solid #ccd; border-radius: 6px; padding: 16px 20px; }
+.meta { color: #888; font-size: 0.85em; }
+.seller { font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>DriftMarket - Classifieds</h1>
+<div class="listing">
+  <h2>{{ listing.title }}</h2>
+  <p class="meta">Posted by <span class="seller">{{ listing.seller }}</span> &middot; Local pickup only</p>
+  <p>
+    Selling off a crate of old shortwave radio gear, a couple handhelds, some spare antenna
+    cable. Not using any of it where I'm headed next. Clearing stuff out before a long
+    deployment and would rather someone get use out of it than have it sit in storage.
+  </p>
+  <p>
+    Make an offer, I'm not picky. Only catch is you'll have to come get it yourself, I'm not
+    shipping this stuff. (Also if anyone wants to take my cat {{ listing.pet_name }} for a few months
+    while I'm gone, separate post, but ask.)
+  </p>
+</div>
+</body>
+</html>

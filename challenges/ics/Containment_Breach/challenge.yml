@@ -1,0 +1,47 @@
+name: "Containment Breach"
+author: "Voyager 1"
+category: ICS
+description: |
+    The KEEPER OF TOMORROW's cargo hold carries a terraforming culture bound for Novare, *Ignis vorax*, a thermophilic
+    microorganism that feeds on heat energy. Three culture vessels share
+    one cryo-suppression plant that keeps the colony dormant; a read-only
+    HMI shows all three vessels nominal. Its address is the `HMI` line in this
+    challenge's connection info.
+
+    You have network access to three Modbus/TCP controllers and one plant
+    telemetry endpoint, all at the `Modbus` address in the connection info. The
+    register map is provided.
+
+    Vessel C is under local control — its own setpoints won't take a
+    remote write. Defeat the containment interlock anyway and drive
+    Vessel C's colony past its breach threshold. The flag will appear
+    automatically when it ruptures.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{freeze_the_others_feed_the_founder}
+
+files:
+    - dist/REGISTER_MAP.md
+
+# Live service (docker-compose.yml) — host/ports finalized at deploy time.
+connection_info: |
+    Modbus: {host}:{port} (Modbus/TCP; unit IDs 1-3 = Vessels A/B/C, 4 = Cryo Plant)
+    HMI: http://{host}:8088/data/perspective/client/Containment
+
+topics:
+    - instance:containment-breach
+    - "arc:3:The Chaos"
+
+tags:
+    - medium
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,46 @@
+name: "Zero Eccentricity"
+author: "Voyager 1"
+category: Web
+description: |
+    The station's autopilot died somewhere past the last relay, and the NAV-7
+    console wants the orbit insertion traced by hand. Hold the button, draw one
+    loop around the planet, and the burn computer will judge it.
+
+    The flight manual says a steady hand can do it. Nobody on this crew has a
+    hand that steady.
+
+    ```
+    http://<challenge-host>:8080
+    ```
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{n0_st34dy_h4nd_ju5t_a_st34dy_scr1pt}
+
+files: []
+
+hints:
+    - { content: "No human hand is that steady. Nobody said it has to be a human hand.", cost: 25 }
+    - { content: "The console can tell when mouse events are faked from the page itself. Don't fake the mouse; script a real one.", cost: 25 }
+
+# Live service (docker-compose.yml) - host/port finalized at deploy time.
+connection_info: "http://{host}:{port}"
+
+tags:
+    - medium
+    - client-side-trust
+    - web
+
+topics:
+    - instance:zero-eccentricity
+    - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"

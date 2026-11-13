@@ -1,0 +1,31 @@
+name: "Nothing to Report"
+author: "Voyager 1"
+category: Steganography
+description: |
+    A shift log entry recovered from crew member cm-0417's backup partition
+    reads completely routine — nothing flagged, nothing out of place. Except
+    the phrasing is just a little off. Every sentence, every single one.
+
+    Maybe that's not a coincidence.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{vowel_null_cipher}
+
+files:
+    - dist/shift_log.txt
+
+topics:
+    - "arc:1:The Prologue"
+
+tags:
+    - easy
+    - medium
+
+state: hidden
+version: "0.1"

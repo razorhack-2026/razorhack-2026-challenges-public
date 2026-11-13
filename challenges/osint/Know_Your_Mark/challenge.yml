@@ -1,0 +1,50 @@
+name: "Know Your Mark"
+author: "Voyager 1"
+category: OSINT
+description: |
+    Ship security got into the personal email account Dr. Rootkit's been using this whole time.
+    They recovered one message and compiled a list of sites he might use. Sherlock could help us
+    search them—if only we knew what username he was using.
+
+    Once you know who he is, get him to click something. Security already has a tracking link ready
+    to go, but it's not subtle, so you'll have to hide it before he will.
+
+    Tracking link: `http://dangerouslink.com/notify?id=8841x`
+
+    Download the Sherlock site list from the mail portal, then run
+    `sherlock --json sherlock-sites.json <username>`.
+
+    The Kali image's system Sherlock install doesn't apply `--json` correctly and will scan the
+    normal internet-wide site list instead of just the two sites above. If that happens, install a
+    current copy and run that instead:
+    ```
+    pip install --user --break-system-packages --ignore-installed --no-cache-dir sherlock-project
+    python3 -m sherlock_project --json sherlock-sites.json <username>
+    ```
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER - set globally before the event
+    minimum: 100    # PLACEHOLDER - set globally before the event
+
+# The recovered credential also serves as the Lateral Drift VPN login; keep them in sync.
+flags:
+    - flag{rootkit_icarus_override}
+
+files:
+    - dist/recovered_email.pdf
+
+topics:
+    - instance:know-your-mark
+    - "quest:Know Your Mark"
+
+# Each team has its own copy (Razorhack-Infra), so it has one mailbox: token "security"
+# (KYM_TEAM_TOKENS there). CTFd fills in {host} and {port}.
+connection_info: "http://{host}:{port}/mail/security"
+
+tags:
+    - medium
+
+state: hidden
+version: "0.1"

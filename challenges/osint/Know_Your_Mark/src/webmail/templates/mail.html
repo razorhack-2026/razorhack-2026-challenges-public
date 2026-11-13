@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+  <title>RazorPower Co. Contractor Mail Portal</title>
+  <style>
+    body { font-family: sans-serif; background: #eef1f5; color: #1f2937; margin: 0; }
+    header { background: #1e293b; color: #fff; padding: 14px 24px; }
+    header h1 { margin: 0; font-size: 18px; }
+    header .team { color: #94a3b8; font-size: 12px; }
+    .wrap { max-width: 720px; margin: 24px auto; padding: 0 16px; }
+    .card { background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 18px; margin-bottom: 18px; }
+    label { display: block; font-size: 12px; color: #4b5563; margin-top: 10px; }
+    input[type=text], textarea { width: 100%; box-sizing: border-box; padding: 8px; margin-top: 4px;
+      border: 1px solid #d1d5db; border-radius: 4px; font-family: inherit; }
+    .editor { min-height: 120px; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;
+      background: white; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .editor:empty:before { content: attr(data-placeholder); color: #9ca3af; pointer-events: none; }
+    .toolbar button { margin: 8px 0; padding: 6px 10px; background: #e5e7eb; color: #1f2937; }
+    dialog { width: min(400px, 80vw); border: 0; border-radius: 8px; padding: 20px; }
+    dialog::backdrop { background: #0008; }
+    dialog .actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .msg.sent a { pointer-events: none; }
+    button { margin-top: 14px; padding: 9px 18px; background: #1e3a8a; color: #fff; border: none;
+      border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .budget { font-size: 12px; color: #6b7280; margin-top: 8px; }
+    .msg { padding: 10px 14px; border-radius: 6px; margin-bottom: 10px; }
+    .msg-content { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .msg.sent { background: #e0e7ff; margin-left: 15%; }
+    .msg.reply { background: #f3f4f6; margin-right: 15%; }
+    .msg.system { background: #fef3c7; font-size: 13px; color: #92400e; }
+    .msg .hdr { font-size: 11px; color: #6b7280; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>RazorPower Co. - Contractor Mail Portal</h1>
+  <div class="team">Team: {{ team }}</div>
+</header>
+<div class="wrap">
+
+  <div class="card"><a href="/sherlock-sites.json">Download Sherlock site list</a></div>
+
+  <div class="card">
+    <form id="compose" method="post" action="/mail/{{ token }}/send">
+      <label>From</label>
+      <input type="text" name="from_addr" value="{{ draft.from_addr }}" placeholder="your.address@your-company.example">
+      <label>To</label>
+      <input type="text" value="rootkit@duskwire.net" disabled>
+      <label>Subject</label>
+      <input type="text" name="subject" value="{{ draft.subject }}">
+      <label id="body-label">Body</label>
+      <div class="toolbar"><button type="button" id="insert-link">Insert link</button></div>
+      <div id="editor" class="editor" contenteditable="true" role="textbox" aria-labelledby="body-label"
+           aria-multiline="true" data-placeholder="Write your message...">{{ draft.body | safe }}</div>
+      <input type="hidden" name="body" id="body-value">
+      <noscript>JavaScript is required to compose a message.</noscript>
+      <button type="submit">Send</button>
+      <div class="budget" id="cooldown" data-remaining="{{ remaining }}">{% if remaining_seconds %}Next request available in {{ '%d:%02d' | format(remaining_seconds // 60, remaining_seconds % 60) }}.{% else %}Ready to send.{% endif %}</div>
+    </form>
+  </div>
+
+  <div class="card">
+    {% if not thread %}
+      <p style="color:#9ca3af">No messages yet.</p>
+    {% endif %}
+    {% for m in thread %}
+      {% if m.kind == "sent" %}
+        <div class="msg sent">
+          <div class="hdr">You &rarr; rootkit@duskwire.net &middot; From: {{ m.from_addr }} &middot; Subject: {{ m.subject }}</div>
+          <div class="msg-content">{{ m.body | safe }}</div>
+        </div>
+      {% elif m.kind == "reply" %}
+        <div class="msg reply">
+          <div class="hdr">Rootkit</div>
+          <div class="msg-content">{{ m.text }}</div>
+        </div>
+      {% else %}
+        <div class="msg system"><div class="msg-content">{{ m.text }}</div></div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+</div>
+<dialog id="link-dialog" aria-labelledby="link-title">
+  <h2 id="link-title">Insert link</h2>
+  <form id="link-form">
+    <label for="link-text">Text to display</label>
+    <input id="link-text" type="text" required>
+    <label for="link-url">Web address</label>
+    <input id="link-url" type="url" placeholder="https://example.com" required>
+    <div class="actions"><button type="button" id="cancel-link">Cancel</button><button type="submit">Insert</button></div>
+  </form>
+</dialog>
+<script>
+  const editor = document.getElementById('editor');
+  const dialog = document.getElementById('link-dialog');
+  const linkText = document.getElementById('link-text');
+  const linkUrl = document.getElementById('link-url');
+  const cooldown = document.getElementById('cooldown');
+  const cooldownEnd = performance.now() + Number(cooldown.dataset.remaining) * 1000;
+  function updateCooldown() {
+    const seconds = Math.max(0, Math.ceil((cooldownEnd - performance.now()) / 1000));
+    cooldown.textContent = seconds
+      ? `Next request available in ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}.`
+      : 'Ready to send.';
+  }
+  updateCooldown();
+  setInterval(updateCooldown, 1000);
+  let savedRange = null;
+  document.getElementById('insert-link').addEventListener('click', () => {
+    const selection = window.getSelection();
+    savedRange = selection.rangeCount && editor.contains(selection.getRangeAt(0).commonAncestorContainer)
+      ? selection.getRangeAt(0).cloneRange() : null;
+    linkText.value = savedRange ? savedRange.toString() : '';
+    linkUrl.value = '';
+    dialog.showModal();
+    (linkText.value ? linkUrl : linkText).focus();
+  });
+  document.getElementById('cancel-link').addEventListener('click', () => dialog.close());
+  document.getElementById('link-form').addEventListener('submit', event => {
+    event.preventDefault();
+    let url;
+    try { url = new URL(linkUrl.value); } catch { return; }
+    if (!['http:', 'https:'].includes(url.protocol)) { linkUrl.setCustomValidity('Use an HTTP or HTTPS address.'); linkUrl.reportValidity(); return; }
+    const anchor = document.createElement('a');
+    anchor.href = url.href;
+    anchor.textContent = linkText.value;
+    dialog.close();
+    editor.focus();
+    const range = savedRange || document.createRange();
+    if (!savedRange) { range.selectNodeContents(editor); range.collapse(false); }
+    range.deleteContents();
+    range.insertNode(anchor);
+    range.setStartAfter(anchor);
+    range.collapse(true);
+    const selection = window.getSelection();
+    selection.removeAllRanges(); selection.addRange(range);
+  });
+  linkUrl.addEventListener('input', () => linkUrl.setCustomValidity(''));
+  document.getElementById('compose').addEventListener('submit', () => {
+    document.getElementById('body-value').value = editor.innerHTML;
+  });
+</script>
+</body>
+</html>

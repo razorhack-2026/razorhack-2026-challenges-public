@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head><title>{{ profile.handle }} - StarFic</title>
+<style>
+body { font-family: Georgia, serif; background: #fdf6e3; color: #333; max-width: 700px; margin: 40px auto; }
+h1 { color: #7a4; }
+.meta { color: #888; font-size: 0.9em; }
+.story { background: #fff; border: 1px solid #e4d9b8; border-radius: 6px; padding: 16px 20px; margin-top: 20px; }
+.story h2 { margin-top: 0; color: #a66; }
+.excerpt { font-style: italic; color: #555; }
+</style>
+</head>
+<body>
+<h1>{{ profile.handle }}</h1>
+<p class="meta">Member since {{ profile.joined }} &middot; 1 published work &middot; 14 kudos</p>
+<p>Hi all! Just a night-shift nobody who likes writing space opera where the hero actually
+gets to be cool for once. Comments welcome, be nice, this is my first one.</p>
+
+<div class="story">
+  <h2>{{ profile.story_title }}</h2>
+  <p class="meta">Space Opera &middot; Original Character &middot; 1 chapter &middot; Complete</p>
+  <p class="excerpt">
+    "They called him reckless. They called him a liability. {{ profile.character_name }} called
+    it Tuesday. No ship had ever outrun him, no lock had ever held him, and no crew had ever
+    regretted following him into the dark -- not once, not yet. He straightened his coat, looked
+    out at the horizon no one else believed was there, and smiled the smile that made admirals
+    nervous and ensigns loyal for life."
+  </p>
+  <p>Author's note: wrote this one after a long shift. Don't judge me too hard, I just think
+  someone should get to be the hero who's actually in control for once. Part 2 someday maybe.</p>
+</div>
+</body>
+</html>

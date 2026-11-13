@@ -1,0 +1,38 @@
+name: "Last Mile"
+author: "Voyager 1"
+category: ICS
+description: >
+    You finally reach the KEEPER OF TOMORROW's engineering workstation, and now you can see what Rootkit
+    has been doing with it: he has taken over the Kalium refinery line and is enriching the ship's fuel for
+    himself, one centrifuge run at a time. You cannot force him off the controls from here, but you can take
+    the line down. The controller's commissioning paperwork is on the workstation, and nobody ever closed the
+    last item on its checklist. Work out what that unfinished item was meant to prove, and see it through.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{critical_speed_broke_the_rotor}
+
+files: []   # no dist/ handouts: live service; the commissioning sheet is on Lateral Drift's workstation
+
+connection_info: Modbus/TCP host:port from the engineering workstation's diagnostics page; paperwork in its Documents panel; the flag shows on the controller's status page
+
+# Same topic name as Lateral Drift: both run in one per-team copy (the workstation's PLC address points at it).
+topics:
+    - instance:lateral-drift
+    - "quest:Know Your Mark"
+
+requirements:
+    prerequisites:
+        - "Lateral Drift"
+    anonymize: true
+
+tags:
+    - medium
+
+state: hidden
+version: "0.1"

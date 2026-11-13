@@ -1,0 +1,20 @@
+{
+  "_comment": "GM-only acceptance-test manifest for `gw.ps1 challenge` / `gw_challenge`. Never put a literal flag here; only the 'flag{' prefix is allowed (and enforced). Paths are relative to the challenge folder (the parent of src/).",
+  "gateway": "containment2",
+  "project": "Containment",
+  "ignition": "src/ignition",
+  "sim": {
+    "composeDir": ".",
+    "service": "sim",
+    "ports": [502, 503, 504, 505]
+  },
+  "restingExpect": ["SYSTEM ONLINE", "NOMINAL", "MEMBRANE"],
+  "notExpect": ["flag{", "CONTAINMENT BREACH"],
+  "scenario": {
+    "interpreter": "python",
+    "script": "solution/solve.py",
+    "args": "--path plant-overload --host 127.0.0.1 --timeout 60",
+    "afterExpect": ["CONTAINMENT BREACH", "FOUNDER CULTURE", "flag{"],
+    "afterWaitMs": 70000
+  }
+}

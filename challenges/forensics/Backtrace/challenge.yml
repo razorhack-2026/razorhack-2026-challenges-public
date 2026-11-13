@@ -1,0 +1,32 @@
+name: "Backtrace"
+author: "Voyager 1"
+category: Forensics
+description: |
+    Something triggered a safety incident aboard the ISV Kestrel — read
+    Ship Security's report and investigate.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{never_ftp_your_secrets_into_space}
+
+files:
+    - dist/kestrel_shipnet.pcap
+    - dist/SHIP_SYSTEMS.md
+    - dist/INCIDENT_REPORT.md
+
+tags:
+    - medium
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:3:The Chaos"
+
+state: hidden
+version: "0.1"

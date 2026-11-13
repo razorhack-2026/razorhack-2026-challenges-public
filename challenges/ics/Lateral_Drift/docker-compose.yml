@@ -1,0 +1,38 @@
+# Challenge: Lateral Drift (2/3 of the "Lateral Drift" sequence) and Last Mile (3/3).
+# One shared network namespace, mirroring the per-team Fargate task (instance
+# lateral-drift): engineering-workstation and Last Mile's process-plc join
+# vpn-gateway's namespace. Only the gateway's sshd listens on every address; the
+# workstation (:5000) and the PLC (Modbus :502, status page :8000) listen on 127.0.0.1
+# only, so the one thing a competitor can reach directly is the gateway, with the
+# credential from Know Your Mark. Everything else is reached by pivoting through it,
+# which is the "lateral drift" the challenge is named for.
+#   docker compose up -d --build
+#   ssh rootkit@localhost -p 2223          (port 22 in the Fargate copy)
+
+services:
+  vpn-gateway:
+    build: ./src/vpn_gateway
+    container_name: lateral-drift-vpn-gateway
+    restart: unless-stopped
+    ports:
+      - "2223:22"   # the only player-facing port
+
+  engineering-workstation:
+    build: ./src/engineering_workstation
+    container_name: lateral-drift-engineering-workstation
+    restart: unless-stopped
+    network_mode: "service:vpn-gateway"
+    environment:
+      # The PLC address this workstation advertises (Diagnostics panel + commissioning
+      # sheet) and that a competitor tunnels to THROUGH vpn-gateway. process-plc is in
+      # the same namespace, so it's 127.0.0.1 and its own ports (also config.py's defaults).
+      - PROCESS_PLC_HOST=${PROCESS_PLC_HOST:-127.0.0.1}
+      - PROCESS_PLC_PORT=${PROCESS_PLC_PORT:-502}
+      - PROCESS_PLC_STATUS_PORT=${PROCESS_PLC_STATUS_PORT:-8000}
+
+  # Last Mile (3/3). Its source lives here so one folder builds the whole copy.
+  process-plc:
+    build: ./src/process_plc
+    container_name: last-mile-process-plc
+    restart: unless-stopped
+    network_mode: "service:vpn-gateway"

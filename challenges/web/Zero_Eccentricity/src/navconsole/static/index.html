@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NAV-7 Orbit Insertion</title>
+<style>
+  :root {
+    --paint: #5b6157;          /* flight-deck grey-green enamel */
+    --paint-hi: #6c7367;
+    --paint-lo: #444940;
+    --engrave: #e9e6d8;
+    --phosphor: #7dff9a;
+    --phosphor-dim: rgba(125, 255, 154, 0.22);
+    --led: #ff3b1f;
+    --led-off: rgba(255, 59, 31, 0.09);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    height: 100vh; overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 30%, #2a2c28 0%, #141513 70%) fixed;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0;
+    font-family: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+    color: var(--engrave);
+  }
+
+  /* ---------- the console panel ---------- */
+  .panel {
+    position: relative; flex: none; transform-origin: center center;
+    display: grid; grid-template-columns: auto 300px; gap: 26px;
+    padding: 34px 34px 30px;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px),
+      linear-gradient(180deg, var(--paint-hi), var(--paint) 40%, var(--paint-lo));
+    border-radius: 4px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.18),
+      inset 0 -2px 0 rgba(0,0,0,0.35),
+      0 30px 60px rgba(0,0,0,0.6),
+      0 0 0 6px #262824, 0 0 0 7px #3b3e37;
+  }
+  .screw {
+    position: absolute; width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #c9c9c0, #6d6e66 60%, #3a3b36);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .screw::after {
+    content: ""; position: absolute; left: 2px; right: 2px; top: 5.5px; height: 2px;
+    background: #2f302b; transform: rotate(var(--r, 30deg));
+  }
+  .screw.tl { top: 10px; left: 10px; --r: 22deg; }
+  .screw.tr { top: 10px; right: 10px; --r: 71deg; }
+  .screw.bl { bottom: 10px; left: 10px; --r: 133deg; }
+  .screw.br { bottom: 10px; right: 10px; --r: 4deg; }
+
+  .engr {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--engrave); text-shadow: 0 1px 0 rgba(0,0,0,0.55);
+  }
+
+  /* ---------- CRT ---------- */
+  .bezel {
+    position: relative; padding: 18px; border-radius: 10px;
+    background: linear-gradient(160deg, #2b2d29, #191a17);
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .bezel .tag { position: absolute; top: -20px; left: 4px; }
+  .bezel .tag.r { left: auto; right: 4px; }
+  .screen {
+    position: relative; width: 600px; height: 600px; border-radius: 22px; overflow: hidden;
+    background: #030a05;
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.9);
+  }
+  .screen canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #trace { cursor: crosshair; touch-action: none; }
+  .glass, .scan { position: absolute; inset: 0; pointer-events: none; }
+  .scan {
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.28) 0 1px, transparent 1px 3px);
+    mix-blend-mode: multiply;
+  }
+  .glass {
+    border-radius: 22px;
+    background:
+      radial-gradient(ellipse at 30% 18%, rgba(255,255,255,0.07), transparent 40%),
+      radial-gradient(ellipse at center, transparent 58%, rgba(0,0,0,0.55) 100%);
+  }
+  .crt-text {
+    position: absolute; left: 18px; right: 18px; bottom: 14px; pointer-events: none;
+    font: 13px/1.35 "Lucida Console", "Courier New", monospace;
+    color: var(--phosphor); text-shadow: 0 0 6px rgba(125,255,154,0.7);
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .crt-text .cur { animation: blink 1s steps(1) infinite; }
+  .crt-head {
+    position: absolute; left: 18px; top: 14px; pointer-events: none;
+    font: 11px/1.4 "Lucida Console", "Courier New", monospace;
+    color: var(--phosphor); opacity: 0.6; letter-spacing: 0.06em;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---------- right column ---------- */
+  .side { display: flex; flex-direction: column; gap: 16px; padding-top: 2px; }
+  .plate {
+    padding: 10px 12px 9px; border-radius: 2px;
+    background: linear-gradient(180deg, #1d1f1b, #10110f);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .plate .t1 { font-size: 22px; font-weight: 700; letter-spacing: 0.12em; color: #f1eedf; }
+  .plate .t2 { font-size: 10px; letter-spacing: 0.22em; color: #a9a796; margin-top: 2px; }
+
+  .readout { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 4px 10px; }
+  .readout .engr { grid-column: 1 / -1; }
+  .window {
+    grid-column: 1 / -1; padding: 7px 10px; border-radius: 3px; background: #0b0605;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.95), 0 1px 0 rgba(255,255,255,0.12);
+  }
+  .window canvas { display: block; }
+  .unit { font-size: 10px; letter-spacing: 0.14em; color: #b9b6a6; grid-column: 2; margin-top: -2px; }
+
+  .lamps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .lamp {
+    position: relative; padding: 8px 4px; text-align: center; border-radius: 2px;
+    font: 700 10px/1.1 "Arial Narrow", Arial, sans-serif; letter-spacing: 0.12em;
+    color: rgba(30, 24, 12, 0.55);
+    background: linear-gradient(180deg, #4b4636, #3a362a);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.1);
+    transition: background .08s, color .08s, box-shadow .08s;
+  }
+  .lamp.on.amber { background: linear-gradient(180deg, #ffd36b, #f0a91f); color: #3a2400;
+                   box-shadow: 0 0 14px rgba(255,190,60,0.55), inset 0 0 0 1px rgba(0,0,0,0.4); }
+  .lamp.on.red   { background: linear-gradient(180deg, #ff7a5c, #e2351a); color: #2e0700;
+                   box-shadow: 0 0 14px rgba(255,80,40,0.55), inset 0 0 0 1px rgba(0,0,0,0.4); }
+  .lamp.on.green { background: linear-gradient(180deg, #b9ff9a, #5fd94a); color: #0c2a05;
+                   box-shadow: 0 0 14px rgba(120,255,90,0.55), inset 0 0 0 1px rgba(0,0,0,0.4); }
+
+  .dymo {
+    align-self: flex-start; transform: rotate(-1.2deg);
+    background: #12261c; color: #f4f4ee; padding: 4px 9px 3px; border-radius: 2px;
+    font: 700 12px/1 "Courier New", monospace; letter-spacing: 0.14em;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.08), 0 2px 3px rgba(0,0,0,0.4);
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.4);
+  }
+
+
+  .tape {
+    margin-top: 4px; min-height: 0; overflow: hidden; max-height: 0;
+    background: repeating-linear-gradient(180deg, #f3efe2 0 22px, #ece7d8 22px 23px);
+    color: #2d2a22; font: 12px/1.5 "Courier New", monospace;
+    transition: max-height .6s ease-out;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.4);
+    border-left: 1px dashed #c9c2ad; border-right: 1px dashed #c9c2ad;
+  }
+  .tape.out { max-height: 160px; }
+  .tape div { padding: 8px 10px; word-break: break-all; white-space: pre-wrap; }
+  .slot {
+    height: 8px; border-radius: 2px; background: #0d0e0c;
+    box-shadow: inset 0 2px 3px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+</style>
+</head>
+<body>
+<div class="panel">
+  <span class="screw tl"></span><span class="screw tr"></span>
+  <span class="screw bl"></span><span class="screw br"></span>
+
+  <div class="bezel">
+    <span class="tag engr">Orbital plot</span>
+    <span class="tag r engr">Range 1:40 000</span>
+    <div class="screen">
+      <canvas id="sky" width="600" height="600"></canvas>
+      <canvas id="trace" width="600" height="600"></canvas>
+      <div class="scan"></div>
+      <div class="glass"></div>
+      <div class="crt-head">AP-DISC &nbsp; INS MAN &nbsp; TGT ECC 0.000</div>
+      <div class="crt-text"><span id="status">Standing by for manual trace</span> <span class="cur">_</span></div>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="plate">
+      <div class="t1">NAV-7</div>
+      <div class="t2">ORBIT INSERTION / BURN COMMIT</div>
+    </div>
+
+    <div class="readout">
+      <span class="engr">Circularity</span>
+      <div class="window"><canvas id="seg-circ" width="250" height="52"></canvas></div>
+      <span class="unit">PERCENT</span>
+    </div>
+    <div class="readout">
+      <span class="engr">Eccentricity</span>
+      <div class="window"><canvas id="seg-ecc" width="250" height="40"></canvas></div>
+    </div>
+    <div class="readout">
+      <span class="engr">Orbit radius</span>
+      <div class="window"><canvas id="seg-rad" width="250" height="40"></canvas></div>
+      <span class="unit">SCOPE PX</span>
+    </div>
+
+    <div class="lamps">
+      <div class="lamp amber" id="lamp-xmit">XMIT</div>
+      <div class="lamp red" id="lamp-unstable">ORBIT<br>UNSTABLE</div>
+      <div class="lamp red" id="lamp-reject">TLM<br>REJECT</div>
+      <div class="lamp green" id="lamp-lock">BURN<br>COMMIT</div>
+    </div>
+
+    <span class="dymo">MIN CIRC 99.5</span>
+
+    <div>
+      <div class="slot"></div>
+      <div class="tape" id="tape"><div id="flag"></div></div>
+    </div>
+  </div>
+
+</div>
+<script src="/static/nav.js"></script>
+</body>
+</html>

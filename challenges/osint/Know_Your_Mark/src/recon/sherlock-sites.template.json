@@ -1,0 +1,158 @@
+{
+  "AsteroidBazaar": {
+    "urlMain": "http://challenge-host:8112/",
+    "url": "http://challenge-host:8112/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "BeaconBoard": {
+    "urlMain": "http://challenge-host:8100/",
+    "url": "http://challenge-host:8100/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "CargoCommons": {
+    "urlMain": "http://challenge-host:8113/",
+    "url": "http://challenge-host:8113/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "CelestialBoards": {
+    "urlMain": "http://challenge-host:8114/",
+    "url": "http://challenge-host:8114/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "CometCorner": {
+    "urlMain": "http://challenge-host:8115/",
+    "url": "http://challenge-host:8115/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "CosmosJournal": {
+    "urlMain": "http://challenge-host:8116/",
+    "url": "http://challenge-host:8116/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "CrewExchange": {
+    "urlMain": "http://challenge-host:8101/",
+    "url": "http://challenge-host:8101/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "DeepSignal": {
+    "urlMain": "http://challenge-host:8102/",
+    "url": "http://challenge-host:8102/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "Dockside": {
+    "urlMain": "http://challenge-host:8103/",
+    "url": "http://challenge-host:8103/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "DriftMarket": {
+    "urlMain": "http://challenge-host:8087/",
+    "url": "http://challenge-host:8087/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "FleetArchive": {
+    "urlMain": "http://challenge-host:8104/",
+    "url": "http://challenge-host:8104/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "FlightLog": {
+    "urlMain": "http://challenge-host:8117/",
+    "url": "http://challenge-host:8117/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "GalaxyForum": {
+    "urlMain": "http://challenge-host:8118/",
+    "url": "http://challenge-host:8118/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "HorizonForum": {
+    "urlMain": "http://challenge-host:8105/",
+    "url": "http://challenge-host:8105/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "LaunchPad": {
+    "urlMain": "http://challenge-host:8119/",
+    "url": "http://challenge-host:8119/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "LunarList": {
+    "urlMain": "http://challenge-host:8106/",
+    "url": "http://challenge-host:8106/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "NebulaNotes": {
+    "urlMain": "http://challenge-host:8120/",
+    "url": "http://challenge-host:8120/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "NovaNetwork": {
+    "urlMain": "http://challenge-host:8121/",
+    "url": "http://challenge-host:8121/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "OrbitalNotes": {
+    "urlMain": "http://challenge-host:8107/",
+    "url": "http://challenge-host:8107/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "OutpostMarket": {
+    "urlMain": "http://challenge-host:8108/",
+    "url": "http://challenge-host:8108/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "RelayHub": {
+    "urlMain": "http://challenge-host:8109/",
+    "url": "http://challenge-host:8109/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "SectorMarket": {
+    "urlMain": "http://challenge-host:8122/",
+    "url": "http://challenge-host:8122/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "StarFic": {
+    "urlMain": "http://challenge-host:8086/",
+    "url": "http://challenge-host:8086/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "Starlight": {
+    "urlMain": "http://challenge-host:8110/",
+    "url": "http://challenge-host:8110/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "TransitSquare": {
+    "urlMain": "http://challenge-host:8111/",
+    "url": "http://challenge-host:8111/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  },
+  "WaypointBoard": {
+    "urlMain": "http://challenge-host:8123/",
+    "url": "http://challenge-host:8123/u/{}",
+    "errorType": "status_code",
+    "username_claimed": ""
+  }
+}

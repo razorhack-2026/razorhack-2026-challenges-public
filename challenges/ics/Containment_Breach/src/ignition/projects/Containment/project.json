@@ -1,0 +1,7 @@
+{
+    "title":  "Containment",
+    "description":  "Containment Breach read-only operator HMI",
+    "enabled":  true,
+    "inheritable":  false,
+    "parent":  ""
+}

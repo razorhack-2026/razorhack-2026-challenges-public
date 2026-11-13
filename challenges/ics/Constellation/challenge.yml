@@ -1,0 +1,33 @@
+name: "Constellation"
+author: "Voyager 1"
+category: ICS
+description: |
+    A Modbus/TCP device at `<challenge-host>:502` is exposing a set of
+    holding registers, but they don't look like normal telemetry — hundreds
+    of small integers in tight groups of three.
+
+    Read them, figure out what each group of three means, and plot it.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{polaris_lock}
+
+# Live Modbus/TCP service (docker-compose.yml) — host/port finalized at deploy time.
+connection_info: "{host}:{port} (Modbus/TCP)"
+
+tags:
+    - medium
+
+topics:
+    - "arc:2:Buildup"
+    - instance:constellation
+
+state: hidden
+version: "0.1"

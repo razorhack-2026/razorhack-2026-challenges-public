@@ -1,0 +1,26 @@
+[
+  {
+    "model": "DM-5",
+    "name": "DM-5 Mining Drone Operations Manual v1.8",
+    "file": null,
+    "description": "Legacy autonomous mining drone. Superseded by the DM-7 platform."
+  },
+  {
+    "model": "DM-7",
+    "name": "DM-7 Mining Drone Operations Manual v2.3",
+    "file": "/manuals/DM-7_Operations_Manual_v2.3.pdf",
+    "description": "Current-generation autonomous mineral extraction drone with dual-axis laser drilling."
+  },
+  {
+    "model": "TK-3",
+    "name": "TK-3 Transport Carrier Operations Manual v3.1",
+    "file": null,
+    "description": "Heavy-lift ore transport carrier for inter-belt transit operations."
+  },
+  {
+    "model": "SC-9",
+    "name": "SC-9 Survey Craft Operations Manual v1.2",
+    "file": null,
+    "description": "Long-range spectral survey craft for initial asteroid classification."
+  }
+]

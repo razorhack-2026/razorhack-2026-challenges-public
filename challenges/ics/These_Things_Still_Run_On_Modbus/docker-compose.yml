@@ -1,0 +1,49 @@
+version: "3.9"
+
+# Challenge: These Things Still Run On Modbus
+# Network: 10.13.37.0/24
+# On Linux, the Docker bridge is host-routable — players can nmap 10.13.37.0/24 directly.
+# On macOS/Windows (Docker Desktop), use the exposed host ports instead.
+#
+# VENDOR_URL — what the drone's FC43 response hands back as its vendor
+# support URL. Defaults below to http://localhost:8080, matching this
+# file's own website port mapping, so local GM testing works out of the
+# box. At the real venue, override it to wherever the website is actually
+# reachable from a participant, e.g.:
+#   VENDOR_URL=http://chal7.razorhack.example:8080 docker compose up -d
+# The internal bridge IP (10.13.37.50) is never reachable from outside
+# the container network — do not fall back to it in a real deployment.
+
+services:
+  drone:
+    build: ./src/drone
+    container_name: dm7_drone
+    restart: unless-stopped
+    environment:
+      - VENDOR_URL=${VENDOR_URL:-http://localhost:8080}
+    ports:
+      - "502:502"
+    networks:
+      mining_net:
+        ipv4_address: 10.13.37.30
+
+  website:
+    build:
+      context: ./src/website
+      args:
+        VENDOR_URL: ${VENDOR_URL:-http://localhost:8080}
+    container_name: astratechindustries
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    networks:
+      mining_net:
+        ipv4_address: 10.13.37.50
+
+networks:
+  mining_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.13.37.0/24
+          gateway: 10.13.37.1

@@ -1,0 +1,29 @@
+# Zero Eccentricity - one live service, no jump box.
+#
+# GM-only: the page (src/navconsole/static/) records one mouse stroke and
+# the server (src/navconsole/app.py) fits a circle to it. The flag is
+# returned only at >= 99.5% circularity, which a human hand can't hold but
+# a scripted mouse can. The page drops events with isTrusted == false, so
+# the intended solve is real input automation (Playwright / Selenium / CDP /
+# pyautogui). See solution/solution.md.
+#
+# No state worth keeping: rounds live in memory and expire after 10 min.
+name: zero_eccentricity
+
+services:
+  navconsole:
+    build: ./src/navconsole
+    ports:
+      - "8080:8080"
+    environment:
+      NAV_FLAG: "flag{n0_st34dy_h4nd_ju5t_a_st34dy_scr1pt}"
+    restart: unless-stopped
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 64
+    read_only: true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

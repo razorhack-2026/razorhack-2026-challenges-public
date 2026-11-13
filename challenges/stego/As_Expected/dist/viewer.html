@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terminal Buffer Viewer</title>
+<style>
+  :root {
+    --bg: #1c1b17;
+    --panel: #26241f;
+    --ink: #ece8dd;
+    --muted: #9a9488;
+    --border: #3c392f;
+    --accent: #e08b6f;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+  h1 { font-size: 1.05rem; font-weight: 600; margin: 0 0 4px; }
+  p.sub { color: var(--muted); margin: 0 0 12px; font-size: 0.78rem; }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    flex: 0 0 auto;
+  }
+  .toolbar label { font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .toolbar input[type="number"] {
+    width: 90px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: var(--bg);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 8px;
+  }
+  .toolbar label.upload-label {
+    font-family: inherit;
+    font-size: 0.78rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 12px;
+    cursor: pointer;
+  }
+  .stat { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+  .stat b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .pane {
+    flex: 1 1 auto;
+    min-height: 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+  }
+  textarea#grid {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    color: var(--ink);
+    font-family: inherit;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow: auto;
+    padding: 10px 14px;
+  }
+</style>
+</head>
+<body>
+  <h1>Terminal Buffer Viewer</h1>
+  <p class="sub">Upload the dump and set a chars-per-line width to re-wrap it. Scrolls both ways; nothing is hidden or clipped.</p>
+
+  <div class="toolbar">
+    <label class="upload-label">Upload .txt
+      <input type="file" id="uploadInput" accept=".txt,text/plain" style="display:none">
+    </label>
+    <label>Chars per line
+      <input type="number" id="widthNum" min="1" max="100000" value="80">
+    </label>
+    <div class="stat"><b id="lineCount">0</b> lines &middot; <b id="charCount">0</b> chars</div>
+  </div>
+
+  <div class="pane">
+    <textarea id="grid" spellcheck="false" placeholder="Upload a .txt file to begin."></textarea>
+  </div>
+
+<script>
+const gridEl = document.getElementById("grid");
+const widthNum = document.getElementById("widthNum");
+const charCount = document.getElementById("charCount");
+const lineCount = document.getElementById("lineCount");
+const uploadInput = document.getElementById("uploadInput");
+
+let rawText = "";
+
+function wrapAt(text, w) {
+  const flat = text.replace(/\n/g, "");
+  let out = "";
+  for (let i = 0; i < flat.length; i += w) {
+    out += flat.slice(i, i + w) + (i + w < flat.length ? "\n" : "");
+  }
+  return out;
+}
+
+function updateStats(text) {
+  charCount.textContent = text.replace(/\n/g, "").length;
+  lineCount.textContent = text.length ? text.split("\n").length : 0;
+}
+
+function rewrap() {
+  if (!rawText) return;
+  const w = Math.max(1, parseInt(widthNum.value, 10) || 1);
+  const wrapped = wrapAt(rawText, w);
+  gridEl.value = wrapped;
+  updateStats(wrapped);
+}
+
+widthNum.addEventListener("input", rewrap);
+
+uploadInput.addEventListener("change", () => {
+  const file = uploadInput.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    rawText = reader.result;
+    rewrap();
+  };
+  reader.onerror = () => alert("Couldn't read that file.");
+  reader.readAsText(file);
+  uploadInput.value = "";
+});
+</script>
+</body>
+</html>

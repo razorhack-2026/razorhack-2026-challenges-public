@@ -1,0 +1,39 @@
+name: "Five By Five"
+author: "Voyager 1"
+category: Web
+description: |
+    A break-room word game somebody on the night crew built to kill time --
+    nobody ever thought to secure a toy. One 5-letter cyber term, Wordle
+    rules, exactly one guess. Allegedly.
+
+    ```
+    http://<challenge-host>:8080
+    ```
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{client_side_lock_isnt_a_lock}
+
+files: []
+
+# Live service (docker-compose.yml) - host/port finalized at deploy time.
+connection_info: "http://{host}:{port}"
+
+tags:
+    - medium
+    - client-side-trust
+    - web
+
+topics:
+    - "arc:1:The Prologue"
+    - instance:five-by-five
+
+state: hidden
+version: "0.1"

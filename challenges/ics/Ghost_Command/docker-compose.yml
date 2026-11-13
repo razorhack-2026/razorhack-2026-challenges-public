@@ -1,0 +1,60 @@
+# Challenge: Ghost Command
+# Network: substation_net (10.13.39.0/24) — a flat L2 segment shared by
+# both IEDs and the jump box. GOOSE runs straight over Ethernet (EtherType
+# 0x88b8, no IP/TCP), so the jump box needs genuine L2 adjacency to inject
+# a replayed frame — same reasoning as Blind Spot's plant_net jump box.
+#
+# Frames use the Ethernet broadcast address rather than a real GOOSE
+# multicast MAC, to sidestep Docker bridge multicast-snooping edge cases.
+# See solution/solution.md.
+
+services:
+  ied-prot:
+    build:
+      context: ./src
+      dockerfile: ied-prot/Dockerfile
+    container_name: ghostcommand_ied_prot
+    restart: unless-stopped
+    cap_add:
+      - NET_RAW
+    networks:
+      substation_net:
+        ipv4_address: 10.13.39.10
+
+  ied-bkr:
+    build:
+      context: ./src
+      dockerfile: ied-bkr/Dockerfile
+    container_name: ghostcommand_ied_bkr
+    restart: unless-stopped
+    cap_add:
+      - NET_RAW
+    environment:
+      FLAG: "flag{one_frame_wasnt_a_drill}"
+    networks:
+      substation_net:
+        ipv4_address: 10.13.39.20
+
+  jump:
+    build:
+      context: ./src/jump
+    container_name: ghostcommand_jump
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    ports:
+      # On the team's Wi-Fi VM (instance:wifi), next to the Wi-Fi challenge's 2222,
+      # RH_BIND_IP is the VM's eth0 address. Unset locally: every interface.
+      - "${RH_BIND_IP:-0.0.0.0}:2223:22"
+    networks:
+      substation_net:
+        ipv4_address: 10.13.39.99
+
+networks:
+  substation_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.13.39.0/24
+          gateway: 10.13.39.1

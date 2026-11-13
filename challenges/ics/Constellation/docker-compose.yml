@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  server:
+    build:
+      context: ./src
+    container_name: constellation-server
+    ports:
+      # Modbus/TCP. Map 502->502 on the host; contestants target <host-ip>:502.
+      - "502:502"
+    restart: unless-stopped

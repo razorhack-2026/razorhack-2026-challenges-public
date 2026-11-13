@@ -1,0 +1,75 @@
+version: "3.9"
+
+# Challenge: Blind Spot
+# Networks:
+#   plant_net (10.13.37.0/24) — the spoofable segment. `controller`, `monitor`,
+#     and `attacker` all sit here; this is what contestants ARP-poison.
+#   mgmt_net (10.13.38.0/24) — private link between `controller` and `monitor`
+#     ONLY. `attacker` has no interface on it at all, so it cannot be ARP-
+#     poisoned or sniffed from the jump box — it's the unspoofable channel
+#     `monitor` uses to report its real verdict every poll cycle, which is
+#     what the flag-unlock condition actually gates on. (An earlier version
+#     of this challenge gated purely on a lockdown *write* sent back over
+#     plant_net — which meant a naive "ARP-poison and blackhole everything"
+#     approach, with no relay or rewrite at all, also won, since it silenced
+#     the lockdown write along with everything else. mgmt_net closes that.)
+#
+# ARP spoofing needs real L2 adjacency to plant_net, which a contestant's own
+# machine doesn't have over a normal forwarded port — so `attacker` is a
+# jumpbox already plugged into it. Contestants SSH into it (see README.md for
+# the connection details) and run their attack from inside; it's genuinely
+# on-segment regardless of what OS/network the contestant connects from.
+
+services:
+  controller:
+    build: ./src/controller
+    container_name: blindspot_controller
+    restart: unless-stopped
+    networks:
+      plant_net:
+        ipv4_address: 10.13.37.10
+      mgmt_net:
+        ipv4_address: 10.13.38.10
+
+  monitor:
+    build: ./src/monitor
+    container_name: blindspot_monitor
+    restart: unless-stopped
+    networks:
+      plant_net:
+        ipv4_address: 10.13.37.20
+      mgmt_net:
+        ipv4_address: 10.13.38.20
+
+  attacker:
+    build: ./src/attacker
+    container_name: blindspot_attacker
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    sysctls:
+      - net.ipv4.ip_forward=1
+    ports:
+      # On the team's Wi-Fi VM (instance:wifi), next to the Wi-Fi challenge's 2222,
+      # RH_BIND_IP is the VM's eth0 address. Unset locally: every interface.
+      - "${RH_BIND_IP:-0.0.0.0}:2224:22"
+    networks:
+      plant_net:
+        ipv4_address: 10.13.37.99
+
+networks:
+  plant_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.13.37.0/24
+          gateway: 10.13.37.1
+
+  mgmt_net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.13.38.0/24
+          gateway: 10.13.38.1

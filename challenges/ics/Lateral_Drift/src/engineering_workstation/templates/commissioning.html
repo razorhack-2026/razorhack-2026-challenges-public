@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <title>RC-200 Commissioning Sheet</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <style>
+    body { font-family: Tahoma, "Segoe UI", Arial, sans-serif; background: #d4d0c8;
+           color: #000; margin: 0; font-size: 12px; padding-bottom: 28px; }
+    .titlebar { background: #0a246a; color: #fff; padding: 4px 8px; font-weight: bold;
+                border-bottom: 1px solid #000; }
+    .content { padding: 12px; max-width: 880px; }
+    .sheet { background: #fff; border: 1px solid #808080; padding: 16px; }
+    h1 { font-size: 15px; margin: 0 0 4px 0; }
+    h2 { font-size: 13px; margin: 20px 0 4px 0; border-bottom: 1px solid #aca899; padding-bottom: 2px; }
+    .muted { color: #444; margin: 0; }
+    table { border-collapse: collapse; width: 100%; margin-top: 6px; }
+    th, td { border: 1px solid #aca899; padding: 4px 8px; text-align: left; font-size: 12px;
+             vertical-align: top; }
+    th { background: #ece9d8; }
+    code { font-family: "Courier New", monospace; }
+    .todo { color: #a05a00; }
+    .checklist { line-height: 1.6; }
+    a { color: #0000ee; }
+    .statusbar { position: fixed; bottom: 0; left: 0; right: 0; background: #ece9d8;
+                 border-top: 1px solid #808080; padding: 3px 8px; font-size: 11px; color: #333; }
+  </style>
+</head>
+<body>
+  <div class="titlebar">RazerPowerCo &mdash; Engineering Portal &mdash; Document Viewer</div>
+  <div class="content">
+    <div class="sheet">
+      <h1>RazerPowerCo RC-200 Kalium Enrichment Centrifuge Controller</h1>
+      <p class="muted">Commissioning sheet, rev C. Keep with the controller's service file. Site: KEEPER OF TOMORROW,
+         Kalium refinery line 2. The line spins raw Kalium feed gas through a centrifuge to enrich fuel-grade Kalium for the main drive.</p>
+
+      <h2>1. Network</h2>
+      <table>
+        <tr><th>Interface</th><th>Address</th><th>Notes</th></tr>
+        <tr><td>Modbus/TCP</td><td><code>{{ plc_host }}:{{ plc_port }}</code></td><td>Unit id 1. No authentication on the Modbus port.</td></tr>
+        <tr><td>Status page (HTTP)</td><td><code>http://{{ plc_host }}:{{ plc_status_port }}/</code></td><td>Read-only plant state and event log.</td></tr>
+      </table>
+
+      <h2>2. Register map</h2>
+      <table>
+        <tr><th>Address</th><th>Name</th><th>Access</th><th>Description</th></tr>
+        <tr><td>40001</td><td>rotor_speed_setpoint</td><td>R/W</td><td>Commanded rotor speed, 0 to 100 % of rated. Writes are ignored while the maintenance lock is engaged (section 3) and are limited to safe_limit.</td></tr>
+        <tr><td>40002</td><td>safe_limit</td><td>R</td><td>Highest speed the firmware will accept, %. Fixed at the factory.</td></tr>
+        <tr><td>40003</td><td>rotor_speed</td><td>R</td><td>Actual rotor speed, %. Ramps toward the setpoint.</td></tr>
+        <tr><td>40004</td><td>maint_unlock</td><td>W</td><td>Write the maintenance unlock code here. Always reads 0.</td></tr>
+        <tr><td>40005</td><td>lockout_seconds</td><td>R</td><td>Seconds left on a wrong-code lockout, 0 if none.</td></tr>
+        <tr><td>40006</td><td>vibration</td><td>R</td><td>Rotor vibration, mm/s x 10.</td></tr>
+        <tr><td>40007</td><td>bearing_temp</td><td>R</td><td>Rotor bearing temperature, degrees C.</td></tr>
+        <tr><td>40008</td><td>bearing_wear</td><td>R</td><td>Accumulated bearing wear, 0 to 100 %.</td></tr>
+        <tr><td>40009</td><td>feed_vessel_temp</td><td>R</td><td>Feed vessel temperature, degrees C.</td></tr>
+        <tr><td>00001</td><td>scram_tripped</td><td>R</td><td>Cascade scram relay. Latches true if the rotor bearing fails.</td></tr>
+        <tr><td>00002</td><td>maint_unlocked</td><td>R</td><td>True once the correct unlock code has been written.</td></tr>
+      </table>
+
+      <h2>3. Maintenance lock</h2>
+      <p class="muted">The controller ships locked. Until the maintenance unlock code is written to 40004, setpoint
+         writes are ignored and the value reads back unchanged. <strong>Factory default unlock code: {{ unlock_code }}.</strong>
+         Five wrong codes in a row lock register 40004 for 60 seconds.</p>
+
+      <h2>4. Rotor protection</h2>
+      <p class="muted">The firmware limits the setpoint to safe_limit (40002). Bearing wear (40008) builds up while
+         vibration (40006) is high and recovers when it is low. If the bearing wears out (100 %), the rotor
+         seizes, the cascade scram relay latches, and the draw-off from the feed vessel stops. The relay stays
+         latched until the controller is restarted. Without the draw-off the feed vessel temperature (40009) rises.</p>
+      <p class="muted"><strong>Operating note:</strong> vibration is not constant across the speed range. Like any rotor, the
+         RC-200 has a critical speed somewhere in its working range, and the vendor advises keeping it away from
+         that speed. The critical speed moves as the bearing heats up.</p>
+
+      <h2>5. Commissioning checklist</h2>
+      <p class="checklist">[x] 1. Mount and wire controller<br>
+         [x] 2. Verify Modbus/TCP link<br>
+         [x] 3. Record register map (section 2)<br>
+         [x] 4. Verify bearing protection and scram relay<br>
+         [x] 5. Sign off with plant engineering<br>
+         <span class="todo">[ ] 6. Change the factory default unlock code (open, ticket ENG-2087)</span></p>
+
+      <p class="muted"><a href="/dashboard">Back to dashboard</a></p>
+    </div>
+  </div>
+  <div class="statusbar">RazerPowerCo Plant Engineering intranet &middot; authorized use only &middot; sessions are logged</div>
+</body>
+</html>

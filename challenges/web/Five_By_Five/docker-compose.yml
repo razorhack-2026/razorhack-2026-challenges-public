@@ -1,0 +1,20 @@
+# Five By Five - one live service, no jump box.
+#
+# GM-only: each session gets a random 5-letter word from WORD_BANK in
+# src/wordle/app.py (not configured here -- edit the list in code to
+# change it). The "one guess" restriction competitors see is entirely
+# client-side (src/wordle/app.py's HOME_PAGE <script>): a session_id from
+# GET /api/session keeps working against POST /api/guess forever, with no
+# guess-count limit and no tie to the page ever being reloaded. That's
+# intentional; see solution/solution.md.
+name: five_by_five
+
+services:
+  wordle:
+    build: ./src/wordle
+    ports:
+      - "8080:8080"
+    environment:
+      WORDLE_ALPHABET: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      WORDLE_FLAG: "flag{client_side_lock_isnt_a_lock}"
+    restart: unless-stopped

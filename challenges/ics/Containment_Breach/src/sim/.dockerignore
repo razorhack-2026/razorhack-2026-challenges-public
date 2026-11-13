@@ -1,0 +1,6 @@
+# Never ship Python bytecode into the image — a stale .pyc can carry strings
+# (e.g. an old flag constant) even after the source is cleaned.
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

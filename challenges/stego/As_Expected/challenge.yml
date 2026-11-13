@@ -1,0 +1,38 @@
+name: "As Expected"
+author: "Voyager 1"
+category: Steganography
+description: |
+    A terminal buffer dump recovered from an old relay station export -- one
+    giant, unbroken block of text. No line breaks, just operational chatter
+    running on and on. Whoever first opened it took one look, saw "status
+    nominal" repeated a thousand times, and moved on.
+
+    They were looking at it wrong.
+
+    The export came with a block validator: a checksum over the first chunk
+    of the dump, confirming it hasn't been corrupted. The terminal never
+    recorded how big a chunk it was checking.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{WEIRD_SPACING}
+
+files:
+    - dist/output.txt
+    - dist/checksum.txt
+    - dist/viewer.html
+
+tags:
+    - medium
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,9 @@
+RazorPowerCo Terminal Buffer Export -- Block Validator
+--------------------------------------------------------
+source   : output.txt
+algo     : sha256
+field    : first BLOCK_SIZE characters of the raw dump
+checksum : 82e61065f62169c6c3d95f1f6df09ed0f4560894bb5194d35d44e4f59e44c813
+
+note: BLOCK_SIZE was never written down. The terminal only ever confirmed
+that the block checked out -- not how big a block it was validating.

@@ -1,0 +1,46 @@
+version: "3.9"
+
+# One shared network namespace, mirroring the per-team Fargate task: ignition and hmi-proxy join
+# sim's namespace, so every port is published from sim and they reach each other on 127.0.0.1.
+# See src/DEPLOYMENT.md.
+services:
+  sim:
+    build:
+      context: ./src/sim
+    container_name: containment-breach-sim
+    ports:
+      # Three vessels + one shared cryo-plant telemetry endpoint, as unit IDs on one Modbus/TCP
+      # port. The per-device listeners (502 Vessel A, 503 Vessel B, 504 Vessel C, 505 Cryo Plant)
+      # serve the same datastores for the gateway and listen on 127.0.0.1 only.
+      - "5030:5030"  # All four as unit IDs 1-4 (A, B, C, plant): the competitor-facing endpoint
+      # hmi-proxy, competitor-facing: http://<host>:8088/data/perspective/client/Containment
+      - "8088:8088"
+      # The gateway itself, GM only (loopback); never publish this to competitors
+      - "127.0.0.1:8089:8089"
+    restart: unless-stopped
+    # Uncomment to raise log verbosity for debugging growth-model ticks:
+    # environment:
+    #   - PYTHONUNBUFFERED=1
+
+  # The operator HMI. One gateway per team instance, started with the sim and wired to it on
+  # 127.0.0.1:502-505. Built from src/ignition (the Containment project, tags and the four Modbus
+  # devices, the same files containment.gwbk was built from), with a random admin password for
+  # each start (set GATEWAY_ADMIN_PASSWORD here to choose one). Competitors reach it only through
+  # `hmi-proxy` below, which passes just the read-only Perspective client.
+  ignition:
+    build:
+      context: ./src/ignition
+    container_name: containment-breach-ignition
+    network_mode: "service:sim"
+    depends_on:
+      - sim
+    restart: unless-stopped
+
+  hmi-proxy:
+    build:
+      context: ./src/proxy
+    container_name: containment-breach-hmi
+    network_mode: "service:sim"
+    depends_on:
+      - ignition
+    restart: unless-stopped

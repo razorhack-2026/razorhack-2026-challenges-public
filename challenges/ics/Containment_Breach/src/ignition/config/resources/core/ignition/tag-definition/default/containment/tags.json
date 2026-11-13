@@ -1,0 +1,272 @@
+[
+    {
+        "name": "vesselA_incubation_temp",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselA]HR1",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselA_colony_density",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselA]HR2",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselA_breach_threshold",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselA]HR3",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselA_suppression_level",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselA]HR4",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselA_suppression_system",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselA]C1",
+        "dataType": "Boolean",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselA_breach",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselA]C2",
+        "dataType": "Boolean",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselB_incubation_temp",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselB]HR1",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselB_colony_density",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselB]HR2",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselB_breach_threshold",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselB]HR3",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselB_suppression_level",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselB]HR4",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselB_suppression_system",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselB]C1",
+        "dataType": "Boolean",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselB_breach",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselB]C2",
+        "dataType": "Boolean",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselC_incubation_temp",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselC]HR1",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselC_colony_density",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselC]HR2",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselC_breach_threshold",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselC]HR3",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselC_suppression_level",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselC]HR4",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselC_suppression_system",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselC]C1",
+        "dataType": "Boolean",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselC_breach",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselC]C2",
+        "dataType": "Boolean",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "plant_total_capacity",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[CryoPlant]HR1",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "plant_total_demand",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[CryoPlant]HR2",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "plant_allocation_pct",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[CryoPlant]HR3",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselA_coolant_valve_pct",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselA]HR5",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselA_viability_pct",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselA]HR6",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselB_coolant_valve_pct",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselB]HR5",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselB_viability_pct",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselB]HR6",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselC_coolant_valve_pct",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselC]HR5",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    },
+    {
+        "name": "vesselC_viability_pct",
+        "tagType": "AtomicTag",
+        "valueSource": "opc",
+        "opcServer": "Ignition OPC UA Server",
+        "opcItemPath": "ns=1;s=[VesselC]HR6",
+        "dataType": "Int2",
+        "tagGroup": "ContainmentFast",
+        "accessRights": "Read_Only"
+    }
+]

@@ -1,0 +1,134 @@
+# Challenge: Know Your Mark (1/3 of the "Lateral Drift" sequence)
+# Five containers. webmail/persona/ollama split by trust boundary, same as before; the
+# model is chosen by env (LLM_PROVIDER); see solution/solution.md "Hooking up an LLM".
+# Default = local Ollama, no external API.
+# At the event each team gets its own copy as one Fargate task (Razorhack-Infra
+# lib/challenges.json, instance know-your-mark): one network namespace, so the sites
+# take their own ports (PORT, OTHER_SITE_PORTS), persona and the model bind 127.0.0.1,
+# and the model is src/ollama/Dockerfile's image with the weights already in it.
+#   webmail     - published port. No model credentials, no VPN credential.
+#   persona     - no published port, reachable only from webmail (internal DNS). Holds
+#     the in-fiction system prompt AND the real VPN credential.
+#   ollama      - no published port, reachable only from persona. Runs the actual
+#     model; a named volume caches the pulled weights across restarts.
+#   starfic     - published port. Static OSINT artifact: Rootkit's fan-fiction profile.
+#   driftmarket - published port. Static OSINT artifact: Rootkit's classifieds listing.
+
+services:
+  webmail:
+    # Built from src/ so the image carries src/recon/'s Sherlock template (no bind mount).
+    build:
+      context: ./src
+      dockerfile: webmail/Dockerfile
+    container_name: ${KYM_PREFIX:-kym}-webmail
+    restart: unless-stopped
+    ports:
+      - "${WEBMAIL_PORT:-8080}:8080"
+    environment:
+      # Must be larger than persona's LLM_TIMEOUT (default 300 ollama / 60 openai_compat).
+      - PERSONA_TIMEOUT=${PERSONA_TIMEOUT:-330}
+      - MODEL_COOLDOWN_SECONDS=${MODEL_COOLDOWN_SECONDS:-180}
+      - KYM_TEAM_TOKENS=${KYM_TEAM_TOKENS:-}
+      - KYM_ALLOW_DEV_TOKENS=${KYM_ALLOW_DEV_TOKENS:-}   # local testing only; unset on a real deploy
+      - SHERLOCK_TEMPLATE=/app/sherlock-sites.template.json
+      # NOTE: no LLM_* variables and no credential here, by design.
+    depends_on:
+      - persona
+
+  persona:
+    build: ./src/persona
+    container_name: ${KYM_PREFIX:-kym}-persona
+    restart: unless-stopped
+    environment:
+      - LLM_PROVIDER=${LLM_PROVIDER:-ollama}          # ollama | openai_compat | mock
+      - PERSONA_TIMEOUT=${PERSONA_TIMEOUT:-330}
+      - LLM_TIMEOUT=${LLM_TIMEOUT:-}                  # empty = provider default (ollama 300, openai_compat 60, mock 10)
+      - LLM_MAX_TOKENS=${LLM_MAX_TOKENS:-96}
+      - LLM_TEMPERATURE=${LLM_TEMPERATURE:-0.6}
+      - LLM_CONCURRENCY=${LLM_CONCURRENCY:-}
+      # ollama
+      - OLLAMA_URL=${OLLAMA_URL:-http://ollama:11434/api/chat}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5:3b-instruct}
+      - OLLAMA_NUM_THREADS=${OLLAMA_NUM_THREADS:-4}
+      # openai_compat
+      - LLM_BASE_URL=${LLM_BASE_URL:-}
+      - LLM_MODEL=${LLM_MODEL:-}
+      - LLM_MAX_TOKENS_PARAM=${LLM_MAX_TOKENS_PARAM:-max_tokens}
+      - LLM_API_KEY=${LLM_API_KEY:-}                  # passed through from the host env ONLY; never put a value here
+      # mock
+      - LLM_MOCK_MODE=${LLM_MOCK_MODE:-success}
+    # No `ports:` -- reachable only as http://persona:8090 from webmail, over the
+    # compose network's internal DNS. `depends_on: ollama` is intentionally absent so
+    # non-ollama providers don't need it; start it yourself for LLM_PROVIDER=ollama
+    # (`docker compose up -d ollama`, see Setup).
+
+  ollama:
+    image: ollama/ollama
+    container_name: ${KYM_PREFIX:-kym}-ollama
+    restart: unless-stopped
+    volumes:
+      - ollama_models:/root/.ollama
+    # No `ports:` -- reachable only as http://ollama:11434 from persona.
+
+  starfic:
+    build: ./src/starfic
+    container_name: ${KYM_PREFIX:-kym}-starfic
+    restart: unless-stopped
+    ports:
+      - "${STARFIC_PORT:-8086}:8080"
+
+  driftmarket:
+    build: ./src/driftmarket
+    container_name: ${KYM_PREFIX:-kym}-driftmarket
+    restart: unless-stopped
+    ports:
+      - "${DRIFTMARKET_PORT:-8087}:8080"
+
+  other-sites:
+    build: ./src/other_sites
+    container_name: ${KYM_PREFIX:-kym}-other-sites
+    restart: unless-stopped
+    ports:
+      - "${OTHER_SITE_PORT_01:-8100}:8080"
+      - "${OTHER_SITE_PORT_02:-8101}:8080"
+      - "${OTHER_SITE_PORT_03:-8102}:8080"
+      - "${OTHER_SITE_PORT_04:-8103}:8080"
+      - "${OTHER_SITE_PORT_05:-8104}:8080"
+      - "${OTHER_SITE_PORT_06:-8105}:8080"
+      - "${OTHER_SITE_PORT_07:-8106}:8080"
+      - "${OTHER_SITE_PORT_08:-8107}:8080"
+      - "${OTHER_SITE_PORT_09:-8108}:8080"
+      - "${OTHER_SITE_PORT_10:-8109}:8080"
+      - "${OTHER_SITE_PORT_11:-8110}:8080"
+      - "${OTHER_SITE_PORT_12:-8111}:8080"
+      - "${OTHER_SITE_PORT_13:-8112}:8080"
+      - "${OTHER_SITE_PORT_14:-8113}:8080"
+      - "${OTHER_SITE_PORT_15:-8114}:8080"
+      - "${OTHER_SITE_PORT_16:-8115}:8080"
+      - "${OTHER_SITE_PORT_17:-8116}:8080"
+      - "${OTHER_SITE_PORT_18:-8117}:8080"
+      - "${OTHER_SITE_PORT_19:-8118}:8080"
+      - "${OTHER_SITE_PORT_20:-8119}:8080"
+      - "${OTHER_SITE_PORT_21:-8120}:8080"
+      - "${OTHER_SITE_PORT_22:-8121}:8080"
+      - "${OTHER_SITE_PORT_23:-8122}:8080"
+      - "${OTHER_SITE_PORT_24:-8123}:8080"
+
+volumes:
+  ollama_models:
+    # Stable cache name also reuses the existing local development model volume.
+    name: ${KYM_MODEL_VOLUME:-kym_ollama_models}
+
+# Setup (one-time per instance):
+#   1. docker compose up -d ollama
+#   2. docker exec kym-ollama ollama pull qwen2.5:3b-instruct
+#      (or whatever OLLAMA_MODEL is set to; ~2GB, cached in the named volume after
+#      the first pull - survives `compose restart`, not `compose down -v`)
+#   3. docker compose up -d
+#   4. Confirm: curl http://localhost:8080/mail/<a-token-from-src/webmail/config.py>
+#      curl http://localhost:8086/ (starfic) and http://localhost:8087/ (driftmarket)
+#
+# If the deploy box has a GPU, Docker needs `--gpus all` wiring (not set up here by
+# default - add a `deploy.resources.reservations.devices` block if needed) and a
+# bigger model (Qwen2.5 7B / Mistral 7B Instruct) via OLLAMA_MODEL is worth it for
+# materially better in-character consistency. Decide against actual venue hardware.
