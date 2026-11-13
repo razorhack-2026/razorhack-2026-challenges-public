@@ -1,0 +1,7 @@
+{
+  "title": "ECLSS",
+  "description": "RazorHack ECLSS life-support HMI (ISV Ozark Horizon)",
+  "parent": "",
+  "enabled": true,
+  "inheritable": false
+}

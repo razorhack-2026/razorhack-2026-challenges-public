@@ -1,0 +1,38 @@
+# Power-Trip -- one instance per team.
+#
+# Local testing:            docker compose up -d
+# Force a rebuild:          docker compose up -d --build
+#
+# Unlike most challenges here, this container never holds the flag. The flag is
+# sealed inside dist/interlock.enc at authoring time; the rig only knows the
+# board's interlock key, and has no command that returns it.
+#
+# WARNING: DEVICE_KEY and dist/interlock.enc are a matched pair. The blob is
+# sealed under SHA-256(DEVICE_KEY)[:16]. If you override DEVICE_KEY here you
+# MUST regenerate the blob or the challenge becomes unsolvable:
+#
+#   python src/gen_interlock.py --flag 'flag{...}' --key <new hex key>
+#
+# Every team's instance must run the SAME key -- challenge.yml carries a single
+# static flag, so per-team keys would need per-team flags.
+services:
+  power-trip:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+    image: power-trip:latest
+    container_name: power-trip
+    environment:
+      # Default is the committed src/device_key.txt, which matches the committed
+      # dist/interlock.enc. Leave it alone unless you are regenerating both.
+      DEVICE_KEY: ${DEVICE_KEY:-}
+      PORT: 1337
+      MAX_CHILDREN: ${MAX_CHILDREN:-16}
+    ports:
+      - "1337:1337"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1g
+    cpus: "1.0"
+    pids_limit: 256

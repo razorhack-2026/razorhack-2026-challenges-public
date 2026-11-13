@@ -1,0 +1,693 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1100,
+      "height": 720
+    }
+  },
+  "root": {
+    "type": "ia.container.coord",
+    "version": 0,
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "mode": "fixed",
+      "style": {
+        "backgroundColor": "#050a16",
+        "backgroundImage": "radial-gradient(1.5px 1.5px at 20px 30px, rgba(255,255,255,0.9), transparent), radial-gradient(1px 1px at 120px 80px, rgba(180,220,255,0.8), transparent), radial-gradient(1px 1px at 70px 150px, rgba(255,255,255,0.6), transparent), radial-gradient(1.5px 1.5px at 165px 170px, rgba(200,180,255,0.7), transparent), radial-gradient(1px 1px at 190px 20px, rgba(255,255,255,0.5), transparent), radial-gradient(ellipse at 12% 0%, rgba(40,110,255,0.24), transparent 55%), radial-gradient(ellipse at 95% 100%, rgba(150,60,255,0.22), transparent 55%), linear-gradient(180deg, #040814 0%, #070d1f 100%)",
+        "backgroundSize": "200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 100% 100%, 100% 100%, 100% 100%",
+        "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif"
+      }
+    },
+    "children": [
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hdr_band"
+        },
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 1100,
+          "height": 72
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundImage": "linear-gradient(90deg, rgba(20,70,150,0.55), rgba(10,20,40,0.15))",
+            "borderBottom": "1px solid rgba(90,170,255,0.35)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hdr_title"
+        },
+        "position": {
+          "x": 32,
+          "y": 10,
+          "width": 760,
+          "height": 32
+        },
+        "props": {
+          "text": "TRAINING BAY",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "24px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 700,
+            "letterSpacing": "0.22em",
+            "textShadow": "0 0 14px rgba(80,200,255,0.55)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hdr_sub"
+        },
+        "position": {
+          "x": 32,
+          "y": 44,
+          "width": 760,
+          "height": 20
+        },
+        "props": {
+          "text": "OPERATOR CONSOLE  ·  ISV OZARK HORIZON",
+          "style": {
+            "color": "#6fa8dc",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.32em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "beacon_card"
+        },
+        "position": {
+          "x": 32,
+          "y": 96,
+          "width": 676,
+          "height": 420
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "beacon_title"
+        },
+        "position": {
+          "x": 52,
+          "y": 110,
+          "width": 636,
+          "height": 22
+        },
+        "props": {
+          "text": "DEEP-SPACE BEACON TUNER",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.markdown",
+        "version": 0,
+        "meta": {
+          "name": "briefing"
+        },
+        "position": {
+          "x": 52,
+          "y": 136,
+          "width": 636,
+          "height": 110
+        },
+        "props": {
+          "source": "Tune the beacon to **the 21-cm hydrogen line, in MHz (whole number)**.  \nType the value and press **Enter** - the console writes it to the PLC. The beacon holds lock for 30 s once the PLC confirms it.",
+          "style": {
+            "color": "#c9dcf0",
+            "fontSize": "15px",
+            "lineHeight": "1.6",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "padding": "4px 8px"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "freq_lbl"
+        },
+        "position": {
+          "x": 52,
+          "y": 262,
+          "width": 200,
+          "height": 20
+        },
+        "props": {
+          "text": "FREQUENCY  (MHz)",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.18em"
+          }
+        }
+      },
+      {
+        "type": "ia.input.numeric-entry-field",
+        "version": 0,
+        "meta": {
+          "name": "FreqEntry"
+        },
+        "position": {
+          "x": 52,
+          "y": 286,
+          "width": 260,
+          "height": 52
+        },
+        "props": {
+          "value": 0,
+          "style": {
+            "backgroundColor": "rgba(4,10,24,0.9)",
+            "color": "#9fe8ff",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "fontSize": "26px",
+            "border": "1px solid rgba(76,201,240,0.6)",
+            "borderRadius": "10px",
+            "boxShadow": "0 0 18px rgba(76,201,240,0.25)"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "tag",
+              "config": {
+                "mode": "direct",
+                "tagPath": "[default]Training/Beacon_Freq",
+                "bidirectional": true
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "lock_chip"
+        },
+        "position": {
+          "x": 336,
+          "y": 300,
+          "width": 168,
+          "height": 28
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#04121f",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "14px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]Training/IG3_Locked} = 1, 'SIGNAL LOCKED', 'SEARCHING')"
+              }
+            }
+          },
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]Training/IG3_Locked} = 1, '#39e6a0', '#ffc857')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "sig_lbl"
+        },
+        "position": {
+          "x": 52,
+          "y": 360,
+          "width": 200,
+          "height": 20
+        },
+        "props": {
+          "text": "SIGNAL LOCK",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.18em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.progress",
+        "version": 0,
+        "meta": {
+          "name": "sig_bar"
+        },
+        "position": {
+          "x": 52,
+          "y": 384,
+          "width": 636,
+          "height": 18
+        },
+        "props": {
+          "min": 0,
+          "max": 100,
+          "value": 0,
+          "mode": "determinate",
+          "bar": {
+            "color": "#4cc9f0",
+            "style": {
+              "borderRadius": "9px",
+              "boxShadow": "0 0 12px rgba(76,201,240,0.35)"
+            }
+          },
+          "track": {
+            "color": "rgba(120,160,220,0.16)",
+            "style": {
+              "borderRadius": "9px"
+            }
+          },
+          "valueDisplay": {
+            "enabled": false
+          },
+          "style": {
+            "borderRadius": "9px",
+            "overflow": "hidden"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]Training/IG3_Locked} = 1, 100, 6)"
+              }
+            }
+          },
+          "props.bar.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]Training/IG3_Locked} = 1, '#39e6a0', '#ffc857')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "BeaconStatus"
+        },
+        "position": {
+          "x": 52,
+          "y": 420,
+          "width": 636,
+          "height": 72
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "20px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "fontWeight": 700,
+            "letterSpacing": "0.06em",
+            "borderRadius": "10px",
+            "padding": "0 16px"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]Training/IG3_Locked} = 1, 'BEACON LOCKED   flag{hm1_wr1t3s_r34ch_th3_plc}', 'NO LOCK  -  CHECK YOUR FREQUENCY')"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]Training/IG3_Locked} = 1, '#39e6a0', '#ffc857')"
+              }
+            }
+          },
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]Training/IG3_Locked} = 1, 'rgba(57,230,160,0.10)', 'rgba(255,200,87,0.06)')"
+              }
+            }
+          },
+          "props.style.textShadow": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]Training/IG3_Locked} = 1, '0 0 16px #39e6a0', 'none')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "link_card"
+        },
+        "position": {
+          "x": 728,
+          "y": 96,
+          "width": 340,
+          "height": 200
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "link_title"
+        },
+        "position": {
+          "x": 748,
+          "y": 110,
+          "width": 300,
+          "height": 22
+        },
+        "props": {
+          "text": "PLC LINK",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hb_val"
+        },
+        "position": {
+          "x": 748,
+          "y": 140,
+          "width": 300,
+          "height": 48
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#9fe8ff",
+            "fontSize": "30px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "fontWeight": 700,
+            "textShadow": "0 0 14px rgba(80,200,255,0.55)"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat({[default]Training/Heartbeat}, '00000')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hb_lbl"
+        },
+        "position": {
+          "x": 748,
+          "y": 192,
+          "width": 300,
+          "height": 18
+        },
+        "props": {
+          "text": "HEARTBEAT  ·  +1 EVERY 100 ms",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "10px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "letterSpacing": "0.18em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.progress",
+        "version": 0,
+        "meta": {
+          "name": "hb_bar"
+        },
+        "position": {
+          "x": 748,
+          "y": 226,
+          "width": 300,
+          "height": 14
+        },
+        "props": {
+          "min": 0,
+          "max": 49,
+          "value": 0,
+          "mode": "determinate",
+          "bar": {
+            "color": "#4cc9f0",
+            "style": {
+              "borderRadius": "7px",
+              "boxShadow": "0 0 12px rgba(76,201,240,0.35)"
+            }
+          },
+          "track": {
+            "color": "rgba(120,160,220,0.16)",
+            "style": {
+              "borderRadius": "7px"
+            }
+          },
+          "valueDisplay": {
+            "enabled": false
+          },
+          "style": {
+            "borderRadius": "7px",
+            "overflow": "hidden"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "{[default]Training/Heartbeat} % 50"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hb_note"
+        },
+        "position": {
+          "x": 748,
+          "y": 252,
+          "width": 300,
+          "height": 20
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "'LAST FREQUENCY WRITTEN  ' + {[default]Training/Beacon_Freq}"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "notes_card"
+        },
+        "position": {
+          "x": 728,
+          "y": 316,
+          "width": 340,
+          "height": 200
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "notes_title"
+        },
+        "position": {
+          "x": 748,
+          "y": 330,
+          "width": 300,
+          "height": 22
+        },
+        "props": {
+          "text": "STATION NOTES",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.markdown",
+        "version": 0,
+        "meta": {
+          "name": "notes_md"
+        },
+        "position": {
+          "x": 748,
+          "y": 352,
+          "width": 300,
+          "height": 150
+        },
+        "props": {
+          "source": "- Training PLC: Modbus TCP, unit 1\n- Register map: `REGISTER_MAP.md`\n- PLC logic: `TRAINING_LOGIC.st`\n- Successes hold ~20 s, then re-arm",
+          "style": {
+            "color": "#c9dcf0",
+            "fontSize": "15px",
+            "lineHeight": "1.6",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "padding": "4px 8px"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "SvcNote"
+        },
+        "position": {
+          "x": 900,
+          "y": 702,
+          "width": 190,
+          "height": 12
+        },
+        "props": {
+          "text": "flag{h1dd3n_1s_n0t_s3cur3}",
+          "style": {
+            "color": "transparent",
+            "fontSize": "3px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "opacity": 0.02
+          }
+        }
+      }
+    ]
+  }
+}

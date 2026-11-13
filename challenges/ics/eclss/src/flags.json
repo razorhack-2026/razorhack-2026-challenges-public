@@ -1,0 +1,14 @@
+{
+  "_comment": "Edit these before every event, then run: python3 tools/build_challenge.py. Each flag must be <= 32 ASCII chars (16 Modbus registers). The disarm code must be 1..32767 and is shown only on the hidden Ignition /maint page.",
+  "ship_name": "ISV Ozark Horizon",
+  "disarm_code": 7982,
+  "flags": {
+    "banner":     "flag{h41l1ng_th3_0z4rk_h0r1z0n}",
+    "ghost_deck": "flag{unl1nk3d_p4g3s_st1ll_l04d}",
+    "o2":         "flag{br34th3_34sy_cr3w}",
+    "co2":        "flag{scrub_b3d_sw4p_succ3ss}",
+    "temp":       "flag{g0ld1l0cks_z0n3_r3st0r3d}",
+    "disarm":     "flag{3x0rc1s3d_th3_m41nt_sync}",
+    "final":      "flag{4ll_syst3ms_n0m1n4l_c4pt}"
+  }
+}

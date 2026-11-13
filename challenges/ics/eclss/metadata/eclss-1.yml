@@ -1,0 +1,57 @@
+# Source writeup: solution/STAFF_GUIDE.md (ECLSS) and solution/eclss/SOLUTIONS.md
+# Author's weight: 75 of the part's 1000 points (not used: uniform dynamic scoring).
+name: "ECLSS 1: Hailing frequencies"
+author: "Definitely Not Dr. Rootkit"
+category: ICS
+description: |
+    **ECLSS, part 1 of 7.** You are on the deck crew of the **ISV Ozark
+    Horizon**. Mid-transit, the Environmental Control & Life Support System
+    started fighting the crew: oxygen sagging, CO2 climbing, the cabin running
+    hot. The watch officer swears nobody touched the setpoints. The ship's PLC
+    answers Modbus/TCP on port 502 (unit id 1) and its Ignition HMI is on port
+    8088. Registers are 16-bit signed; scaled values are stored x10 or x100.
+    All 22 ICS challenges use your team's own copy of this rig: start it from
+    any of them (it takes a few minutes to come up). Stop resets the ship and
+    the Training Bay.
+
+    Point a Modbus client at the PLC and sweep the holding registers. Most
+    carry telemetry and setpoints - but one block spells something out in
+    ASCII. Read it.
+
+    *Hint: two ASCII characters pack into each 16-bit register, low byte
+    first.*
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Flag: Always readable at HR1124-1139.
+# Default value shipped by the kit; if src/flags.json or
+# src/training/training_flags.json change, rebuild and update this to match.
+flags:
+    - "flag{h41l1ng_th3_0z4rk_h0r1z0n}"
+
+# Paths are relative to this metadata/ folder, so dist/ is ../dist/.
+files:
+    - ../dist/eclss/CHALLENGES.md
+    - ../dist/MODBUS_PRIMER.md
+    - ../dist/eclss/REGISTER_MAP_PLAYER.md
+
+# Each team's own copy: one Fargate task (topic instance:eclss). CTFd fills in {host}.
+connection_info: "{host}:502 (Modbus/TCP, unit id 1)"
+
+tags:
+    - easy
+    - eclss
+    - modbus
+
+topics:
+    - instance:eclss
+    - "quest:Environmental Challenges"
+
+state: hidden
+version: "0.1"

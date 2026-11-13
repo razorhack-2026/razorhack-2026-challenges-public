@@ -1,0 +1,660 @@
+(* =====================================================================
+   ECLSS_Core  -  Environmental Control & Life Support System model
+   ISV Ozark Horizon  -  RazorHack ICS training challenge
+
+   Training-only teaching model. One function block holds BOTH the plant
+   (cabin atmosphere physics) and the control logic, so the whole scenario
+   lives inside the PLC and no external simulator is needed.
+
+   Subsystems modeled:
+     OGA  - Oxygen Generation Assembly (electrolysis), P + feed-forward
+     CDRA - Carbon Dioxide Removal Assembly, two-bed swing adsorption
+     TCS  - Thermal Control System, coolant valve + trim heater
+
+   Teaching hooks (the puzzle): a "MaintSync" routine periodically
+   re-applies a set of mis-configured values while it is armed. Students
+   learn to find it and clear it by writing the correct code to the
+   disarm register. Wrong codes re-apply the mis-config; 5 wrong codes in
+   a row cause a 60 s lockout so the intended path is reasoning, not a
+   register sweep. All values are make-believe game state.
+
+   Call once per scan. dt must equal the task interval in seconds.
+   GENERATED FROM TEMPLATE - edit the .tmpl and re-run build_challenge.py
+   ===================================================================== *)
+FUNCTION_BLOCK ECLSS_Core
+VAR_INPUT
+    dt : REAL := 0.1;
+END_VAR
+VAR_IN_OUT
+    (* Operator-writable setpoints (%MW -> Modbus HR 1024+) *)
+    O2_SP_x100       : INT;
+    O2_Kp_x10        : INT;
+    CDRA_Mode        : INT;     (* 0=OFF 1=AUTO 2=MAN_A 3=MAN_B *)
+    CDRA_HalfCycle_s : INT;
+    Temp_SP_x100     : INT;
+    TCS_Kp_x10       : INT;
+    Disarm_Code      : INT;
+    (* Operator-writable commands (%QX -> Modbus coils) *)
+    OGA_Inhibit      : BOOL;
+    CDRA_Heater_En   : BOOL;
+    TCS_Reverse      : BOOL;
+    Heater_Override  : BOOL;
+END_VAR
+VAR_OUTPUT
+    O2_x100        : INT;   (* cabin O2 %, x100  (e.g. 2095 = 20.95%) *)
+    CO2_ppm        : INT;   (* cabin CO2, ppm *)
+    Temp_x100      : INT;   (* cabin temp degC, x100 *)
+    Press_x10      : INT;   (* cabin pressure kPa, x10 *)
+    OGA_x10        : INT;   (* O2 generator output %, x10 *)
+    BedA_x10       : INT;   (* CDRA bed A saturation %, x10 *)
+    BedB_x10       : INT;   (* CDRA bed B saturation %, x10 *)
+    ActiveBed      : INT;   (* 1=A adsorbing, 2=B adsorbing *)
+    Valve_x10      : INT;   (* coolant valve %, x10 *)
+    Heater_x10     : INT;   (* trim heater %, x10 *)
+    AlarmWord      : INT;   (* bitfield, see below *)
+    CrewStatus     : INT;   (* 0=OK 1=WARN 2=CRITICAL *)
+    MET_s          : INT;   (* mission elapsed time, s *)
+    NominalHold_s  : INT;   (* consecutive s all-nominal *)
+    FlagsEarned    : INT;   (* bitfield of objectives met *)
+    CrewCount      : INT;   (* souls aboard (game score) *)
+    MaintSyncArmed : BOOL;  (* TRUE while puzzle routine re-applies mis-config *)
+    TamperLockout  : BOOL;  (* TRUE during the wrong-code lockout window *)
+END_VAR
+VAR
+    initdone  : BOOL := FALSE;
+    (* plant state carried as REAL for smooth integration *)
+    o2        : REAL;   (* % *)
+    co2       : REAL;   (* ppm *)
+    temp      : REAL;   (* degC *)
+    press     : REAL;   (* kPa *)
+    bedA      : REAL;   (* 0..100 saturation *)
+    bedB      : REAL;
+    oga       : REAL;   (* 0..100 cmd *)
+    valve     : REAL;   (* 0..100 cmd *)
+    heater    : REAL;   (* 0..100 cmd *)
+    bedTimer  : REAL;   (* s into current half-cycle *)
+    active    : INT := 1;
+    metf      : REAL;
+    holdf     : REAL;
+    (* control working vars *)
+    o2sp      : REAL;
+    o2kp      : REAL;
+    o2err     : REAL;
+    tsp       : REAL;
+    tkp       : REAL;
+    terr      : REAL;
+    (* crew model *)
+    crew      : INT := 4;
+    crewDerate: REAL := 1.0;
+    (* puzzle routine state *)
+    syncTmr   : REAL;
+    wrongCnt  : INT := 0;
+    lockTmr   : REAL := 0.0;
+    lastCode  : INT := 0;
+    alarms    : INT;
+    flags     : INT;
+END_VAR
+
+(* ---- constants (teaching values, not real ECLSS figures) ---------- *)
+VAR CONSTANT
+    SYNC_PERIOD  : REAL := 20.0;  (* s between puzzle re-applications *)
+    LOCK_TIME    : REAL := 60.0;  (* s lockout after 5 wrong codes *)
+    DISARM_KEY  : INT  := 7982;
+    O2_LO        : REAL := 19.5;
+    O2_HI        : REAL := 23.5;  (* fire-risk ceiling *)
+    CO2_HI       : REAL := 5000.0;
+    CO2_CAP      : REAL := 12000.0;
+    T_LO         : REAL := 18.0;
+    T_HI         : REAL := 27.0;
+END_VAR
+
+(* ================= one-time initialization ======================== *)
+IF NOT initdone THEN
+    (* The sabotage has been running since before the crew noticed, so the
+       cabin starts out of spec (O2 low, CO2 high, hot) with the pinned bed A
+       already saturated. Every objective bit below then has to be earned:
+       an in-range start would publish flags 3-5 on the very first scan. *)
+    o2    := 19.0;
+    co2   := 6000.0;
+    temp  := 28.5;
+    press := 101.3;
+    bedA  := 100.0;
+    bedB  := 40.0;
+    oga   := 50.0;
+    valve := 40.0;
+    heater:= 10.0;
+    bedTimer := 0.0;
+    active   := 1;
+    metf  := 0.0;
+    holdf := 0.0;
+    crew  := 4;
+    (* puzzle routine starts armed and immediately mis-configures *)
+    MaintSyncArmed := TRUE;
+    syncTmr := SYNC_PERIOD;   (* force apply on first scan *)
+    initdone := TRUE;
+END_IF;
+
+(* ================= puzzle routine (MaintSync) ===================== *)
+(* While armed, every SYNC_PERIOD it re-applies the three mis-config
+   values that drive the cabin out of spec. This is the thing students
+   must locate and disable. *)
+IF lockTmr > 0.0 THEN
+    lockTmr := lockTmr - dt;
+    IF lockTmr < 0.0 THEN lockTmr := 0.0; END_IF;
+END_IF;
+TamperLockout := (lockTmr > 0.0);
+
+(* handle a new code written to the disarm register *)
+IF Disarm_Code <> lastCode AND Disarm_Code <> 0 THEN
+    lastCode := Disarm_Code;
+    IF NOT TamperLockout THEN
+        IF Disarm_Code = DISARM_KEY THEN
+            MaintSyncArmed := FALSE;     (* solved *)
+            wrongCnt := 0;
+        ELSE
+            wrongCnt := wrongCnt + 1;
+            syncTmr := SYNC_PERIOD;      (* re-apply now on wrong guess *)
+            IF wrongCnt >= 5 THEN
+                lockTmr := LOCK_TIME;
+                wrongCnt := 0;
+            END_IF;
+        END_IF;
+    END_IF;
+    Disarm_Code := 0;   (* consume the write *)
+END_IF;
+TamperLockout := (lockTmr > 0.0);   (* latch within the same scan *)
+
+IF MaintSyncArmed THEN
+    syncTmr := syncTmr + dt;
+    IF syncTmr >= SYNC_PERIOD THEN
+        syncTmr := 0.0;
+        (* the mis-configuration the puzzle keeps forcing back *)
+        O2_SP_x100 := 1850;    (* O2 setpoint dragged below the 19.5% floor *)
+        CDRA_Mode  := 2;       (* CDRA pinned to bed A, no swing -> CO2 climbs *)
+        Temp_SP_x100 := 3100;  (* thermal setpoint pushed to 31 C *)
+    END_IF;
+END_IF;
+
+(* ================= read operator setpoints ======================== *)
+o2sp := INT_TO_REAL(O2_SP_x100) / 100.0;
+o2kp := INT_TO_REAL(O2_Kp_x10) / 10.0;
+IF o2kp <= 0.0 THEN o2kp := 2.0; END_IF;
+tsp  := INT_TO_REAL(Temp_SP_x100) / 100.0;
+tkp  := INT_TO_REAL(TCS_Kp_x10) / 10.0;
+IF tkp <= 0.0 THEN tkp := 3.0; END_IF;
+
+(* ================= OGA : oxygen generation ======================== *)
+(* feed-forward exactly offsets crew metabolic draw (0.06 %/s at 4 crew
+   = 6 % generator output at 0.01 %/s per %), plus P on error, so O2
+   settles on the setpoint with no steady-state offset *)
+crewDerate := INT_TO_REAL(crew) / 4.0;
+o2err := o2sp - o2;
+IF OGA_Inhibit THEN
+    oga := 0.0;
+ELSE
+    oga := 6.0 * crewDerate + o2kp * o2err * 10.0;
+    IF oga < 0.0   THEN oga := 0.0;   END_IF;
+    IF oga > 100.0 THEN oga := 100.0; END_IF;
+END_IF;
+(* plant: generation raises O2, crew consumes it *)
+o2 := o2 + (oga * 0.010 - crewDerate * 0.060) * dt;
+IF o2 < 0.0 THEN o2 := 0.0; END_IF;
+IF o2 > 100.0 THEN o2 := 100.0; END_IF;
+
+(* ================= CDRA : CO2 removal ============================= *)
+(* crew produce CO2; the adsorbing bed removes it until saturated.
+   AUTO swaps beds on the half-cycle timer. Manual modes pin one bed. *)
+CASE CDRA_Mode OF
+    0: active := 0;                      (* OFF *)
+    1:                                   (* AUTO swing *)
+        bedTimer := bedTimer + dt;
+        IF bedTimer >= INT_TO_REAL(CDRA_HalfCycle_s) THEN
+            bedTimer := 0.0;
+            IF active = 1 THEN active := 2; ELSE active := 1; END_IF;
+        END_IF;
+    2: active := 1;                      (* MAN bed A *)
+    3: active := 2;                      (* MAN bed B *)
+END_CASE;
+
+(* regenerate the idle bed (heater speeds it), load the active one *)
+IF active <> 1 THEN
+    IF CDRA_Heater_En THEN bedA := bedA - 8.0 * dt; ELSE bedA := bedA - 3.0 * dt; END_IF;
+END_IF;
+IF active <> 2 THEN
+    IF CDRA_Heater_En THEN bedB := bedB - 8.0 * dt; ELSE bedB := bedB - 3.0 * dt; END_IF;
+END_IF;
+IF bedA < 0.0 THEN bedA := 0.0; END_IF;
+IF bedB < 0.0 THEN bedB := 0.0; END_IF;
+
+(* CO2 balance: crew add, active unsaturated bed removes.
+   A bed loads at 3 %/s, so a freshly regenerated bed lasts ~30 s - one
+   default half-cycle. In AUTO the beds swap before saturating; pinned to
+   one bed (MAN_A/MAN_B) it saturates and CO2 climbs unchecked. *)
+co2 := co2 + crewDerate * 55.0 * dt;
+IF active = 1 AND bedA < 100.0 THEN
+    co2 := co2 - 95.0 * dt;
+    bedA := bedA + 3.0 * dt;
+ELSIF active = 2 AND bedB < 100.0 THEN
+    co2 := co2 - 95.0 * dt;
+    bedB := bedB + 3.0 * dt;
+END_IF;
+IF co2 < 350.0 THEN co2 := 350.0; END_IF;
+(* contingency LiOH canisters cap the cabin at 12,000 ppm. Without a cap a
+   ship left sabotaged climbs ~55 ppm/s forever: past 32,767 ppm the 16-bit
+   register wraps negative, and recovery would take longer than a round. *)
+IF co2 > CO2_CAP THEN co2 := CO2_CAP; END_IF;
+IF bedA > 100.0 THEN bedA := 100.0; END_IF;
+IF bedB > 100.0 THEN bedB := 100.0; END_IF;
+
+(* ================= TCS : thermal control ========================= *)
+terr := temp - tsp;    (* positive = too hot -> open coolant valve *)
+valve := 40.0 + tkp * terr * 10.0;
+IF TCS_Reverse THEN valve := 100.0 - valve; END_IF;  (* mis-wire trap *)
+IF valve < 0.0   THEN valve := 0.0;   END_IF;
+IF valve > 100.0 THEN valve := 100.0; END_IF;
+
+IF Heater_Override THEN
+    heater := 100.0;
+ELSE
+    IF terr < 0.0 THEN heater := -terr * tkp * 10.0; ELSE heater := 0.0; END_IF;
+    IF heater > 100.0 THEN heater := 100.0; END_IF;
+END_IF;
+
+(* plant: crew + heater add heat, coolant valve removes it *)
+temp := temp + (crewDerate * 0.20 + heater * 0.010 - valve * 0.015) * dt;
+(* keep every channel inside its 16-bit register (Temp_x100 <= 327.67 C) *)
+IF temp < 0.0  THEN temp := 0.0;  END_IF;
+IF temp > 60.0 THEN temp := 60.0; END_IF;
+
+(* ================= pressure (informational) ====================== *)
+press := 101.3 + (o2 - 20.9) * 0.05;
+
+(* ================= crew health model (score) ===================== *)
+(* out-of-spec environment slowly reduces the crew count; a long
+   nominal hold is what "wins". Purely game scoring. *)
+alarms := 0;
+IF o2  < O2_LO  THEN alarms := alarms + 1;  END_IF;   (* bit0 O2 low  *)
+IF o2  > O2_HI  THEN alarms := alarms + 2;  END_IF;   (* bit1 O2 high *)
+IF co2 > CO2_HI THEN alarms := alarms + 4;  END_IF;   (* bit2 CO2 high *)
+IF temp < T_LO  THEN alarms := alarms + 8;  END_IF;   (* bit3 cold *)
+IF temp > T_HI  THEN alarms := alarms + 16; END_IF;   (* bit4 hot  *)
+IF MaintSyncArmed THEN alarms := alarms + 32; END_IF; (* bit5 tamper *)
+
+IF alarms = 0 THEN
+    holdf := holdf + dt;
+    IF crew < 4 THEN
+        (* slow recovery once environment is good again *)
+        IF holdf > 30.0 THEN crew := 4; END_IF;
+    END_IF;
+ELSE
+    holdf := 0.0;
+END_IF;
+
+metf := metf + dt;
+
+(* severe excursions cost crew (bounded, slow) *)
+IF (o2 < 17.0 OR co2 > 8000.0 OR temp > 32.0 OR temp < 12.0) THEN
+    (* decrement at most ~1 crew per 40 s of hard excursion *)
+    IF (metf - holdf) > 0.0 THEN
+        crewDerate := crewDerate;  (* no-op to keep var live *)
+    END_IF;
+    IF crew > 0 AND (metf * 1000.0) >= 0.0 THEN
+        (* integer decrement gated by a coarse timer in holdf-less state *)
+        IF holdf = 0.0 AND (temp > 34.0 OR o2 < 15.0 OR co2 > 10000.0) THEN
+            crew := crew - 0;  (* reserved: hard kill disabled in training build *)
+        END_IF;
+    END_IF;
+END_IF;
+
+IF alarms = 0 THEN
+    CrewStatus := 0;
+ELSIF (o2 < 17.0 OR co2 > 8000.0 OR temp > 32.0 OR temp < 12.0) THEN
+    CrewStatus := 2;
+ELSE
+    CrewStatus := 1;
+END_IF;
+
+(* ================= objective / flag bitfield ===================== *)
+(* bit0 O2 restored & held, bit1 CO2 in range, bit2 temp in range,
+   bit3 puzzle routine disarmed, bit4 full nominal hold reached *)
+flags := 0;
+IF o2 >= O2_LO AND o2 <= O2_HI      THEN flags := flags + 1;  END_IF;
+IF co2 <= CO2_HI                    THEN flags := flags + 2;  END_IF;
+IF temp >= T_LO AND temp <= T_HI    THEN flags := flags + 4;  END_IF;
+IF NOT MaintSyncArmed               THEN flags := flags + 8;  END_IF;
+IF holdf >= 30.0 AND NOT MaintSyncArmed THEN flags := flags + 16; END_IF;
+
+(* ================= scale to integer outputs ====================== *)
+O2_x100   := REAL_TO_INT(o2  * 100.0);
+CO2_ppm   := REAL_TO_INT(co2);
+Temp_x100 := REAL_TO_INT(temp * 100.0);
+Press_x10 := REAL_TO_INT(press * 10.0);
+OGA_x10   := REAL_TO_INT(oga   * 10.0);
+BedA_x10  := REAL_TO_INT(bedA  * 10.0);
+BedB_x10  := REAL_TO_INT(bedB  * 10.0);
+ActiveBed := active;
+Valve_x10 := REAL_TO_INT(valve  * 10.0);
+Heater_x10:= REAL_TO_INT(heater * 10.0);
+AlarmWord := alarms;
+MET_s     := REAL_TO_INT(metf);
+NominalHold_s := REAL_TO_INT(holdf);
+FlagsEarned   := flags;
+CrewCount     := crew;
+END_FUNCTION_BLOCK
+
+
+(* =====================================================================
+   PROGRAM prog0  -  wires ECLSS_Core to located (Modbus-mapped) variables
+   ISV Ozark Horizon
+
+   Address map (OpenPLC v4 modbus_slave plugin):
+     %QW n      -> Modbus holding register n            (telemetry, read)
+     %MW n      -> Modbus holding register 1024 + n      (setpoints / flags)
+     %QX 0.b    -> Modbus coil b                         (commands, write)
+   Full map in docs/REGISTER_MAP.md.
+   GENERATED FROM TEMPLATE - edit the .tmpl and re-run build_challenge.py
+   ===================================================================== *)
+PROGRAM prog0
+VAR
+    eclss : ECLSS_Core;
+
+    (* ---- telemetry: holding registers 0..16 (read) ---- *)
+    O2        AT %QW0  : INT;
+    CO2       AT %QW1  : INT;
+    TempC     AT %QW2  : INT;
+    Press     AT %QW3  : INT;
+    OGA       AT %QW4  : INT;
+    BedA      AT %QW5  : INT;
+    BedB      AT %QW6  : INT;
+    ActiveBed AT %QW7  : INT;
+    Valve     AT %QW8  : INT;
+    Heater    AT %QW9  : INT;
+    AlarmW    AT %QW10 : INT;
+    CrewSt    AT %QW11 : INT;
+    MET       AT %QW12 : INT;
+    Hold      AT %QW13 : INT;
+    FlagBits  AT %QW14 : INT;
+    Crew      AT %QW15 : INT;
+    StatusB   AT %QW16 : INT;   (* bit0 MaintSyncArmed, bit1 TamperLockout *)
+
+    (* ---- setpoints: holding registers 1024.. (read/write) ---- *)
+    O2_SP     AT %MW0  : INT;
+    O2_Kp     AT %MW1  : INT;
+    CDRA_Mode AT %MW2  : INT;
+    CDRA_Half AT %MW3  : INT;
+    Temp_SP   AT %MW4  : INT;
+    TCS_Kp    AT %MW5  : INT;
+    Disarm    AT %MW6  : INT;
+
+    (* ---- commands: coils 0..3 (write) ---- *)
+    OGA_Inhibit    AT %QX0.0 : BOOL;
+    CDRA_Heater_En AT %QX0.1 : BOOL;
+    TCS_Reverse    AT %QX0.2 : BOOL;
+    Heater_Over    AT %QX0.3 : BOOL;
+
+    (* ---- published flag text: holding registers 1024+100 .. ----
+       Each flag is ASCII packed 2 chars/register, low byte first.
+       A flag register block reads as zeros until its objective bit is set. *)
+    F_banner_00 AT %MW100 : INT;
+    F_banner_01 AT %MW101 : INT;
+    F_banner_02 AT %MW102 : INT;
+    F_banner_03 AT %MW103 : INT;
+    F_banner_04 AT %MW104 : INT;
+    F_banner_05 AT %MW105 : INT;
+    F_banner_06 AT %MW106 : INT;
+    F_banner_07 AT %MW107 : INT;
+    F_banner_08 AT %MW108 : INT;
+    F_banner_09 AT %MW109 : INT;
+    F_banner_10 AT %MW110 : INT;
+    F_banner_11 AT %MW111 : INT;
+    F_banner_12 AT %MW112 : INT;
+    F_banner_13 AT %MW113 : INT;
+    F_banner_14 AT %MW114 : INT;
+    F_banner_15 AT %MW115 : INT;
+    F_o2_00 AT %MW120 : INT;
+    F_o2_01 AT %MW121 : INT;
+    F_o2_02 AT %MW122 : INT;
+    F_o2_03 AT %MW123 : INT;
+    F_o2_04 AT %MW124 : INT;
+    F_o2_05 AT %MW125 : INT;
+    F_o2_06 AT %MW126 : INT;
+    F_o2_07 AT %MW127 : INT;
+    F_o2_08 AT %MW128 : INT;
+    F_o2_09 AT %MW129 : INT;
+    F_o2_10 AT %MW130 : INT;
+    F_o2_11 AT %MW131 : INT;
+    F_o2_12 AT %MW132 : INT;
+    F_o2_13 AT %MW133 : INT;
+    F_o2_14 AT %MW134 : INT;
+    F_o2_15 AT %MW135 : INT;
+    F_co2_00 AT %MW140 : INT;
+    F_co2_01 AT %MW141 : INT;
+    F_co2_02 AT %MW142 : INT;
+    F_co2_03 AT %MW143 : INT;
+    F_co2_04 AT %MW144 : INT;
+    F_co2_05 AT %MW145 : INT;
+    F_co2_06 AT %MW146 : INT;
+    F_co2_07 AT %MW147 : INT;
+    F_co2_08 AT %MW148 : INT;
+    F_co2_09 AT %MW149 : INT;
+    F_co2_10 AT %MW150 : INT;
+    F_co2_11 AT %MW151 : INT;
+    F_co2_12 AT %MW152 : INT;
+    F_co2_13 AT %MW153 : INT;
+    F_co2_14 AT %MW154 : INT;
+    F_co2_15 AT %MW155 : INT;
+    F_temp_00 AT %MW160 : INT;
+    F_temp_01 AT %MW161 : INT;
+    F_temp_02 AT %MW162 : INT;
+    F_temp_03 AT %MW163 : INT;
+    F_temp_04 AT %MW164 : INT;
+    F_temp_05 AT %MW165 : INT;
+    F_temp_06 AT %MW166 : INT;
+    F_temp_07 AT %MW167 : INT;
+    F_temp_08 AT %MW168 : INT;
+    F_temp_09 AT %MW169 : INT;
+    F_temp_10 AT %MW170 : INT;
+    F_temp_11 AT %MW171 : INT;
+    F_temp_12 AT %MW172 : INT;
+    F_temp_13 AT %MW173 : INT;
+    F_temp_14 AT %MW174 : INT;
+    F_temp_15 AT %MW175 : INT;
+    F_disarm_00 AT %MW180 : INT;
+    F_disarm_01 AT %MW181 : INT;
+    F_disarm_02 AT %MW182 : INT;
+    F_disarm_03 AT %MW183 : INT;
+    F_disarm_04 AT %MW184 : INT;
+    F_disarm_05 AT %MW185 : INT;
+    F_disarm_06 AT %MW186 : INT;
+    F_disarm_07 AT %MW187 : INT;
+    F_disarm_08 AT %MW188 : INT;
+    F_disarm_09 AT %MW189 : INT;
+    F_disarm_10 AT %MW190 : INT;
+    F_disarm_11 AT %MW191 : INT;
+    F_disarm_12 AT %MW192 : INT;
+    F_disarm_13 AT %MW193 : INT;
+    F_disarm_14 AT %MW194 : INT;
+    F_disarm_15 AT %MW195 : INT;
+    F_final_00 AT %MW200 : INT;
+    F_final_01 AT %MW201 : INT;
+    F_final_02 AT %MW202 : INT;
+    F_final_03 AT %MW203 : INT;
+    F_final_04 AT %MW204 : INT;
+    F_final_05 AT %MW205 : INT;
+    F_final_06 AT %MW206 : INT;
+    F_final_07 AT %MW207 : INT;
+    F_final_08 AT %MW208 : INT;
+    F_final_09 AT %MW209 : INT;
+    F_final_10 AT %MW210 : INT;
+    F_final_11 AT %MW211 : INT;
+    F_final_12 AT %MW212 : INT;
+    F_final_13 AT %MW213 : INT;
+    F_final_14 AT %MW214 : INT;
+    F_final_15 AT %MW215 : INT;
+    firstScan : BOOL := TRUE;
+END_VAR
+
+(* default setpoints applied once; the puzzle routine will fight these *)
+IF firstScan THEN
+    O2_SP     := 2095;   (* 20.95 % *)
+    O2_Kp     := 20;     (* 2.0 *)
+    CDRA_Mode := 1;      (* AUTO *)
+    CDRA_Half := 30;     (* 30 s half-cycle *)
+    Temp_SP   := 2250;   (* 22.5 C *)
+    TCS_Kp    := 30;     (* 3.0 *)
+    firstScan := FALSE;
+END_IF;
+
+eclss(
+    dt := 0.1,
+    O2_SP_x100 := O2_SP, O2_Kp_x10 := O2_Kp,
+    CDRA_Mode := CDRA_Mode, CDRA_HalfCycle_s := CDRA_Half,
+    Temp_SP_x100 := Temp_SP, TCS_Kp_x10 := TCS_Kp,
+    Disarm_Code := Disarm,
+    OGA_Inhibit := OGA_Inhibit, CDRA_Heater_En := CDRA_Heater_En,
+    TCS_Reverse := TCS_Reverse, Heater_Override := Heater_Over);
+
+(* write back setpoints the FB may have changed (puzzle re-apply / consume) *)
+O2_SP     := eclss.O2_SP_x100;
+CDRA_Mode := eclss.CDRA_Mode;
+Temp_SP   := eclss.Temp_SP_x100;
+Disarm    := eclss.Disarm_Code;
+
+(* latch telemetry *)
+O2        := eclss.O2_x100;
+CO2       := eclss.CO2_ppm;
+TempC     := eclss.Temp_x100;
+Press     := eclss.Press_x10;
+OGA       := eclss.OGA_x10;
+BedA      := eclss.BedA_x10;
+BedB      := eclss.BedB_x10;
+ActiveBed := eclss.ActiveBed;
+Valve     := eclss.Valve_x10;
+Heater    := eclss.Heater_x10;
+AlarmW    := eclss.AlarmWord;
+CrewSt    := eclss.CrewStatus;
+MET       := eclss.MET_s;
+Hold      := eclss.NominalHold_s;
+FlagBits  := eclss.FlagsEarned;
+Crew      := eclss.CrewCount;
+StatusB   := 0;
+IF eclss.MaintSyncArmed THEN StatusB := StatusB + 1; END_IF;
+IF eclss.TamperLockout  THEN StatusB := StatusB + 2; END_IF;
+
+(* publish flag text, each block gated by its objective bit *)
+    (* banner: always readable *)
+    F_banner_00 := 27750;
+    F_banner_01 := 26465;
+    F_banner_02 := 26747;
+    F_banner_03 := 12596;
+    F_banner_04 := 12652;
+    F_banner_05 := 26478;
+    F_banner_06 := 29791;
+    F_banner_07 := 13160;
+    F_banner_08 := 12383;
+    F_banner_09 := 13434;
+    F_banner_10 := 27506;
+    F_banner_11 := 26719;
+    F_banner_12 := 29232;
+    F_banner_13 := 31281;
+    F_banner_14 := 28208;
+    F_banner_15 := 125;
+    IF (eclss.FlagsEarned AND 1) <> 0 THEN  (* flag: o2 *)
+        F_o2_00 := 27750;
+        F_o2_01 := 26465;
+        F_o2_02 := 25211;
+        F_o2_03 := 13170;
+        F_o2_04 := 29748;
+        F_o2_05 := 13160;
+        F_o2_06 := 13151;
+        F_o2_07 := 29492;
+        F_o2_08 := 24441;
+        F_o2_09 := 29283;
+        F_o2_10 := 30515;
+        F_o2_11 := 125;
+        F_o2_12 := 0;
+        F_o2_13 := 0;
+        F_o2_14 := 0;
+        F_o2_15 := 0;
+    END_IF;
+    IF (eclss.FlagsEarned AND 2) <> 0 THEN  (* flag: co2 *)
+        F_co2_00 := 27750;
+        F_co2_01 := 26465;
+        F_co2_02 := 29563;
+        F_co2_03 := 29283;
+        F_co2_04 := 25205;
+        F_co2_05 := 25183;
+        F_co2_06 := 25651;
+        F_co2_07 := 29535;
+        F_co2_08 := 13431;
+        F_co2_09 := 24432;
+        F_co2_10 := 30067;
+        F_co2_11 := 25443;
+        F_co2_12 := 29491;
+        F_co2_13 := 32115;
+        F_co2_14 := 0;
+        F_co2_15 := 0;
+    END_IF;
+    IF (eclss.FlagsEarned AND 4) <> 0 THEN  (* flag: temp *)
+        F_temp_00 := 27750;
+        F_temp_01 := 26465;
+        F_temp_02 := 26491;
+        F_temp_03 := 27696;
+        F_temp_04 := 12644;
+        F_temp_05 := 12396;
+        F_temp_06 := 27491;
+        F_temp_07 := 24435;
+        F_temp_08 := 12410;
+        F_temp_09 := 13166;
+        F_temp_10 := 29279;
+        F_temp_11 := 29491;
+        F_temp_12 := 12404;
+        F_temp_13 := 13170;
+        F_temp_14 := 32100;
+        F_temp_15 := 0;
+    END_IF;
+    IF (eclss.FlagsEarned AND 8) <> 0 THEN  (* flag: disarm *)
+        F_disarm_00 := 27750;
+        F_disarm_01 := 26465;
+        F_disarm_02 := 13179;
+        F_disarm_03 := 12408;
+        F_disarm_04 := 25458;
+        F_disarm_05 := 29489;
+        F_disarm_06 := 25651;
+        F_disarm_07 := 29791;
+        F_disarm_08 := 13160;
+        F_disarm_09 := 27999;
+        F_disarm_10 := 12596;
+        F_disarm_11 := 29806;
+        F_disarm_12 := 29535;
+        F_disarm_13 := 28281;
+        F_disarm_14 := 32099;
+        F_disarm_15 := 0;
+    END_IF;
+    IF (eclss.FlagsEarned AND 16) <> 0 THEN  (* flag: final *)
+        F_final_00 := 27750;
+        F_final_01 := 26465;
+        F_final_02 := 13435;
+        F_final_03 := 27756;
+        F_final_04 := 29535;
+        F_final_05 := 29561;
+        F_final_06 := 13172;
+        F_final_07 := 29549;
+        F_final_08 := 28255;
+        F_final_09 := 27952;
+        F_final_10 := 28209;
+        F_final_11 := 27700;
+        F_final_12 := 25439;
+        F_final_13 := 28724;
+        F_final_14 := 32116;
+        F_final_15 := 0;
+    END_IF;
+END_PROGRAM
+
+CONFIGURATION Config0
+    RESOURCE Res0 ON PLC
+        TASK Main(INTERVAL := T#100ms, PRIORITY := 0);
+        PROGRAM Inst0 WITH Main : prog0;
+    END_RESOURCE
+END_CONFIGURATION
+

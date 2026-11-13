@@ -1,0 +1,54 @@
+# Source writeup: solution/STAFF_GUIDE.md (Training Bay) and solution/training/SOLUTIONS.md
+# Author's weight: 100 of the part's 1000 points (not used: uniform dynamic scoring).
+name: "Training Bay MB7: Breaker Panel"
+author: "Definitely Not Dr. Rootkit"
+category: ICS
+description: |
+    **Training Bay, Modbus track.** The Training Bay PLC answers Modbus/TCP
+    (unit id 1, 0-based addresses) on port 5020 of your team's copy (see the
+    connection info). Text flags are ASCII packed two
+    characters per register, low byte first. A solved challenge stays unlocked
+    for about 20 seconds and then re-arms, so read your flag promptly.
+    Holding register 1025 is a panel of 16 breakers, one per bit. Bits count
+    from 0 at the least significant end: bit 0 has the value 1. Close
+    **breaker 9** (set bit 9) and leave every other breaker exactly as you
+    found it. Change anything else and the panel trips; coil 30 resets a
+    tripped panel. The flag appears at holding registers 700-715.
+    All 22 ICS challenges use your team's own copy of this rig: start it from
+    any of them (it takes a few minutes to come up). Stop resets the ship and
+    the Training Bay.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Flag: HR700-715 after a read-modify-write of HR1025 bit 9.
+# Default value shipped by the kit; if src/flags.json or
+# src/training/training_flags.json change, rebuild and update this to match.
+flags:
+    - "flag{m4sk_b3f0r3_y0u_wr1t3}"
+
+# Paths are relative to this metadata/ folder, so dist/ is ../dist/.
+files:
+    - ../dist/training/TRAINING_GUIDE.md
+    - ../dist/training/REGISTER_MAP.md
+    - ../dist/MODBUS_PRIMER.md
+
+# Each team's own copy: one Fargate task (topic instance:eclss). CTFd fills in {host}.
+connection_info: "{host}:5020 (Modbus/TCP, unit id 1)"
+
+tags:
+    - medium
+    - training
+    - modbus
+
+topics:
+    - instance:eclss
+    - "training:Modbus"
+
+state: hidden
+version: "0.1"

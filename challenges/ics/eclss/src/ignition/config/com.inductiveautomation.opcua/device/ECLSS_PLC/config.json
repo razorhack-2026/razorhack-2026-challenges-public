@@ -1,0 +1,42 @@
+{
+  "profile": {
+    "type": "ModbusTcp"
+  },
+  "settings": {
+    "advanced": {
+      "maxRetryCount": 1,
+      "reconnectAfterConsecutiveTimeouts": true,
+      "reverseWordOrder": false,
+      "zeroBasedAddressing": false
+    },
+    "connectivity": {
+      "communicationTimeout": 2000,
+      "hostname": "127.0.0.1",
+      "port": 502
+    },
+    "readRequests": {
+      "readMultipleCoilsAllowed": true,
+      "readMultipleDiscreteInputsAllowed": true,
+      "readMultipleRegistersRequestAllowed": true
+    },
+    "requestOptimization": {
+      "concurrentRequests": 1,
+      "maxCoilsPerRequest": 2000,
+      "maxDiscreteInputsPerRequest": 2000,
+      "maxHoldingRegistersPerRequest": 125,
+      "maxHoldingRegistersPerWriteRequest": 123,
+      "maxInputRegistersPerRequest": 125,
+      "spanGaps": true
+    },
+    "stringHandling": {
+      "readRawStrings": false,
+      "reverseByteOrder": false,
+      "rightJustifyStrings": false
+    },
+    "writeRequests": {
+      "forceMultipleRegisterWritesEnabled": false,
+      "writeMultipleCoilsRequestAllowed": true,
+      "writeMultipleRegistersRequestAllowed": true
+    }
+  }
+}

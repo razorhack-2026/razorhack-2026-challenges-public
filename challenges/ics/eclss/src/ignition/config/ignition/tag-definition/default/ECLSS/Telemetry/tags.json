@@ -1,0 +1,138 @@
+[
+  {
+    "dataType": "Int2",
+    "name": "ActiveBed",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR8",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "AlarmWord",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR11",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "BedA_x10",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR6",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "BedB_x10",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR7",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "CO2_ppm",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR2",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "CrewCount",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR16",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "CrewStatus",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR12",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "FlagsEarned",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR15",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "Heater_x10",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR10",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "MET_s",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR13",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "NominalHold_s",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR14",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "O2_x100",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "OGA_x10",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR5",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "Press_x10",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR4",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "StatusBits",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR17",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "Temp_x100",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR3",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "Valve_x10",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR9",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  }
+]

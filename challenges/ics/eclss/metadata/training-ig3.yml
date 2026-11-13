@@ -1,0 +1,47 @@
+# Source writeup: solution/STAFF_GUIDE.md (Training Bay) and solution/training/SOLUTIONS.md
+# Author's weight: 75 of the part's 1000 points (not used: uniform dynamic scoring).
+name: "Training Bay IG3: Tune the Beacon"
+author: "Definitely Not Dr. Rootkit"
+category: ICS
+description: |
+    **Training Bay, Ignition track.** The Training HMI is an Ignition
+    Perspective project on your team's Ignition gateway (port 8088).
+    Use the Training HMI to tune the deep-space beacon. The screen tells you
+    the frequency in the form of a clue. When the PLC confirms the lock, the
+    HMI shows your flag for 30 seconds.
+    All 22 ICS challenges use your team's own copy of this rig: start it from
+    any of them (it takes a few minutes to come up). Stop resets the ship and
+    the Training Bay.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Flag: Shown by a gateway-side expression binding once HR740 = 1 (the team's own training PLC).
+# Default value shipped by the kit; if src/flags.json or
+# src/training/training_flags.json change, rebuild and update this to match.
+flags:
+    - "flag{hm1_wr1t3s_r34ch_th3_plc}"
+
+# Paths are relative to this metadata/ folder, so dist/ is ../dist/.
+files:
+    - ../dist/training/TRAINING_GUIDE.md
+
+# Each team's own copy: one Fargate task (topic instance:eclss). CTFd fills in {host}.
+connection_info: "http://{host}:8088/data/perspective/client/training"
+
+tags:
+    - medium
+    - training
+    - ignition
+
+topics:
+    - instance:eclss
+    - "training:Ignition"
+
+state: hidden
+version: "0.1"

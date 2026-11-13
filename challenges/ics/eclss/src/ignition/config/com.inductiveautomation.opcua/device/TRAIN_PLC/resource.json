@@ -1,0 +1,13 @@
+{
+  "attributes": {
+    "enabled": true
+  },
+  "description": "RazorHack TRAIN_PLC",
+  "files": [
+    "config.json"
+  ],
+  "overridable": true,
+  "restricted": false,
+  "scope": "A",
+  "version": 1
+}

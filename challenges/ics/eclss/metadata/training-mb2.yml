@@ -1,0 +1,51 @@
+# Source writeup: solution/STAFF_GUIDE.md (Training Bay) and solution/training/SOLUTIONS.md
+# Author's weight: 50 of the part's 1000 points (not used: uniform dynamic scoring).
+name: "Training Bay MB2: Long Read"
+author: "Definitely Not Dr. Rootkit"
+category: ICS
+description: |
+    **Training Bay, Modbus track.** The Training Bay PLC answers Modbus/TCP
+    (unit id 1, 0-based addresses) on port 5020 of your team's copy (see the
+    connection info). Text flags are ASCII packed two
+    characters per register, low byte first. A solved challenge stays unlocked
+    for about 20 seconds and then re-arms, so read your flag promptly.
+    Somewhere in holding registers 10-25 the bay is saying something. Read the
+    whole block in one request and decode it.
+    All 22 ICS challenges use your team's own copy of this rig: start it from
+    any of them (it takes a few minutes to come up). Stop resets the ship and
+    the Training Bay.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Flag: Always readable at HR10-25.
+# Default value shipped by the kit; if src/flags.json or
+# src/training/training_flags.json change, rebuild and update this to match.
+flags:
+    - "flag{r3g1st3rs_sp34k_4sc11}"
+
+# Paths are relative to this metadata/ folder, so dist/ is ../dist/.
+files:
+    - ../dist/training/TRAINING_GUIDE.md
+    - ../dist/training/REGISTER_MAP.md
+    - ../dist/MODBUS_PRIMER.md
+
+# Each team's own copy: one Fargate task (topic instance:eclss). CTFd fills in {host}.
+connection_info: "{host}:5020 (Modbus/TCP, unit id 1)"
+
+tags:
+    - easy
+    - training
+    - modbus
+
+topics:
+    - instance:eclss
+    - "training:Modbus"
+
+state: hidden
+version: "0.1"

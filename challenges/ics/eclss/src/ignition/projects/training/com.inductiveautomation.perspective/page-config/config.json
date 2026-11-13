@@ -1,0 +1,11 @@
+{
+  "pages": {
+    "/": {
+      "title": "Training Bay",
+      "viewPath": "TrainingHMI"
+    }
+  },
+  "sharedDocks": {
+    "cornerPriority": "top-bottom"
+  }
+}

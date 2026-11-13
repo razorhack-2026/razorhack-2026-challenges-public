@@ -1,0 +1,53 @@
+# Source writeup: solution/STAFF_GUIDE.md (Training Bay) and solution/training/SOLUTIONS.md
+# Author's weight: 100 of the part's 1000 points (not used: uniform dynamic scoring).
+name: "Training Bay PL3: Count the Pulses"
+author: "Definitely Not Dr. Rootkit"
+category: ICS
+description: |
+    **Training Bay, OpenPLC track.** Open `TRAINING_LOGIC.st` and read the
+    function block named below: the code tells you *what* the PLC wants, and
+    `REGISTER_MAP.md` tells you *where* to write it. The PLC scans every
+    **100 ms**. Training Bay PLC: Modbus/TCP, unit id 1. Text flags are ASCII
+    packed two characters per register, low byte first, and re-arm about 20
+    seconds after you solve.
+    Function block: `FB_PulseCounter`. Send exactly the right number of pulses
+    on coil 17. Holding register 730 shows the count, 737 shows a fault. Coil
+    18 resets. Flag at holding registers 640-655.
+    All 22 ICS challenges use your team's own copy of this rig: start it from
+    any of them (it takes a few minutes to come up). Stop resets the ship and
+    the Training Bay.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Flag: HR640-655 after exactly 7 slow pulses.
+# Default value shipped by the kit; if src/flags.json or
+# src/training/training_flags.json change, rebuild and update this to match.
+flags:
+    - "flag{3dg3s_n0t_l3v3ls}"
+
+# Paths are relative to this metadata/ folder, so dist/ is ../dist/.
+files:
+    - ../dist/training/TRAINING_GUIDE.md
+    - ../dist/training/REGISTER_MAP.md
+    - ../dist/training/TRAINING_LOGIC.st
+
+# Each team's own copy: one Fargate task (topic instance:eclss). CTFd fills in {host}.
+connection_info: "{host}:5020 (Modbus/TCP, unit id 1)"
+
+tags:
+    - hard
+    - training
+    - openplc
+
+topics:
+    - instance:eclss
+    - "training:OpenPLC"
+
+state: hidden
+version: "0.1"

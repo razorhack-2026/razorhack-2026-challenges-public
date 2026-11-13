@@ -1,0 +1,10 @@
+# GM-side, so these are floors rather than exact pins: a reviewing GM runs
+# whatever Python they have, and an exact numpy pin has no wheel on a newer
+# interpreter (numpy==2.1.3 predates Python 3.14, so pip falls back to building
+# it from source and fails without MSVC). The deployed container pins exactly --
+# see deploy/requirements.txt -- because that interpreter is fixed at 3.12.
+numpy>=2.1
+pycryptodome>=3.20
+
+# Only needed for solve.py --serial (driving a socat-bridged pty).
+# pyserial>=3.5

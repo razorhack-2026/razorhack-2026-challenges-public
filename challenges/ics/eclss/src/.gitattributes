@@ -1,0 +1,15 @@
+# Files that run inside Linux containers must keep LF line endings, even when
+# the repo is checked out on Windows (core.autocrlf would otherwise break them).
+*.sh      text eol=lf
+*.st      text eol=lf
+*.tmpl    text eol=lf
+*.mjs     text eol=lf
+*.py      text eol=lf
+*.json    text eol=lf
+*.yml     text eol=lf
+Dockerfile text eol=lf
+
+# Windows-only scripts
+*.ps1     text eol=crlf
+
+*.zip     binary

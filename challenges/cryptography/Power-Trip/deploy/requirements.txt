@@ -1,0 +1,6 @@
+# Container-side only. The GM/test set is ../requirements.txt.
+# unicorn 2.1.0 still imports pkg_resources at load time, and python:3.12-slim
+# no longer ships setuptools, so it has to be installed explicitly.
+setuptools==75.6.0
+unicorn==2.1.0
+numpy==2.1.3

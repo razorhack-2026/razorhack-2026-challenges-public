@@ -1,0 +1,172 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1100,
+      "height": 720
+    }
+  },
+  "root": {
+    "type": "ia.container.coord",
+    "version": 0,
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "mode": "fixed",
+      "style": {
+        "backgroundColor": "#050a16",
+        "backgroundImage": "radial-gradient(1.5px 1.5px at 20px 30px, rgba(255,255,255,0.9), transparent), radial-gradient(1px 1px at 120px 80px, rgba(180,220,255,0.8), transparent), radial-gradient(1px 1px at 70px 150px, rgba(255,255,255,0.6), transparent), radial-gradient(1.5px 1.5px at 165px 170px, rgba(200,180,255,0.7), transparent), radial-gradient(1px 1px at 190px 20px, rgba(255,255,255,0.5), transparent), radial-gradient(ellipse at 12% 0%, rgba(40,110,255,0.24), transparent 55%), radial-gradient(ellipse at 95% 100%, rgba(150,60,255,0.22), transparent 55%), linear-gradient(180deg, #040814 0%, #070d1f 100%)",
+        "backgroundSize": "200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 100% 100%, 100% 100%, 100% 100%",
+        "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif"
+      }
+    },
+    "children": [
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hdr_band"
+        },
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 1100,
+          "height": 72
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundImage": "linear-gradient(90deg, rgba(20,70,150,0.55), rgba(10,20,40,0.15))",
+            "borderBottom": "1px solid rgba(90,170,255,0.35)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hdr_title"
+        },
+        "position": {
+          "x": 32,
+          "y": 10,
+          "width": 760,
+          "height": 32
+        },
+        "props": {
+          "text": "ISV OZARK HORIZON  ·  CREW MANIFEST",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "24px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 700,
+            "letterSpacing": "0.22em",
+            "textShadow": "0 0 14px rgba(80,200,255,0.55)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hdr_sub"
+        },
+        "position": {
+          "x": 32,
+          "y": 44,
+          "width": 760,
+          "height": 20
+        },
+        "props": {
+          "text": "ARCHIVED CONSOLE  ·  DECOMMISSIONED AT LAUNCH",
+          "style": {
+            "color": "#6fa8dc",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.32em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "badge"
+        },
+        "position": {
+          "x": 880,
+          "y": 20,
+          "width": 188,
+          "height": 32
+        },
+        "props": {
+          "text": "ARCHIVED",
+          "style": {
+            "color": "#04121f",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "backgroundColor": "#9b5de5",
+            "borderRadius": "16px",
+            "fontWeight": 700,
+            "letterSpacing": "0.18em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "term_card"
+        },
+        "position": {
+          "x": 32,
+          "y": 96,
+          "width": 1036,
+          "height": 260
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid #9b5de5",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.markdown",
+        "version": 0,
+        "meta": {
+          "name": "term_text"
+        },
+        "position": {
+          "x": 56,
+          "y": 116,
+          "width": 988,
+          "height": 220
+        },
+        "props": {
+          "source": "This console was retired at launch and removed from the operator menu, but the page was never deleted from the gateway.\n\nIf you are reading this, you found an unlinked Perspective page.\n\nArchive access token: `flag{unl1nk3d_p4g3s_st1ll_l04d}`",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "15px",
+            "lineHeight": "1.6",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "padding": "4px 8px"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+# Local state only. Unlike the author's original .gitignore, build/, the
+# generated Ignition views, tags and gateway config (ignition/config/) and
+# training/student/ ARE committed: they are what the images bake in, and rebuilding
+# them needs the builder image (internet at build time).
+.env
+.strucpp/
+__pycache__/
+*.pyc
+build/ECLSS_Core.st

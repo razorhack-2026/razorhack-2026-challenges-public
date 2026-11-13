@@ -1,0 +1,248 @@
+{
+  "name": "ECLSS",
+  "tagType": "Folder",
+  "tags": [
+    {
+      "name": "Telemetry",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "name": "O2_x100",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1"
+        },
+        {
+          "name": "CO2_ppm",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR2"
+        },
+        {
+          "name": "Temp_x100",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR3"
+        },
+        {
+          "name": "Press_x10",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR4"
+        },
+        {
+          "name": "OGA_x10",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR5"
+        },
+        {
+          "name": "BedA_x10",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR6"
+        },
+        {
+          "name": "BedB_x10",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR7"
+        },
+        {
+          "name": "ActiveBed",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR8"
+        },
+        {
+          "name": "Valve_x10",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR9"
+        },
+        {
+          "name": "Heater_x10",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR10"
+        },
+        {
+          "name": "AlarmWord",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR11"
+        },
+        {
+          "name": "CrewStatus",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR12"
+        },
+        {
+          "name": "MET_s",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR13"
+        },
+        {
+          "name": "NominalHold_s",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR14"
+        },
+        {
+          "name": "FlagsEarned",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR15"
+        },
+        {
+          "name": "CrewCount",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR16"
+        },
+        {
+          "name": "StatusBits",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR17"
+        }
+      ]
+    },
+    {
+      "name": "Setpoints",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "name": "O2_SP_x100",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1025"
+        },
+        {
+          "name": "O2_Kp_x10",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1026"
+        },
+        {
+          "name": "CDRA_Mode",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1027"
+        },
+        {
+          "name": "CDRA_HalfCycle_s",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1028"
+        },
+        {
+          "name": "Temp_SP_x100",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1029"
+        },
+        {
+          "name": "TCS_Kp_x10",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1030"
+        },
+        {
+          "name": "Disarm_Code",
+          "tagType": "AtomicTag",
+          "dataType": "Int2",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1031"
+        }
+      ]
+    },
+    {
+      "name": "Commands",
+      "tagType": "Folder",
+      "tags": [
+        {
+          "name": "OGA_Inhibit",
+          "tagType": "AtomicTag",
+          "dataType": "Boolean",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.C1"
+        },
+        {
+          "name": "CDRA_Heater_En",
+          "tagType": "AtomicTag",
+          "dataType": "Boolean",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.C2"
+        },
+        {
+          "name": "TCS_Reverse",
+          "tagType": "AtomicTag",
+          "dataType": "Boolean",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.C3"
+        },
+        {
+          "name": "Heater_Override",
+          "tagType": "AtomicTag",
+          "dataType": "Boolean",
+          "valueSource": "opc",
+          "opcServer": "Ignition OPC UA Server",
+          "opcItemPath": "ns=1;s=[ECLSS_PLC]1.C4"
+        }
+      ]
+    }
+  ]
+}

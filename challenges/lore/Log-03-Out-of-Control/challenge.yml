@@ -1,0 +1,14 @@
+name: "Log 03: Out of Control"
+author: Voyager 2
+category: Lore
+description: |
+    Hey KOT crew, things are out of control. We need every crew member to keep going, I believe we can fix this! Keep finding what you can, and hopefully we find some sort of light at the end of the tunnel.
+
+# A Lore entry (Razorhack-CTFd story.py): read-only, no flag, worth nothing, and
+# never counts toward unlocking the next arc.
+type: standard
+value: 0
+topics:
+    - "arc:3:The Chaos"
+state: hidden
+version: "0.1"

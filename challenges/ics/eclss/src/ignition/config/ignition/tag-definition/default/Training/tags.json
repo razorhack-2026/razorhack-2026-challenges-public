@@ -1,0 +1,26 @@
+[
+  {
+    "dataType": "Int2",
+    "name": "Beacon_Freq",
+    "opcItemPath": "ns=1;s=[TRAIN_PLC]1.HR1027",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "Heartbeat",
+    "opcItemPath": "ns=1;s=[TRAIN_PLC]1.HR2",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "IG3_Locked",
+    "opcItemPath": "ns=1;s=[TRAIN_PLC]1.HR741",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  }
+]

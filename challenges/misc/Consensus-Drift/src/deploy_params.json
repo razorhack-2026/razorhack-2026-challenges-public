@@ -1,0 +1,16 @@
+{
+  "validators": [
+    "0xC9bf66E6f341586A7e01be867Bb3573e6E9FEA0f",
+    "0x0068cCEE4dce736FECa32fe1D42dC8A4988eBfD0",
+    "0x57a941F096853B3Cc8cdE962e14C0a9B915F71C6",
+    "0xa450bBc1F7aF2C9c113Ac598e4E31921a5BC0d5d",
+    "0x377811d219577C5858c24B994EAD96060AE689E7",
+    "0x9eDcAfeDc5D15a412a92Eaf0B067c7Ab8A33b102",
+    "0x8E658f3a719E9e37cDe537FDF4a87b770dfd69FE"
+  ],
+  "threshold": 5,
+  "finalized_height": 1400,
+  "finalized_hash": "0x89d380d7b71986efbf480914106c17fc89012039fdcbb94afa4632e5c28b6f0b",
+  "pow_bits": 24,
+  "unlock_record": "0x6118aeefda9ff2ef9cea01ef0d125dc22df990d95bbc6fb50e07dfb7eaf24d7c"
+}

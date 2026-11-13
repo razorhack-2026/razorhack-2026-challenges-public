@@ -1,0 +1,72 @@
+# Source writeup: solution/STAFF_GUIDE.md (ECLSS) and solution/eclss/SOLUTIONS.md
+# Author's weight: 200 of the part's 1000 points (not used: uniform dynamic scoring).
+name: "ECLSS 6: Exorcise the maintenance sync"
+author: "Definitely Not Dr. Rootkit"
+category: ICS
+description: |
+    **ECLSS, part 6 of 7.** You are on the deck crew of the **ISV Ozark
+    Horizon**. Mid-transit, the Environmental Control & Life Support System
+    started fighting the crew: oxygen sagging, CO2 climbing, the cabin running
+    hot. The watch officer swears nobody touched the setpoints. The ship's PLC
+    answers Modbus/TCP on port 502 (unit id 1) and its Ignition HMI is on port
+    8088. Registers are 16-bit signed; scaled values are stored x10 or x100.
+    All 22 ICS challenges use your team's own copy of this rig: start it from
+    any of them (it takes a few minutes to come up). Stop resets the ship and
+    the Training Bay.
+
+    You have probably noticed your corrections getting undone every so often.
+    A "maintenance sync" routine re-applies a commissioning baseline while it
+    is **armed**. There is a documented way to stand it down: a maintenance
+    console on the HMI explains it and gives you the code (it isn't on the
+    menu either: ECLSS 2's hint shows how to find pages like it). Writing
+    that code to the right register disarms the routine for good.
+
+    *Careful: five wrong codes in a row lock the register for a minute. This is
+    a reasoning puzzle, not a number to brute force.*
+
+    The PLC keeps a live objective bitfield at **holding register 14**
+    (`FlagsEarned`): bit 0 O2 in range, bit 1 CO2 in range, bit 2 temperature in
+    range, bit 3 maintenance sync disarmed, bit 4 full nominal hold.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Flag: Published at HR1204-1219 once FlagsEarned bit3 sets (the disarm lasts
+# until the copy restarts). /maint shows only the code, not this flag.
+# Default value shipped by the kit; if src/flags.json or
+# src/training/training_flags.json change, rebuild and update this to match.
+flags:
+    - "flag{3x0rc1s3d_th3_m41nt_sync}"
+
+# Paths are relative to this metadata/ folder, so dist/ is ../dist/.
+files:
+    - ../dist/eclss/CHALLENGES.md
+    - ../dist/MODBUS_PRIMER.md
+    - ../dist/eclss/REGISTER_MAP_PLAYER.md
+
+# Each team's own copy: one Fargate task (topic instance:eclss). CTFd fills in {host}.
+connection_info: "{host}:502 (Modbus/TCP, unit id 1) and http://{host}:8088/data/perspective/client/eclss"
+
+tags:
+    - hard
+    - eclss
+    - ignition
+    - modbus
+
+topics:
+    - instance:eclss
+    - "quest:Environmental Challenges"
+
+# Locked until the part before is solved; shown as ??? until then.
+requirements:
+    prerequisites:
+        - "ECLSS 5: Goldilocks"
+    anonymize: true
+
+state: hidden
+version: "0.1"

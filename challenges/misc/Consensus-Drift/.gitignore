@@ -1,0 +1,5 @@
+src/bridge_address.txt
+__pycache__/
+*.pyc
+.env
+*.tags

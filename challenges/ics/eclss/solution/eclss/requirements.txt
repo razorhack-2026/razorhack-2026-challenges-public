@@ -1,0 +1,2 @@
+# Reference solver / health-check dependencies
+pymodbus>=3.6

@@ -1,0 +1,12 @@
+{
+  "attributes": {
+    "config": {}
+  },
+  "files": [
+    "tags.json"
+  ],
+  "overridable": true,
+  "restricted": false,
+  "scope": "G",
+  "version": 1
+}

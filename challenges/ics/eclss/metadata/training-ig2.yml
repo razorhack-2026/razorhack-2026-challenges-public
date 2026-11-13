@@ -1,0 +1,45 @@
+# Source writeup: solution/STAFF_GUIDE.md (Training Bay) and solution/training/SOLUTIONS.md
+# Author's weight: 50 of the part's 1000 points (not used: uniform dynamic scoring).
+name: "Training Bay IG2: Hidden in Plain Sight"
+author: "Definitely Not Dr. Rootkit"
+category: ICS
+description: |
+    **Training Bay, Ignition track.** The Training HMI is an Ignition
+    Perspective project on your team's Ignition gateway (port 8088).
+    Open the Training HMI. Something on that screen was not meant to be seen.
+    All 22 ICS challenges use your team's own copy of this rig: start it from
+    any of them (it takes a few minutes to come up). Stop resets the ship and
+    the Training Bay.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Flag: Invisible label in the TrainingHMI view.
+# Default value shipped by the kit; if src/flags.json or
+# src/training/training_flags.json change, rebuild and update this to match.
+flags:
+    - "flag{h1dd3n_1s_n0t_s3cur3}"
+
+# Paths are relative to this metadata/ folder, so dist/ is ../dist/.
+files:
+    - ../dist/training/TRAINING_GUIDE.md
+
+# Each team's own copy: one Fargate task (topic instance:eclss). CTFd fills in {host}.
+connection_info: "http://{host}:8088/data/perspective/client/training"
+
+tags:
+    - easy
+    - training
+    - ignition
+
+topics:
+    - instance:eclss
+    - "training:Ignition"
+
+state: hidden
+version: "0.1"

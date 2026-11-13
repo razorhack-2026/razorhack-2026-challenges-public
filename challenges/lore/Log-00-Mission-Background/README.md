@@ -1,0 +1,11 @@
+# Log 00: Mission Background
+
+**Category:** Lore  **Author:** Voyager 2
+
+## Description
+
+The year is 2074. RazorPower Co. sent out four autonomous ships to find an alternative power source somewhere in the galaxy after the fall of its Jurassic plans. ARGONAUT, PIONEER, HORIZON, and ICARUS all set sail as a hail mary to save humanity. But, all but one ship, ICARUS, returned with the alternative power source. After months of searching and getting radio silent results, RazorPower Co. decided to continue, for they were running out of time.
+
+Using the alternative power source to power a new, grand, state-of-the-art cargo ship (and all other space travel), the KEEPER OF TOMORROW, they finally set their sights on the goal: To terraform Novare, the planet abundant with the new power source, Kalium. The KOT was seen as RASA Transport Dept.’s prized possession. They trusted it to transport high-end electrical equipment, resources, and most importantly, cutting-edge terraforming technology to continue humanity on Novare.
+
+When KOT has its much-anticipated takeoff to Novare, ICARUS suddenly returns, now evil, taking an unexpected pitstop by KOT. While the crew of KOT speculates it’s the terraforming equipment being sought after, it seems whoever is behind the taking of ICARUS enjoys a bit of a chase...

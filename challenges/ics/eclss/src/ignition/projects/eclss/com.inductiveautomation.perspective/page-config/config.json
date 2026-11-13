@@ -1,0 +1,19 @@
+{
+  "pages": {
+    "/": {
+      "title": "ECLSS Overview",
+      "viewPath": "ECLSSOverview"
+    },
+    "/crew-manifest": {
+      "title": "Crew Manifest (archived)",
+      "viewPath": "CrewManifest"
+    },
+    "/maint": {
+      "title": "Maintenance Console",
+      "viewPath": "MaintConsole"
+    }
+  },
+  "sharedDocks": {
+    "cornerPriority": "top-bottom"
+  }
+}

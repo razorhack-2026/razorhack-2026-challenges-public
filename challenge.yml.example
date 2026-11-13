@@ -1,0 +1,116 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+#
+# This file is what gets your challenge imported into CTFd automatically
+# (`ctf challenge install/sync`) instead of hand-entered. Copy it into your
+# challenge folder as `challenge.yml`, fill in the marked fields, delete the
+# comments you don't need.
+#
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+
+# ── Required — fill these in ─────────────────────────────────────────────
+name: "My Challenge Name"           # display name on the scoreboard
+author: "Your Name"
+category: Forensics                 # exact string shown on the scoreboard, and CTFd
+                                    # is case-sensitive — use one of: Cryptography,
+                                    # Forensics, Network Forensics, Pwn, Reverse Engineering, Web,
+                                    # OSINT, Steganography, Wi-Fi, ICS, AI, Misc,
+                                    # Lore (story entries: see "Story board" below)
+description: |
+    The competitor-facing description, same text as your README.md.
+    This is what players see in CTFd. Markdown works.
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+# Uniform dynamic scoring (GM meeting 2026-08-17): every challenge starts at
+# 500 and decays as more teams solve it. No per-challenge point values.
+# `decay` and `minimum` are set globally once registration numbers are known —
+# leave the placeholders alone; they'll be filled in one pass before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+# Plain string = static, case-sensitive (the default — use this unless you
+# have a reason not to). See the ctfcli spec for case-insensitive or regex.
+# A Lore entry has no flag: leave out flags: entirely (see "Story board").
+flags:
+    - flag{your_flag_here}
+
+# ── Files the competitor downloads ───────────────────────────────────────
+# Paths relative to this file. Everything listed here gets uploaded to CTFd.
+# Only list things from dist/ — never src/ or solution/.
+files:
+    - dist/handout.tar.gz
+
+# ── Optional: hints ──────────────────────────────────────────────────────
+# Free or point-cost. Delete if unused. A title shows before the hint is
+# bought, so keep the answer out of it.
+# hints:
+#     - This hint is free
+#     - { content: "This hint costs points", cost: 50 }
+#     - title: "Sensor 2's capture"
+#       content: "Here's what sensor 2 recorded: [sensor2.pcap](hints/sensor2.pcap)"
+#       cost: 100
+#
+# A file only for teams that buy the hint: put it in a hints/ folder (not
+# dist/, and don't list it under files:) and link to it from the hint's
+# content as above. The challenge sync uploads it and points the link at it.
+# The link stays hidden until a team pays.
+# Hints are set only when the challenge is first imported; after that, change
+# them in the CTFd admin panel.
+
+# ── Optional: live-service challenges only ───────────────────────────────
+# If your challenge runs as a service (docker-compose.yml exists), tell
+# players how to reach it. Host/port get finalized at deploy time.
+# connection_info: nc <host> <port>
+
+# ── Optional: each team's own copy ───────────────────────────────────────
+# If each team gets its own copy of what the challenge runs on (the Wi-Fi
+# range, a per-team container), name it with an instance topic. Its pane in
+# CTFd then has Start and Stop, and once the team's copy is started,
+# {host} and {port} in connection_info become that copy's address.
+# Players never see topics. Challenges sharing one copy use the same name.
+# topics:
+#     - instance:<name>          # lowercase letters, digits and dashes
+# connection_info: "ssh -p {port} root@{host}"
+
+# ── Story board: arc and side quest ──────────────────────────────────────
+# Where the challenge sits on the CTFd board's Story and Side Quests tabs
+# (Razorhack-CTFd story.py). Topics, so players never see them; they go in
+# the same topics: list as instance:<name>.
+#   arc:<n>:<Arc title>   story arc n; the number is the order and arc 1 is
+#                         open from the start. A team opens arc n+1 at 70%
+#                         of arc n's challenges, and until then sees only
+#                         its title, in glyphs. Every challenge in an arc
+#                         must give the same title.
+#   arc:0:<Title>         training: open from the start beside arc 1, and
+#                         never part of the story's unlocking.
+#   quest:<Quest title>   a side quest (never locks anything).
+# No arc: topic means the challenge never locks.
+# topics:
+#     - "arc:2:The Long Dark"
+#     - "quest:Drone Swarm"
+#
+# A Lore entry (story so far, read-only) is its own challenge: category Lore,
+# no flags, worth nothing, in its arc's Lore list on the board:
+#   category: Lore
+#   type: standard
+#   value: 0
+#   topics:
+#       - "arc:2:The Long Dark"
+
+# ── Optional: challenge chains ───────────────────────────────────────────
+# Require another challenge to be solved first (use its `name`).
+# requirements:
+#     - "Part One Challenge Name"
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+# Difficulty goes here (easy / medium / hard) plus any technique tags.
+tags:
+    - medium
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+state: hidden       # challenges stay hidden until we flip them live for the
+                    # event; omitting this defaults to VISIBLE, so keep it
+version: "0.1"

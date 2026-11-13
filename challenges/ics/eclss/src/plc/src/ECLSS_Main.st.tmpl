@@ -1,0 +1,113 @@
+(* =====================================================================
+   PROGRAM prog0  -  wires ECLSS_Core to located (Modbus-mapped) variables
+   {{SHIP_NAME}}
+
+   Address map (OpenPLC v4 modbus_slave plugin):
+     %QW n      -> Modbus holding register n            (telemetry, read)
+     %MW n      -> Modbus holding register 1024 + n      (setpoints / flags)
+     %QX 0.b    -> Modbus coil b                         (commands, write)
+   Full map in docs/REGISTER_MAP.md.
+   GENERATED FROM TEMPLATE - edit the .tmpl and re-run build_challenge.py
+   ===================================================================== *)
+PROGRAM prog0
+VAR
+    eclss : ECLSS_Core;
+
+    (* ---- telemetry: holding registers 0..16 (read) ---- *)
+    O2        AT %QW0  : INT;
+    CO2       AT %QW1  : INT;
+    TempC     AT %QW2  : INT;
+    Press     AT %QW3  : INT;
+    OGA       AT %QW4  : INT;
+    BedA      AT %QW5  : INT;
+    BedB      AT %QW6  : INT;
+    ActiveBed AT %QW7  : INT;
+    Valve     AT %QW8  : INT;
+    Heater    AT %QW9  : INT;
+    AlarmW    AT %QW10 : INT;
+    CrewSt    AT %QW11 : INT;
+    MET       AT %QW12 : INT;
+    Hold      AT %QW13 : INT;
+    FlagBits  AT %QW14 : INT;
+    Crew      AT %QW15 : INT;
+    StatusB   AT %QW16 : INT;   (* bit0 MaintSyncArmed, bit1 TamperLockout *)
+
+    (* ---- setpoints: holding registers 1024.. (read/write) ---- *)
+    O2_SP     AT %MW0  : INT;
+    O2_Kp     AT %MW1  : INT;
+    CDRA_Mode AT %MW2  : INT;
+    CDRA_Half AT %MW3  : INT;
+    Temp_SP   AT %MW4  : INT;
+    TCS_Kp    AT %MW5  : INT;
+    Disarm    AT %MW6  : INT;
+
+    (* ---- commands: coils 0..3 (write) ---- *)
+    OGA_Inhibit    AT %QX0.0 : BOOL;
+    CDRA_Heater_En AT %QX0.1 : BOOL;
+    TCS_Reverse    AT %QX0.2 : BOOL;
+    Heater_Over    AT %QX0.3 : BOOL;
+
+    (* ---- published flag text: holding registers 1024+100 .. ----
+       Each flag is ASCII packed 2 chars/register, low byte first.
+       A flag register block reads as zeros until its objective bit is set. *)
+{{FLAG_DECLS}}
+    firstScan : BOOL := TRUE;
+END_VAR
+
+(* default setpoints applied once; the puzzle routine will fight these *)
+IF firstScan THEN
+    O2_SP     := 2095;   (* 20.95 % *)
+    O2_Kp     := 20;     (* 2.0 *)
+    CDRA_Mode := 1;      (* AUTO *)
+    CDRA_Half := 30;     (* 30 s half-cycle *)
+    Temp_SP   := 2250;   (* 22.5 C *)
+    TCS_Kp    := 30;     (* 3.0 *)
+    firstScan := FALSE;
+END_IF;
+
+eclss(
+    dt := 0.1,
+    O2_SP_x100 := O2_SP, O2_Kp_x10 := O2_Kp,
+    CDRA_Mode := CDRA_Mode, CDRA_HalfCycle_s := CDRA_Half,
+    Temp_SP_x100 := Temp_SP, TCS_Kp_x10 := TCS_Kp,
+    Disarm_Code := Disarm,
+    OGA_Inhibit := OGA_Inhibit, CDRA_Heater_En := CDRA_Heater_En,
+    TCS_Reverse := TCS_Reverse, Heater_Override := Heater_Over);
+
+(* write back setpoints the FB may have changed (puzzle re-apply / consume) *)
+O2_SP     := eclss.O2_SP_x100;
+CDRA_Mode := eclss.CDRA_Mode;
+Temp_SP   := eclss.Temp_SP_x100;
+Disarm    := eclss.Disarm_Code;
+
+(* latch telemetry *)
+O2        := eclss.O2_x100;
+CO2       := eclss.CO2_ppm;
+TempC     := eclss.Temp_x100;
+Press     := eclss.Press_x10;
+OGA       := eclss.OGA_x10;
+BedA      := eclss.BedA_x10;
+BedB      := eclss.BedB_x10;
+ActiveBed := eclss.ActiveBed;
+Valve     := eclss.Valve_x10;
+Heater    := eclss.Heater_x10;
+AlarmW    := eclss.AlarmWord;
+CrewSt    := eclss.CrewStatus;
+MET       := eclss.MET_s;
+Hold      := eclss.NominalHold_s;
+FlagBits  := eclss.FlagsEarned;
+Crew      := eclss.CrewCount;
+StatusB   := 0;
+IF eclss.MaintSyncArmed THEN StatusB := StatusB + 1; END_IF;
+IF eclss.TamperLockout  THEN StatusB := StatusB + 2; END_IF;
+
+(* publish flag text, each block gated by its objective bit *)
+{{FLAG_PUBLISH}}
+END_PROGRAM
+
+CONFIGURATION Config0
+    RESOURCE Res0 ON PLC
+        TASK Main(INTERVAL := T#100ms, PRIORITY := 0);
+        PROGRAM Inst0 WITH Main : prog0;
+    END_RESOURCE
+END_CONFIGURATION

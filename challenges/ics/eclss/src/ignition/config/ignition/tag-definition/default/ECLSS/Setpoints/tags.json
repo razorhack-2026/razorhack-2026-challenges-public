@@ -1,0 +1,58 @@
+[
+  {
+    "dataType": "Int2",
+    "name": "CDRA_HalfCycle_s",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1028",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "CDRA_Mode",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1027",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "Disarm_Code",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1031",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "O2_Kp_x10",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1026",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "O2_SP_x100",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1025",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "TCS_Kp_x10",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1030",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  },
+  {
+    "dataType": "Int2",
+    "name": "Temp_SP_x100",
+    "opcItemPath": "ns=1;s=[ECLSS_PLC]1.HR1029",
+    "opcServer": "Ignition OPC UA Server",
+    "tagType": "AtomicTag",
+    "valueSource": "opc"
+  }
+]

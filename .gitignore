@@ -1,0 +1,15 @@
+.ctf/
+.vscode/
+
+# Python bytecode caches — never track these
+__pycache__/
+*.py[cod]
+# Local secrets and generated flag files: never commit
+flags.local.json
+infra/ai-stack/flags/
+**/.env
+# challenge content (a breadcrumb the players read), not a secret
+!challenges/web/coremelt/src/web/.env
+**/THE-DRILL/host_keys/
+# rev handout (the compiled file is the challenge)
+!challenges/rev/field-diagnostic/dist/diagnostic.pyc

@@ -1,0 +1,25 @@
+# Consensus-Drift -- GM-side Python dependencies for building and TESTING the challenge.
+#
+# Covers everything outside the container:
+#   src/forge_chain.py            (forge the drifted node DBs)
+#   src/deploy.py                 (compile + deploy ConvoyBridge)
+#   solution/walkthrough/*.py     (the reference solution / verify run)
+#
+# The deployed instance image has its own pinned set -- see deploy/requirements.txt.
+# Competitors need nothing from this file; it is not part of dist/.
+#
+# Setup (from this challenge root):
+#   python -m venv .venv
+#   ./.venv/Scripts/pip install -r requirements.txt   # Windows
+#   ./.venv/bin/pip install -r requirements.txt       # Linux / macOS
+#
+# All pure-Python wheels -- no MSVC toolchain required. Verified on CPython 3.14.3
+# (3.13 works too). Do NOT add eth-tester[py-evm]: it pulls safe-pysha3, which needs
+# MSVC 14+ and has no wheel on 3.13+. Use the Docker anvil node instead.
+
+web3==7.16.0
+eth-account==0.14.0
+eth-abi==6.0.0
+eth-utils==6.0.0
+eth-hash[pycryptodome]==0.8.0
+py-solc-x==2.0.5

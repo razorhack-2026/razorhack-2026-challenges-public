@@ -1,0 +1,152 @@
+(* =====================================================================
+   PROGRAM prog0 - Training Bay wiring
+   Located variables -> Modbus (OpenPLC v4 modbus_slave plugin):
+     %QW n    -> holding register n             (read-only to players)
+     %MW n    -> holding register 1024 + n      (player-writable)
+     %QX a.b  -> coil 8*a + b                   (player-writable)
+   GENERATED FROM TEMPLATE - edit the .tmpl and rebuild
+   ===================================================================== *)
+PROGRAM prog0
+VAR
+    beacon   : FB_Beacon;
+    airlock  : FB_Airlock;
+    holdt    : FB_HoldTimer;
+    pulses   : FB_PulseCounter;
+    motor    : FB_MotorSealIn;
+    scaler   : FB_Scaling;
+    breakers : FB_BreakerPanel;
+    tuner    : FB_Tuner;
+    firstScan : BOOL := TRUE;
+    unlock    : INT;
+
+    (* ---- player coils ---- *)
+    Beacon_On     AT %QX0.0 : BOOL;   (* coil 0  *)
+    Inner_Closed  AT %QX1.0 : BOOL;   (* coil 8  *)
+    Suit_Ok       AT %QX1.1 : BOOL;   (* coil 9  *)
+    Override      AT %QX1.2 : BOOL;   (* coil 10 *)
+    Cycle_Req     AT %QX1.3 : BOOL;   (* coil 11 *)
+    Hold_Btn      AT %QX2.0 : BOOL;   (* coil 16 *)
+    Pulse_In      AT %QX2.1 : BOOL;   (* coil 17 *)
+    Count_Reset   AT %QX2.2 : BOOL;   (* coil 18 *)
+    Start_PB      AT %QX3.0 : BOOL;   (* coil 24 *)
+    Stop_PB_NC    AT %QX3.1 : BOOL;   (* coil 25 *)
+    Breaker_Reset AT %QX3.6 : BOOL;   (* coil 30 *)
+
+    (* ---- player-writable registers (HR 1024+) ---- *)
+    Analog_Raw    AT %MW0 : INT;      (* HR 1024 *)
+    Breaker_Word  AT %MW1 : INT;      (* HR 1025 *)
+    Beacon_Freq   AT %MW2 : INT;      (* HR 1026 *)
+
+    (* ---- read-only registers ---- *)
+    Bay_Id        AT %QW0   : INT;
+    Heartbeat     AT %QW1   : INT;
+    Big_Hi        AT %QW400 : INT;
+    Big_Lo        AT %QW401 : INT;
+    Flt_Hi        AT %QW410 : INT;
+    Flt_Lo        AT %QW411 : INT;
+    Diag_Count    AT %QW730 : INT;
+    Diag_Hold     AT %QW731 : INT;
+    Diag_Motor    AT %QW732 : INT;
+    Diag_Eng      AT %QW733 : INT;
+    Diag_Door     AT %QW734 : INT;
+    Diag_Trip     AT %QW735 : INT;
+    Diag_Chamber  AT %QW736 : INT;
+    Diag_Fault    AT %QW737 : INT;
+    IG3_Locked    AT %QW740 : INT;
+    Unlock_Word   AT %QW745 : INT;
+
+    (* ---- flag text blocks ---- *)
+{{FLAG_DECLS}}
+END_VAR
+
+IF firstScan THEN
+    Override     := TRUE;                 (* maintenance left it engaged *)
+    Breaker_Word := {{BREAKER_INIT}};
+    firstScan    := FALSE;
+END_IF;
+
+(* static recon values: MB1, MB5, MB6 *)
+Bay_Id := {{BAY_ID}};
+Big_Hi := {{BIG_HI}};
+Big_Lo := {{BIG_LO}};
+Flt_Hi := {{FLT_HI}};
+Flt_Lo := {{FLT_LO}};
+
+Heartbeat := Heartbeat + 1;
+IF Heartbeat >= 30000 THEN
+    Heartbeat := 0;
+END_IF;
+
+(* ---- run the challenge blocks ---- *)
+beacon(Beacon_On := Beacon_On);
+airlock(Inner_Closed := Inner_Closed, Suit_Ok := Suit_Ok,
+        Override := Override, Cycle_Req := Cycle_Req);
+holdt(Hold_Btn := Hold_Btn);
+pulses(Pulse_In := Pulse_In, Count_Reset := Count_Reset);
+motor(Start_PB := Start_PB, Stop_PB_NC := Stop_PB_NC);
+scaler(Raw := Analog_Raw);
+breakers(Word := Breaker_Word, Reset_Cmd := Breaker_Reset);
+tuner(Freq := Beacon_Freq);
+
+(* ---- re-arm outputs: put the rig back for the next team ---- *)
+IF beacon.Auto_Off THEN
+    Beacon_On := FALSE;
+END_IF;
+IF airlock.Reset_Cycle THEN
+    Cycle_Req := FALSE;  Inner_Closed := FALSE;  Suit_Ok := FALSE;  Override := TRUE;
+END_IF;
+IF holdt.Release_Btn THEN
+    Hold_Btn := FALSE;
+END_IF;
+IF pulses.Clear_Reset THEN
+    Count_Reset := FALSE;
+END_IF;
+IF motor.Reset_Panel THEN
+    Start_PB := FALSE;  Stop_PB_NC := FALSE;
+END_IF;
+IF scaler.Clear_Raw THEN
+    Analog_Raw := 0;
+END_IF;
+IF breakers.Restore THEN
+    Breaker_Word := {{BREAKER_INIT}};
+END_IF;
+IF breakers.Clear_Reset THEN
+    Breaker_Reset := FALSE;
+END_IF;
+IF tuner.Clear_Freq THEN
+    Beacon_Freq := 0;
+END_IF;
+
+(* ---- diagnostics players can watch ---- *)
+Diag_Count := pulses.Count;
+Diag_Hold  := holdt.Elapsed_ds;
+Diag_Eng   := scaler.Eng_x10;
+Diag_Motor := 0;  IF motor.Motor_Run THEN Diag_Motor := 1; END_IF;
+Diag_Door  := 0;  IF airlock.Door_Open THEN Diag_Door := 1; END_IF;
+Diag_Trip  := 0;  IF breakers.Tripped THEN Diag_Trip := 1; END_IF;
+Diag_Fault := 0;  IF pulses.Fault THEN Diag_Fault := 1; END_IF;
+Diag_Chamber := 1013;  IF airlock.Depressurized THEN Diag_Chamber := 0; END_IF;
+IG3_Locked := 0;  IF tuner.Locked THEN IG3_Locked := 1; END_IF;
+
+(* ---- unlock bitfield ---- *)
+unlock := 0;
+IF beacon.Lit         THEN unlock := unlock + 1;   END_IF;   (* bit0 MB4 *)
+IF airlock.Door_Open  THEN unlock := unlock + 2;   END_IF;   (* bit1 PL1 *)
+IF holdt.Done         THEN unlock := unlock + 4;   END_IF;   (* bit2 PL2 *)
+IF pulses.Done        THEN unlock := unlock + 8;   END_IF;   (* bit3 PL3 *)
+IF motor.Done         THEN unlock := unlock + 16;  END_IF;   (* bit4 PL4 *)
+IF scaler.Done        THEN unlock := unlock + 32;  END_IF;   (* bit5 PL5 *)
+IF breakers.Done      THEN unlock := unlock + 64;  END_IF;   (* bit6 MB7 *)
+IF tuner.Locked       THEN unlock := unlock + 128; END_IF;   (* bit7 IG3 *)
+Unlock_Word := unlock;
+
+(* ---- publish flag text (gated blocks read zero while locked) ---- *)
+{{FLAG_PUBLISH}}
+END_PROGRAM
+
+CONFIGURATION Config0
+    RESOURCE Res0 ON PLC
+        TASK Main(INTERVAL := T#100ms, PRIORITY := 0);
+        PROGRAM Inst0 WITH Main : prog0;
+    END_RESOURCE
+END_CONFIGURATION

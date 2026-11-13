@@ -1,0 +1,37 @@
+# Consensus-Drift -- single-instance template. Kept at the challenge root so that a bare
+# `docker compose up` works here with no -f flag and no cd (matching the other challenges
+# in this repo, and keeping the default path frictionless).
+#
+# Default (local testing):   docker compose up -d
+#   - reuses the prebuilt image; builds automatically only if the image is missing.
+#   - FLAG defaults to an obvious placeholder, so this runs out of the box.
+#
+# Force a rebuild (if you changed the source or hit image trouble):
+#                            docker compose up -d --build
+#
+# REAL / scored instance: you MUST override FLAG with the value from challenge.yml -- the
+# placeholder below will NOT score. Examples:
+#   PowerShell:  $env:FLAG='flag{...}'; docker compose up -d
+#   bash:        FLAG='flag{...}' docker compose up -d
+services:
+  consensus-drift:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+    image: consensus-drift:latest
+    container_name: consensus-drift
+    environment:
+      # Default is deliberately NOT flag-shaped so it can't be mistaken for a real flag or
+      # trip a secret scanner. The real flag is never stored here -- override FLAG at deploy
+      # time for a scored instance. POW_BITS raises/lowers the header PoW.
+      FLAG: ${FLAG:-UNSET-set-a-real-FLAG-for-scored-instances}
+      POW_BITS: ${POW_BITS:-24}
+    ports:
+      - "8545:8545"                       # JSON-RPC (competitors send the exploit tx here)
+      - "9000:9000"                       # flag dispenser (nc)
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1g
+    cpus: "1.0"
+    pids_limit: 256

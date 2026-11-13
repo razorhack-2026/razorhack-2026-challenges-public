@@ -1,0 +1,56 @@
+{
+  "seed": "razorhack-2026/consensus-drift/v1",
+  "validators": [
+    {
+      "index": 0,
+      "address": "0xC9bf66E6f341586A7e01be867Bb3573e6E9FEA0f",
+      "private_key": "b488b17fabb0c92a1cf82718b46e17f88842bc1177ad494eb8663c05b6d0e73b"
+    },
+    {
+      "index": 1,
+      "address": "0x0068cCEE4dce736FECa32fe1D42dC8A4988eBfD0",
+      "private_key": "bb2f4639c0c89212b76beb82519b2fc1fead4f432a178d835053f9f155d3b381"
+    },
+    {
+      "index": 2,
+      "address": "0x57a941F096853B3Cc8cdE962e14C0a9B915F71C6",
+      "private_key": "249270ddd39fa271404927c8f37c03f3557a9c6917cb70d539371d30e8206830"
+    },
+    {
+      "index": 3,
+      "address": "0xa450bBc1F7aF2C9c113Ac598e4E31921a5BC0d5d",
+      "private_key": "b099e386dfcc7bd38d247c3967a20b07e15bac040aed8b7d2d44934af8f975c4"
+    },
+    {
+      "index": 4,
+      "address": "0x377811d219577C5858c24B994EAD96060AE689E7",
+      "private_key": "bbadef3ae0fea5586fcb8c02af09b86352c21d7a11eb23ca94a03ad19ecebd10"
+    },
+    {
+      "index": 5,
+      "address": "0x9eDcAfeDc5D15a412a92Eaf0B067c7Ab8A33b102",
+      "private_key": "245696ace151a2759dbba9d39206df7385e1c777b8e8a71b4923abe1e1da7bae"
+    },
+    {
+      "index": 6,
+      "address": "0x8E658f3a719E9e37cDe537FDF4a87b770dfd69FE",
+      "private_key": "27633c0495822c9ab3a1ddd2389c790e6634022caebbb5c711bc482c1ebaa00a"
+    }
+  ],
+  "threshold": 5,
+  "F0": 1400,
+  "finalized_hash": "0x89d380d7b71986efbf480914106c17fc89012039fdcbb94afa4632e5c28b6f0b",
+  "pow_bits": 24,
+  "unlock_record": "0x6118aeefda9ff2ef9cea01ef0d125dc22df990d95bbc6fb50e07dfb7eaf24d7c",
+  "_answer": {
+    "orphan_cnum": 1500,
+    "orphan_root": "0x70a63cf641c8523f227eb328f13cf286505233fa88e12291c3d9d91b2f4becc0",
+    "orphan_voters": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}

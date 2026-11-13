@@ -1,0 +1,14 @@
+name: "Log 01: Welcome Aboard"
+author: Voyager 2
+category: Lore
+description: |
+    Welcome to the KOT! It's a privilege to be on the world's most cutting-edge ship transporting the world's most cutting-edge technology, so perform your duties and be a star crew member!
+
+# A Lore entry (Razorhack-CTFd story.py): read-only, no flag, worth nothing, and
+# never counts toward unlocking the next arc.
+type: standard
+value: 0
+topics:
+    - "arc:1:The Prologue"
+state: hidden
+version: "0.1"

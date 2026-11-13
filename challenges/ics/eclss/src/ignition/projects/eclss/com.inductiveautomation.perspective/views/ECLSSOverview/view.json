@@ -1,0 +1,2567 @@
+{
+  "custom": {},
+  "params": {},
+  "props": {
+    "defaultSize": {
+      "width": 1280,
+      "height": 800
+    }
+  },
+  "root": {
+    "type": "ia.container.coord",
+    "version": 0,
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "mode": "fixed",
+      "style": {
+        "backgroundColor": "#050a16",
+        "backgroundImage": "radial-gradient(1.5px 1.5px at 20px 30px, rgba(255,255,255,0.9), transparent), radial-gradient(1px 1px at 120px 80px, rgba(180,220,255,0.8), transparent), radial-gradient(1px 1px at 70px 150px, rgba(255,255,255,0.6), transparent), radial-gradient(1.5px 1.5px at 165px 170px, rgba(200,180,255,0.7), transparent), radial-gradient(1px 1px at 190px 20px, rgba(255,255,255,0.5), transparent), radial-gradient(ellipse at 12% 0%, rgba(40,110,255,0.24), transparent 55%), radial-gradient(ellipse at 95% 100%, rgba(150,60,255,0.22), transparent 55%), linear-gradient(180deg, #040814 0%, #070d1f 100%)",
+        "backgroundSize": "200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 100% 100%, 100% 100%, 100% 100%",
+        "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif"
+      }
+    },
+    "children": [
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hdr_band"
+        },
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 72
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundImage": "linear-gradient(90deg, rgba(20,70,150,0.55), rgba(10,20,40,0.15))",
+            "borderBottom": "1px solid rgba(90,170,255,0.35)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hdr_title"
+        },
+        "position": {
+          "x": 32,
+          "y": 10,
+          "width": 760,
+          "height": 32
+        },
+        "props": {
+          "text": "ISV OZARK HORIZON",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "24px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 700,
+            "letterSpacing": "0.22em",
+            "textShadow": "0 0 14px rgba(80,200,255,0.55)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hdr_sub"
+        },
+        "position": {
+          "x": 32,
+          "y": 44,
+          "width": 760,
+          "height": 20
+        },
+        "props": {
+          "text": "ENVIRONMENTAL CONTROL & LIFE SUPPORT  ·  ECLSS",
+          "style": {
+            "color": "#6fa8dc",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.32em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "met"
+        },
+        "position": {
+          "x": 820,
+          "y": 14,
+          "width": 280,
+          "height": 44
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#9fe8ff",
+            "fontSize": "22px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "right",
+            "justifyContent": "flex-end",
+            "textShadow": "0 0 14px rgba(80,200,255,0.55)",
+            "letterSpacing": "0.08em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "'MET  ' + numberFormat(floor({[default]ECLSS/Telemetry/MET_s} / 3600.0), '00') + ':' + numberFormat(floor(({[default]ECLSS/Telemetry/MET_s} % 3600) / 60.0), '00') + ':' + numberFormat({[default]ECLSS/Telemetry/MET_s} % 60, '00')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "crew_chip"
+        },
+        "position": {
+          "x": 1116,
+          "y": 20,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#04121f",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "16px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "case({[default]ECLSS/Telemetry/CrewStatus}, 0, 'CREW NOMINAL', 1, 'CREW WARNING', 'CREW CRITICAL')"
+              }
+            }
+          },
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "case({[default]ECLSS/Telemetry/CrewStatus}, 0, '#39e6a0', 1, '#ffc857', '#ff4d6d')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "o2_card"
+        },
+        "position": {
+          "x": 32,
+          "y": 88,
+          "width": 392,
+          "height": 300
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "o2_title"
+        },
+        "position": {
+          "x": 52,
+          "y": 102,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "OXYGEN  ·  O2",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "o2_status"
+        },
+        "position": {
+          "x": 300,
+          "y": 100,
+          "width": 104,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#04121f",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "12px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(({[default]ECLSS/Telemetry/O2_x100} / 100.0) < 19.5, 'LOW', if(({[default]ECLSS/Telemetry/O2_x100} / 100.0) > 23.5, 'HIGH', 'NOMINAL'))"
+              }
+            }
+          },
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(({[default]ECLSS/Telemetry/O2_x100} / 100.0) < 19.5, '#ff4d6d', if(({[default]ECLSS/Telemetry/O2_x100} / 100.0) > 23.5, '#ffc857', '#39e6a0'))"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.chart.gauge",
+        "version": 0,
+        "meta": {
+          "name": "o2_gauge"
+        },
+        "position": {
+          "x": 78,
+          "y": 132,
+          "width": 300,
+          "height": 170
+        },
+        "props": {
+          "value": 0,
+          "animate": true,
+          "backgroundColor": "transparent",
+          "outerAxis": {
+            "data": "value",
+            "show": true,
+            "minValue": 0,
+            "maxValue": 30,
+            "width": 14,
+            "color": "rgba(120,160,220,0.16)",
+            "percentRadius": 92,
+            "ranges": [
+              {
+                "start": 0,
+                "end": 19.5,
+                "width": 14,
+                "color": "#ff4d6d"
+              },
+              {
+                "start": 19.5,
+                "end": 23.5,
+                "width": 14,
+                "color": "#39e6a0"
+              },
+              {
+                "start": 23.5,
+                "end": 30,
+                "width": 14,
+                "color": "#ffc857"
+              }
+            ],
+            "needle": {
+              "origin": 0,
+              "reach": 86,
+              "color": "#e6f3ff"
+            },
+            "tickMarks": {
+              "color": "rgba(160,200,255,0.45)",
+              "thickness": 1,
+              "length": 6
+            }
+          },
+          "innerAxis": {
+            "show": false
+          },
+          "style": {
+            "backgroundColor": "transparent"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "min(max(({[default]ECLSS/Telemetry/O2_x100} / 100.0), 0), 30)"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "o2_value"
+        },
+        "position": {
+          "x": 52,
+          "y": 300,
+          "width": 352,
+          "height": 44
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "34px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "fontWeight": 700,
+            "textShadow": "0 0 14px rgba(80,200,255,0.55)"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat(({[default]ECLSS/Telemetry/O2_x100} / 100.0), '0.00') + ' %'"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(({[default]ECLSS/Telemetry/O2_x100} / 100.0) < 19.5, '#ff4d6d', if(({[default]ECLSS/Telemetry/O2_x100} / 100.0) > 23.5, '#ffc857', '#39e6a0'))"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "o2_sub"
+        },
+        "position": {
+          "x": 52,
+          "y": 346,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "letterSpacing": "0.18em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "'SETPOINT  ' + numberFormat({[default]ECLSS/Setpoints/O2_SP_x100} / 100.0, '0.00') + ' %   ·   SAFE 19.5 - 23.5'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "co2_card"
+        },
+        "position": {
+          "x": 444,
+          "y": 88,
+          "width": 392,
+          "height": 300
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "co2_title"
+        },
+        "position": {
+          "x": 464,
+          "y": 102,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "CARBON DIOXIDE  ·  CO2",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "co2_status"
+        },
+        "position": {
+          "x": 712,
+          "y": 100,
+          "width": 104,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#04121f",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "12px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]ECLSS/Telemetry/CO2_ppm} > 8000, 'CRITICAL', if({[default]ECLSS/Telemetry/CO2_ppm} > 5000, 'HIGH', 'NOMINAL'))"
+              }
+            }
+          },
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]ECLSS/Telemetry/CO2_ppm} > 8000, '#ff4d6d', if({[default]ECLSS/Telemetry/CO2_ppm} > 5000, '#ffc857', '#39e6a0'))"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.chart.gauge",
+        "version": 0,
+        "meta": {
+          "name": "co2_gauge"
+        },
+        "position": {
+          "x": 490,
+          "y": 132,
+          "width": 300,
+          "height": 170
+        },
+        "props": {
+          "value": 0,
+          "animate": true,
+          "backgroundColor": "transparent",
+          "outerAxis": {
+            "data": "value",
+            "show": true,
+            "minValue": 0,
+            "maxValue": 10000,
+            "width": 14,
+            "color": "rgba(120,160,220,0.16)",
+            "percentRadius": 92,
+            "ranges": [
+              {
+                "start": 0,
+                "end": 5000,
+                "width": 14,
+                "color": "#39e6a0"
+              },
+              {
+                "start": 5000,
+                "end": 8000,
+                "width": 14,
+                "color": "#ffc857"
+              },
+              {
+                "start": 8000,
+                "end": 10000,
+                "width": 14,
+                "color": "#ff4d6d"
+              }
+            ],
+            "needle": {
+              "origin": 0,
+              "reach": 86,
+              "color": "#e6f3ff"
+            },
+            "tickMarks": {
+              "color": "rgba(160,200,255,0.45)",
+              "thickness": 1,
+              "length": 6
+            }
+          },
+          "innerAxis": {
+            "show": false
+          },
+          "style": {
+            "backgroundColor": "transparent"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "min(max({[default]ECLSS/Telemetry/CO2_ppm}, 0), 10000)"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "co2_value"
+        },
+        "position": {
+          "x": 464,
+          "y": 300,
+          "width": 352,
+          "height": 44
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "34px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "fontWeight": 700,
+            "textShadow": "0 0 14px rgba(80,200,255,0.55)"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat({[default]ECLSS/Telemetry/CO2_ppm}, '#,##0') + ' ppm'"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]ECLSS/Telemetry/CO2_ppm} > 8000, '#ff4d6d', if({[default]ECLSS/Telemetry/CO2_ppm} > 5000, '#ffc857', '#39e6a0'))"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "co2_sub"
+        },
+        "position": {
+          "x": 464,
+          "y": 346,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "letterSpacing": "0.18em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "'LIMIT  5,000 PPM'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "temp_card"
+        },
+        "position": {
+          "x": 856,
+          "y": 88,
+          "width": 392,
+          "height": 300
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "temp_title"
+        },
+        "position": {
+          "x": 876,
+          "y": 102,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "CABIN TEMPERATURE",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "temp_status"
+        },
+        "position": {
+          "x": 1124,
+          "y": 100,
+          "width": 104,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#04121f",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "12px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(({[default]ECLSS/Telemetry/Temp_x100} / 100.0) < 18, 'COLD', if(({[default]ECLSS/Telemetry/Temp_x100} / 100.0) > 27, 'HOT', 'NOMINAL'))"
+              }
+            }
+          },
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(({[default]ECLSS/Telemetry/Temp_x100} / 100.0) < 18, '#4cc9f0', if(({[default]ECLSS/Telemetry/Temp_x100} / 100.0) > 27, '#ff4d6d', '#39e6a0'))"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.chart.gauge",
+        "version": 0,
+        "meta": {
+          "name": "temp_gauge"
+        },
+        "position": {
+          "x": 902,
+          "y": 132,
+          "width": 300,
+          "height": 170
+        },
+        "props": {
+          "value": 10,
+          "animate": true,
+          "backgroundColor": "transparent",
+          "outerAxis": {
+            "data": "value",
+            "show": true,
+            "minValue": 10,
+            "maxValue": 40,
+            "width": 14,
+            "color": "rgba(120,160,220,0.16)",
+            "percentRadius": 92,
+            "ranges": [
+              {
+                "start": 10,
+                "end": 18,
+                "width": 14,
+                "color": "#4cc9f0"
+              },
+              {
+                "start": 18,
+                "end": 27,
+                "width": 14,
+                "color": "#39e6a0"
+              },
+              {
+                "start": 27,
+                "end": 32,
+                "width": 14,
+                "color": "#ffc857"
+              },
+              {
+                "start": 32,
+                "end": 40,
+                "width": 14,
+                "color": "#ff4d6d"
+              }
+            ],
+            "needle": {
+              "origin": 0,
+              "reach": 86,
+              "color": "#e6f3ff"
+            },
+            "tickMarks": {
+              "color": "rgba(160,200,255,0.45)",
+              "thickness": 1,
+              "length": 6
+            }
+          },
+          "innerAxis": {
+            "show": false
+          },
+          "style": {
+            "backgroundColor": "transparent"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "min(max(({[default]ECLSS/Telemetry/Temp_x100} / 100.0), 10), 40)"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "temp_value"
+        },
+        "position": {
+          "x": 876,
+          "y": 300,
+          "width": 352,
+          "height": 44
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "34px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "fontWeight": 700,
+            "textShadow": "0 0 14px rgba(80,200,255,0.55)"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat(({[default]ECLSS/Telemetry/Temp_x100} / 100.0), '0.0') + ' °C'"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(({[default]ECLSS/Telemetry/Temp_x100} / 100.0) < 18, '#4cc9f0', if(({[default]ECLSS/Telemetry/Temp_x100} / 100.0) > 27, '#ff4d6d', '#39e6a0'))"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "temp_sub"
+        },
+        "position": {
+          "x": 876,
+          "y": 346,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "letterSpacing": "0.18em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "'SETPOINT  ' + numberFormat({[default]ECLSS/Setpoints/Temp_SP_x100} / 100.0, '0.0') + ' °C   ·   SAFE 18 - 27'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cdra_card"
+        },
+        "position": {
+          "x": 32,
+          "y": 404,
+          "width": 604,
+          "height": 184
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cdra_title"
+        },
+        "position": {
+          "x": 52,
+          "y": 418,
+          "width": 564,
+          "height": 22
+        },
+        "props": {
+          "text": "CO2 REMOVAL  ·  CDRA BEDS",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cdra_mode"
+        },
+        "position": {
+          "x": 452,
+          "y": 416,
+          "width": 164,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#04121f",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "12px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "case({[default]ECLSS/Setpoints/CDRA_Mode}, 0, 'OFF', 1, 'AUTO SWING', 2, 'PINNED  BED A', 3, 'PINNED  BED B', 'UNKNOWN')"
+              }
+            }
+          },
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "case({[default]ECLSS/Setpoints/CDRA_Mode}, 1, '#39e6a0', 0, '#ff4d6d', '#ffc857')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "bedA_name"
+        },
+        "position": {
+          "x": 52,
+          "y": 460,
+          "width": 70,
+          "height": 24
+        },
+        "props": {
+          "text": "BED A",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 700,
+            "letterSpacing": "0.16em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "bedA_state"
+        },
+        "position": {
+          "x": 124,
+          "y": 460,
+          "width": 104,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#04121f",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "12px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]ECLSS/Telemetry/ActiveBed} = 1, 'ADSORBING', 'REGEN')"
+              }
+            }
+          },
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]ECLSS/Telemetry/ActiveBed} = 1, '#4cc9f0', '#9b5de5')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.progress",
+        "version": 0,
+        "meta": {
+          "name": "bedA_bar"
+        },
+        "position": {
+          "x": 240,
+          "y": 462,
+          "width": 300,
+          "height": 20
+        },
+        "props": {
+          "min": 0,
+          "max": 100,
+          "value": 0,
+          "mode": "determinate",
+          "bar": {
+            "color": "#4cc9f0",
+            "style": {
+              "borderRadius": "10px",
+              "boxShadow": "0 0 12px rgba(76,201,240,0.35)"
+            }
+          },
+          "track": {
+            "color": "rgba(120,160,220,0.16)",
+            "style": {
+              "borderRadius": "10px"
+            }
+          },
+          "valueDisplay": {
+            "enabled": false
+          },
+          "style": {
+            "borderRadius": "10px",
+            "overflow": "hidden"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "({[default]ECLSS/Telemetry/BedA_x10} / 10.0)"
+              }
+            }
+          },
+          "props.bar.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(({[default]ECLSS/Telemetry/BedA_x10} / 10.0) >= 90, '#ff4d6d', if(({[default]ECLSS/Telemetry/BedA_x10} / 10.0) >= 60, '#ffc857', '#39e6a0'))"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "bedA_pct"
+        },
+        "position": {
+          "x": 548,
+          "y": 460,
+          "width": 72,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "15px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "right",
+            "justifyContent": "flex-end"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat(({[default]ECLSS/Telemetry/BedA_x10} / 10.0), '0') + ' %'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "bedB_name"
+        },
+        "position": {
+          "x": 52,
+          "y": 506,
+          "width": 70,
+          "height": 24
+        },
+        "props": {
+          "text": "BED B",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 700,
+            "letterSpacing": "0.16em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "bedB_state"
+        },
+        "position": {
+          "x": 124,
+          "y": 506,
+          "width": 104,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#04121f",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "12px",
+            "fontWeight": 700,
+            "letterSpacing": "0.12em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]ECLSS/Telemetry/ActiveBed} = 2, 'ADSORBING', 'REGEN')"
+              }
+            }
+          },
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]ECLSS/Telemetry/ActiveBed} = 2, '#4cc9f0', '#9b5de5')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.progress",
+        "version": 0,
+        "meta": {
+          "name": "bedB_bar"
+        },
+        "position": {
+          "x": 240,
+          "y": 508,
+          "width": 300,
+          "height": 20
+        },
+        "props": {
+          "min": 0,
+          "max": 100,
+          "value": 0,
+          "mode": "determinate",
+          "bar": {
+            "color": "#4cc9f0",
+            "style": {
+              "borderRadius": "10px",
+              "boxShadow": "0 0 12px rgba(76,201,240,0.35)"
+            }
+          },
+          "track": {
+            "color": "rgba(120,160,220,0.16)",
+            "style": {
+              "borderRadius": "10px"
+            }
+          },
+          "valueDisplay": {
+            "enabled": false
+          },
+          "style": {
+            "borderRadius": "10px",
+            "overflow": "hidden"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "({[default]ECLSS/Telemetry/BedB_x10} / 10.0)"
+              }
+            }
+          },
+          "props.bar.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(({[default]ECLSS/Telemetry/BedB_x10} / 10.0) >= 90, '#ff4d6d', if(({[default]ECLSS/Telemetry/BedB_x10} / 10.0) >= 60, '#ffc857', '#39e6a0'))"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "bedB_pct"
+        },
+        "position": {
+          "x": 548,
+          "y": 506,
+          "width": 72,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "15px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "right",
+            "justifyContent": "flex-end"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat(({[default]ECLSS/Telemetry/BedB_x10} / 10.0), '0') + ' %'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cdra_note"
+        },
+        "position": {
+          "x": 52,
+          "y": 554,
+          "width": 564,
+          "height": 20
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.12em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "'BEDS SWAP EVERY ' + {[default]ECLSS/Setpoints/CDRA_HalfCycle_s} + ' S  ·  A SATURATED BED STOPS SCRUBBING'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "act_card"
+        },
+        "position": {
+          "x": 656,
+          "y": 404,
+          "width": 592,
+          "height": 184
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "act_title"
+        },
+        "position": {
+          "x": 676,
+          "y": 418,
+          "width": 552,
+          "height": 22
+        },
+        "props": {
+          "text": "ACTUATORS",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "oga_name"
+        },
+        "position": {
+          "x": 676,
+          "y": 458,
+          "width": 180,
+          "height": 24
+        },
+        "props": {
+          "text": "OXYGEN GENERATOR",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.16em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.progress",
+        "version": 0,
+        "meta": {
+          "name": "oga_bar"
+        },
+        "position": {
+          "x": 860,
+          "y": 460,
+          "width": 290,
+          "height": 20
+        },
+        "props": {
+          "min": 0,
+          "max": 100,
+          "value": 0,
+          "mode": "determinate",
+          "bar": {
+            "color": "#4cc9f0",
+            "style": {
+              "borderRadius": "10px",
+              "boxShadow": "0 0 12px rgba(76,201,240,0.35)"
+            }
+          },
+          "track": {
+            "color": "rgba(120,160,220,0.16)",
+            "style": {
+              "borderRadius": "10px"
+            }
+          },
+          "valueDisplay": {
+            "enabled": false
+          },
+          "style": {
+            "borderRadius": "10px",
+            "overflow": "hidden"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "({[default]ECLSS/Telemetry/OGA_x10} / 10.0)"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "oga_pct"
+        },
+        "position": {
+          "x": 1156,
+          "y": 458,
+          "width": 72,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "15px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "right",
+            "justifyContent": "flex-end"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat(({[default]ECLSS/Telemetry/OGA_x10} / 10.0), '0') + ' %'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "valve_name"
+        },
+        "position": {
+          "x": 676,
+          "y": 498,
+          "width": 180,
+          "height": 24
+        },
+        "props": {
+          "text": "COOLANT VALVE",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.16em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.progress",
+        "version": 0,
+        "meta": {
+          "name": "valve_bar"
+        },
+        "position": {
+          "x": 860,
+          "y": 500,
+          "width": 290,
+          "height": 20
+        },
+        "props": {
+          "min": 0,
+          "max": 100,
+          "value": 0,
+          "mode": "determinate",
+          "bar": {
+            "color": "#4895ef",
+            "style": {
+              "borderRadius": "10px",
+              "boxShadow": "0 0 12px rgba(76,201,240,0.35)"
+            }
+          },
+          "track": {
+            "color": "rgba(120,160,220,0.16)",
+            "style": {
+              "borderRadius": "10px"
+            }
+          },
+          "valueDisplay": {
+            "enabled": false
+          },
+          "style": {
+            "borderRadius": "10px",
+            "overflow": "hidden"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "({[default]ECLSS/Telemetry/Valve_x10} / 10.0)"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "valve_pct"
+        },
+        "position": {
+          "x": 1156,
+          "y": 498,
+          "width": 72,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "15px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "right",
+            "justifyContent": "flex-end"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat(({[default]ECLSS/Telemetry/Valve_x10} / 10.0), '0') + ' %'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "heater_name"
+        },
+        "position": {
+          "x": 676,
+          "y": 538,
+          "width": 180,
+          "height": 24
+        },
+        "props": {
+          "text": "TRIM HEATER",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.16em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.progress",
+        "version": 0,
+        "meta": {
+          "name": "heater_bar"
+        },
+        "position": {
+          "x": 860,
+          "y": 540,
+          "width": 290,
+          "height": 20
+        },
+        "props": {
+          "min": 0,
+          "max": 100,
+          "value": 0,
+          "mode": "determinate",
+          "bar": {
+            "color": "#ff8c42",
+            "style": {
+              "borderRadius": "10px",
+              "boxShadow": "0 0 12px rgba(76,201,240,0.35)"
+            }
+          },
+          "track": {
+            "color": "rgba(120,160,220,0.16)",
+            "style": {
+              "borderRadius": "10px"
+            }
+          },
+          "valueDisplay": {
+            "enabled": false
+          },
+          "style": {
+            "borderRadius": "10px",
+            "overflow": "hidden"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "({[default]ECLSS/Telemetry/Heater_x10} / 10.0)"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "heater_pct"
+        },
+        "position": {
+          "x": 1156,
+          "y": 538,
+          "width": 72,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "15px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "right",
+            "justifyContent": "flex-end"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat(({[default]ECLSS/Telemetry/Heater_x10} / 10.0), '0') + ' %'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cabin_card"
+        },
+        "position": {
+          "x": 32,
+          "y": 604,
+          "width": 392,
+          "height": 172
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cabin_title"
+        },
+        "position": {
+          "x": 52,
+          "y": 618,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "CABIN",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cab_n0"
+        },
+        "position": {
+          "x": 52,
+          "y": 654,
+          "width": 170,
+          "height": 24
+        },
+        "props": {
+          "text": "PRESSURE",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.16em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cab_v0"
+        },
+        "position": {
+          "x": 232,
+          "y": 654,
+          "width": 172,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "17px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "right",
+            "justifyContent": "flex-end"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "numberFormat({[default]ECLSS/Telemetry/Press_x10} / 10.0, '0.0') + ' kPa'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cab_n1"
+        },
+        "position": {
+          "x": 52,
+          "y": 684,
+          "width": 170,
+          "height": 24
+        },
+        "props": {
+          "text": "CREW ABOARD",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.16em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "cab_v1"
+        },
+        "position": {
+          "x": 232,
+          "y": 684,
+          "width": 172,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "17px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "right",
+            "justifyContent": "flex-end"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "toStr({[default]ECLSS/Telemetry/CrewCount})"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hold_name"
+        },
+        "position": {
+          "x": 52,
+          "y": 720,
+          "width": 170,
+          "height": 24
+        },
+        "props": {
+          "text": "NOMINAL HOLD",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.16em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "hold_val"
+        },
+        "position": {
+          "x": 232,
+          "y": 720,
+          "width": 172,
+          "height": 24
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "15px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "right",
+            "justifyContent": "flex-end"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "min({[default]ECLSS/Telemetry/NominalHold_s}, 30) + ' / 30 s'"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.progress",
+        "version": 0,
+        "meta": {
+          "name": "hold_bar"
+        },
+        "position": {
+          "x": 52,
+          "y": 748,
+          "width": 352,
+          "height": 12
+        },
+        "props": {
+          "min": 0,
+          "max": 30,
+          "value": 0,
+          "mode": "determinate",
+          "bar": {
+            "color": "#4cc9f0",
+            "style": {
+              "borderRadius": "6px",
+              "boxShadow": "0 0 12px rgba(76,201,240,0.35)"
+            }
+          },
+          "track": {
+            "color": "rgba(120,160,220,0.16)",
+            "style": {
+              "borderRadius": "6px"
+            }
+          },
+          "valueDisplay": {
+            "enabled": false
+          },
+          "style": {
+            "borderRadius": "6px",
+            "overflow": "hidden"
+          }
+        },
+        "propConfig": {
+          "props.value": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "min({[default]ECLSS/Telemetry/NominalHold_s}, 30)"
+              }
+            }
+          },
+          "props.bar.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]ECLSS/Telemetry/NominalHold_s} >= 30, '#39e6a0', '#4cc9f0')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "alarms_card"
+        },
+        "position": {
+          "x": 444,
+          "y": 604,
+          "width": 392,
+          "height": 172
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "alarms_title"
+        },
+        "position": {
+          "x": 464,
+          "y": 618,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "ALARMS",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "alarm_0"
+        },
+        "position": {
+          "x": 464,
+          "y": 656,
+          "width": 112,
+          "height": 32
+        },
+        "props": {
+          "text": "O2 LOW",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "8px",
+            "fontWeight": 700,
+            "letterSpacing": "0.1em"
+          }
+        },
+        "propConfig": {
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 0) = 1, '#ff4d6d', 'rgba(255,255,255,0.04)')"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 0) = 1, '#04121f', '#6f8fb3')"
+              }
+            }
+          },
+          "props.style.boxShadow": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 0) = 1, '0 0 16px #ff4d6d', 'none')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "alarm_1"
+        },
+        "position": {
+          "x": 584,
+          "y": 656,
+          "width": 112,
+          "height": 32
+        },
+        "props": {
+          "text": "O2 HIGH",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "8px",
+            "fontWeight": 700,
+            "letterSpacing": "0.1em"
+          }
+        },
+        "propConfig": {
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 1) = 1, '#ffc857', 'rgba(255,255,255,0.04)')"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 1) = 1, '#04121f', '#6f8fb3')"
+              }
+            }
+          },
+          "props.style.boxShadow": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 1) = 1, '0 0 16px #ffc857', 'none')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "alarm_2"
+        },
+        "position": {
+          "x": 704,
+          "y": 656,
+          "width": 112,
+          "height": 32
+        },
+        "props": {
+          "text": "CO2 HIGH",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "8px",
+            "fontWeight": 700,
+            "letterSpacing": "0.1em"
+          }
+        },
+        "propConfig": {
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 2) = 1, '#ff4d6d', 'rgba(255,255,255,0.04)')"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 2) = 1, '#04121f', '#6f8fb3')"
+              }
+            }
+          },
+          "props.style.boxShadow": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 2) = 1, '0 0 16px #ff4d6d', 'none')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "alarm_3"
+        },
+        "position": {
+          "x": 464,
+          "y": 700,
+          "width": 112,
+          "height": 32
+        },
+        "props": {
+          "text": "CABIN COLD",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "8px",
+            "fontWeight": 700,
+            "letterSpacing": "0.1em"
+          }
+        },
+        "propConfig": {
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 3) = 1, '#4cc9f0', 'rgba(255,255,255,0.04)')"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 3) = 1, '#04121f', '#6f8fb3')"
+              }
+            }
+          },
+          "props.style.boxShadow": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 3) = 1, '0 0 16px #4cc9f0', 'none')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "alarm_4"
+        },
+        "position": {
+          "x": 584,
+          "y": 700,
+          "width": 112,
+          "height": 32
+        },
+        "props": {
+          "text": "CABIN HOT",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "8px",
+            "fontWeight": 700,
+            "letterSpacing": "0.1em"
+          }
+        },
+        "propConfig": {
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 4) = 1, '#ff4d6d', 'rgba(255,255,255,0.04)')"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 4) = 1, '#04121f', '#6f8fb3')"
+              }
+            }
+          },
+          "props.style.boxShadow": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 4) = 1, '0 0 16px #ff4d6d', 'none')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "alarm_5"
+        },
+        "position": {
+          "x": 704,
+          "y": 700,
+          "width": 112,
+          "height": 32
+        },
+        "props": {
+          "text": "TAMPER",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "borderRadius": "8px",
+            "fontWeight": 700,
+            "letterSpacing": "0.1em"
+          }
+        },
+        "propConfig": {
+          "props.style.backgroundColor": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 5) = 1, '#9b5de5', 'rgba(255,255,255,0.04)')"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 5) = 1, '#04121f', '#6f8fb3')"
+              }
+            }
+          },
+          "props.style.boxShadow": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/AlarmWord}, 5) = 1, '0 0 16px #9b5de5', 'none')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "alarm_word"
+        },
+        "position": {
+          "x": 464,
+          "y": 746,
+          "width": 352,
+          "height": 20
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.14em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if({[default]ECLSS/Telemetry/AlarmWord} = 0, 'ALL SYSTEMS CLEAR', 'ACTIVE ALARMS  ·  WORD ' + {[default]ECLSS/Telemetry/AlarmWord})"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "maint_card"
+        },
+        "position": {
+          "x": 856,
+          "y": 604,
+          "width": 392,
+          "height": 172
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "13px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "backgroundColor": "rgba(12,24,46,0.78)",
+            "border": "1px solid rgba(90,170,255,0.28)",
+            "borderRadius": "16px",
+            "boxShadow": "0 0 28px rgba(30,120,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05)"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "maint_title"
+        },
+        "position": {
+          "x": 876,
+          "y": 618,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "MAINTENANCE SYNC",
+          "style": {
+            "color": "#8fc6ff",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "fontWeight": 600,
+            "letterSpacing": "0.24em"
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "maint_state"
+        },
+        "position": {
+          "x": 876,
+          "y": 650,
+          "width": 352,
+          "height": 52
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#e6f3ff",
+            "fontSize": "34px",
+            "fontFamily": "'Consolas','Menlo','Courier New',monospace",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "fontWeight": 700,
+            "letterSpacing": "0.2em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/StatusBits}, 0) = 1, 'ARMED', 'DISARMED')"
+              }
+            }
+          },
+          "props.style.color": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/StatusBits}, 0) = 1, '#ff4d6d', '#39e6a0')"
+              }
+            }
+          },
+          "props.style.textShadow": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/StatusBits}, 0) = 1, '0 0 18px #ff4d6d', '0 0 18px #39e6a0')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "maint_note"
+        },
+        "position": {
+          "x": 876,
+          "y": 706,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#6f8fb3",
+            "fontSize": "12px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/StatusBits}, 0) = 1, 'Commissioning baseline re-applies every 20 s', 'Setpoints are under crew control')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "maint_lock"
+        },
+        "position": {
+          "x": 876,
+          "y": 734,
+          "width": 352,
+          "height": 22
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#ffc857",
+            "fontSize": "11px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "textAlign": "center",
+            "justifyContent": "center",
+            "fontWeight": 700,
+            "letterSpacing": "0.16em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "if(getBit({[default]ECLSS/Telemetry/StatusBits}, 1) = 1, 'DISARM REGISTER LOCKED OUT', '')"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "ia.display.label",
+        "version": 0,
+        "meta": {
+          "name": "footer"
+        },
+        "position": {
+          "x": 32,
+          "y": 780,
+          "width": 1216,
+          "height": 16
+        },
+        "props": {
+          "text": "",
+          "style": {
+            "color": "#2e4a6b",
+            "fontSize": "10px",
+            "fontFamily": "'Segoe UI','Roboto','Helvetica Neue',sans-serif",
+            "letterSpacing": "0.2em"
+          }
+        },
+        "propConfig": {
+          "props.text": {
+            "binding": {
+              "type": "expr",
+              "config": {
+                "expression": "'RAZORHACK ICS  ·  OBJECTIVES ' + toStr({[default]ECLSS/Telemetry/FlagsEarned})"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+name: "Power-Trip"
+author: "Voyager 2"
+category: Cryptography
+description: |
+    RazorPowerCo burned the reactor-interlock key into OTP on every controller
+    board it shipped — no read-back, no debug port, nothing on the wire. Salvage
+    pulled one off the derelict and wired it into a bench rig.
+
+    The board's UART will encrypt anything you hand it, and the rig answers
+    `HELP`. It will not tell you the key. But the rig's shunt amplifier is still
+    wired in, and it reports exactly what the chip drew while it worked.
+
+    `interlock.enc` came off the same controller.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{P0w3r_Tr4c3r_Supr3me}
+
+files:
+    - dist/interlock.enc
+
+# Live UART bridge (docker-compose.yml) — one instance per team, host/port
+# finalized at deploy time. The rig documents its own command set: connect and
+# send HELP.
+connection_info: "nc {host} {port}  (UART bridge — connect and send HELP)"
+
+tags:
+    - hard
+    - side-channel
+    - hardware
+
+topics:
+    - "quest:Odd Jobs"
+    - instance:power-trip
+
+state: hidden
+version: "0.1"

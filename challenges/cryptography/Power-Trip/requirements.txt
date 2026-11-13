@@ -1,0 +1,7 @@
+# GM-side tooling: regenerating dist/interlock.enc, running the reference solve,
+# and driving src/rig.py outside the container. Floors, not exact pins -- see
+# the note in solution/requirements.txt. The container's own pinned set is in
+# deploy/requirements.txt.
+numpy>=2.1
+pycryptodome>=3.20
+unicorn>=2.0.1,<3

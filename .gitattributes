@@ -1,0 +1,9 @@
+# Shell hook scripts must keep LF endings or bash fails with "bad interpreter"
+# (#!/bin/bash\r) when run on Linux/macOS.
+*.sh text eol=lf
+
+# mbox artifacts must stay Unix-LF: Thunderbird/Mozilla import a CRLF mbox as a
+# SINGLE message instead of a thread, which silently breaks the challenge.
+# core.autocrlf=true would otherwise rewrite them on checkout (no NUL bytes, so
+# git autodetects them as text).
+*.mbox binary

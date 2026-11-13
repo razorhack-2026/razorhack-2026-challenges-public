@@ -1,0 +1,64 @@
+# Source writeup: solution/STAFF_GUIDE.md (ECLSS) and solution/eclss/SOLUTIONS.md
+# Author's weight: 225 of the part's 1000 points (not used: uniform dynamic scoring).
+name: "ECLSS 7: All systems nominal"
+author: "Definitely Not Dr. Rootkit"
+category: ICS
+description: |
+    **ECLSS, part 7 of 7.** You are on the deck crew of the **ISV Ozark
+    Horizon**. Mid-transit, the Environmental Control & Life Support System
+    started fighting the crew: oxygen sagging, CO2 climbing, the cabin running
+    hot. The watch officer swears nobody touched the setpoints. The ship's PLC
+    answers Modbus/TCP on port 502 (unit id 1) and its Ignition HMI is on port
+    8088. Registers are 16-bit signed; scaled values are stored x10 or x100.
+    All 22 ICS challenges use your team's own copy of this rig: start it from
+    any of them (it takes a few minutes to come up). Stop resets the ship and
+    the Training Bay.
+
+    With the sync disarmed and O2, CO2, and temperature all in range, hold the
+    cabin nominal. Once the environment has been clean and stable continuously
+    for long enough, the PLC releases the final flag.
+
+    The PLC keeps a live objective bitfield at **holding register 14**
+    (`FlagsEarned`): bit 0 O2 in range, bit 1 CO2 in range, bit 2 temperature in
+    range, bit 3 maintenance sync disarmed, bit 4 full nominal hold.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Flag: HR1224-1239 after 30 s with zero alarms, disarmed (persists).
+# Default value shipped by the kit; if src/flags.json or
+# src/training/training_flags.json change, rebuild and update this to match.
+flags:
+    - "flag{4ll_syst3ms_n0m1n4l_c4pt}"
+
+# Paths are relative to this metadata/ folder, so dist/ is ../dist/.
+files:
+    - ../dist/eclss/CHALLENGES.md
+    - ../dist/MODBUS_PRIMER.md
+    - ../dist/eclss/REGISTER_MAP_PLAYER.md
+
+# Each team's own copy: one Fargate task (topic instance:eclss). CTFd fills in {host}.
+connection_info: "{host}:502 (Modbus/TCP, unit id 1)"
+
+tags:
+    - hard
+    - eclss
+    - modbus
+
+topics:
+    - instance:eclss
+    - "quest:Environmental Challenges"
+
+# Locked until the part before is solved; shown as ??? until then.
+requirements:
+    prerequisites:
+        - "ECLSS 6: Exorcise the maintenance sync"
+    anonymize: true
+
+state: hidden
+version: "0.1"

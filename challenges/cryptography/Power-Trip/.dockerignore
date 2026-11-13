@@ -1,0 +1,19 @@
+# The rig image must never contain the answer. solution/ holds the reference
+# solver and dist/ holds the sealed blob — neither belongs in the build context.
+solution/
+dist/
+README.md
+challenge.yml
+docker-compose.yml
+requirements.txt
+
+# Build/test leftovers.
+src/firmware/*.o
+src/firmware/target.elf
+src/firmware/target.bin
+**/__pycache__/
+**/*.pyc
+*.npz
+.venv/
+.env
+.git/

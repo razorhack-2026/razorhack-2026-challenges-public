@@ -1,0 +1,59 @@
+# =====================================================================
+# RazorHack ICS stack - ECLSS challenge + Training Bay, one team's copy
+#
+# The event runs one copy per team as one Fargate task (instance:eclss,
+# Razorhack-Infra lib/challenges.json). This compose runs the same three
+# images the same way, for local testing: all three share ONE network
+# namespace (the ignition service's), as containers in a Fargate task do.
+#
+#   ECLSS PLC     Modbus/TCP 502    (images/plc-eclss, program baked in)
+#   Training PLC  Modbus/TCP 5020   (images/plc-train, program baked in)
+#   Ignition      HTTP 8088         (images/ignition, HMIs/devices/tags baked in)
+#
+# Each PLC's runtime API listens on 127.0.0.1 only (8443 / 8444): it can
+# download the running program, and the source holds every flag.
+#
+#   Rebuild the PLC programs and HMI after changing flags (needs internet):
+#        docker compose run --rm builder
+#   Build and start a copy:
+#        docker compose up -d --build
+#   Fresh copy (every PLC and gateway state reset):
+#        docker compose up -d --force-recreate
+#
+# Intentionally vulnerable. Isolated range/VLAN only.
+# =====================================================================
+services:
+
+  builder:
+    build: ./builder
+    profiles: ["build"]
+    volumes:
+      - ./:/work
+    working_dir: /work
+
+  ignition:
+    build:
+      context: .
+      dockerfile: images/ignition/Dockerfile
+    image: razorhack-eclss/ignition:local
+    ports:
+      - "502:502"       # ECLSS PLC (shares this namespace)
+      - "5020:5020"     # Training PLC (shares this namespace)
+      - "8088:8088"     # Ignition gateway / HMIs
+    restart: unless-stopped
+
+  plc-eclss:
+    build:
+      context: .
+      dockerfile: images/plc-eclss/Dockerfile
+    image: razorhack-eclss/plc-eclss:local
+    network_mode: service:ignition
+    restart: unless-stopped
+
+  plc-train:
+    build:
+      context: .
+      dockerfile: images/plc-train/Dockerfile
+    image: razorhack-eclss/plc-train:local
+    network_mode: service:ignition
+    restart: unless-stopped

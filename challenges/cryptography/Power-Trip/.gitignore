@@ -1,0 +1,13 @@
+# Build output — the firmware is compiled inside the Docker build stage.
+src/firmware/*.o
+src/firmware/target.elf
+src/firmware/target.bin
+
+# Capture artifacts from local testing; these get large.
+*.npz
+*.npz.tmp
+
+__pycache__/
+*.pyc
+.venv/
+.env

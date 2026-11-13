@@ -1,0 +1,70 @@
+# Source writeup: solution/STAFF_GUIDE.md (ECLSS) and solution/eclss/SOLUTIONS.md
+# Author's weight: 100 of the part's 1000 points (not used: uniform dynamic scoring).
+name: "ECLSS 2: The ghost deck"
+author: "Definitely Not Dr. Rootkit"
+category: ICS
+description: |
+    **ECLSS, part 2 of 7.** You are on the deck crew of the **ISV Ozark
+    Horizon**. Mid-transit, the Environmental Control & Life Support System
+    started fighting the crew: oxygen sagging, CO2 climbing, the cabin running
+    hot. The watch officer swears nobody touched the setpoints. The ship's PLC
+    answers Modbus/TCP on port 502 (unit id 1) and its Ignition HMI is on port
+    8088. Registers are 16-bit signed; scaled values are stored x10 or x100.
+    All 22 ICS challenges use your team's own copy of this rig: start it from
+    any of them (it takes a few minutes to come up). Stop resets the ship and
+    the Training Bay.
+
+    The HMI's menu shows a single screen. The gateway is hosting more pages
+    than the menu admits to - one was "retired at launch" but never actually
+    removed. Find the page that nothing links to.
+
+    *Hint: the menu only decides what gets linked. Reload the HMI with your
+    browser's developer tools open on the Network tab. One request is named
+    after the project: open its response and look for the list of pages.*
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) - do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# Flag: Static text on the unlinked /crew-manifest page.
+# Default value shipped by the kit; if src/flags.json or
+# src/training/training_flags.json change, rebuild and update this to match.
+flags:
+    - "flag{unl1nk3d_p4g3s_st1ll_l04d}"
+
+# The sync never changes hints on a challenge already in CTFd (a team that paid
+# would lose it): add or edit this one in the admin UI too.
+hints:
+    - content: "The request is /data/perspective/project/eclss. Open its project, then pageConfig, then pages."
+      cost: 50
+
+# Paths are relative to this metadata/ folder, so dist/ is ../dist/.
+files:
+    - ../dist/eclss/CHALLENGES.md
+    - ../dist/MODBUS_PRIMER.md
+    - ../dist/eclss/REGISTER_MAP_PLAYER.md
+
+# Each team's own copy: one Fargate task (topic instance:eclss). CTFd fills in {host}.
+connection_info: "http://{host}:8088/data/perspective/client/eclss"
+
+tags:
+    - easy
+    - eclss
+    - ignition
+
+topics:
+    - instance:eclss
+    - "quest:Environmental Challenges"
+
+# Locked until the part before is solved; shown as ??? until then.
+requirements:
+    prerequisites:
+        - "ECLSS 1: Hailing frequencies"
+    anonymize: true
+
+state: hidden
+version: "0.1"

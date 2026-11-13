@@ -1,0 +1,45 @@
+name: "Consensus-Drift"
+author: "Voyager 2"
+category: Misc
+description: |
+    RazorPowerCo replicates its salvage ledger across every hull in the convoy —
+    no single ship is trusted to hold the only copy. That worked right up until
+    the blackout at the Kessel relay.
+
+    The nodes have been talking past each other ever since. Ops dumped what each
+    one currently believes to be true and shipped it to you (the 7 node databases).
+    The record they need is still in there; the convoy just can't agree on which
+    version of it is real.
+
+    You also have relay access to the convoy's on-chain bridge — the light client
+    that decides which salvage record is canonical and releases the sealed manifest.
+    Get it to finalize the manifest and it will hand the record over.
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{0rphan_ckpt_r3played_p4st_th3_dr1ft}
+
+# Live per-team instance: JSON-RPC endpoint + a flag dispenser reachable over nc.
+# Host/ports are finalized at deploy time (see deploy/README.md).
+connection_info: "RPC http://{host}:{port}  |  dispenser: nc {host} 9000"
+
+files:
+    - dist/consensus-drift.tar.gz
+
+tags:
+    - hard
+    - blockchain
+    - evm
+
+topics:
+    - "arc:2:Buildup"
+    - instance:consensus-drift
+
+state: hidden
+version: "0.1"

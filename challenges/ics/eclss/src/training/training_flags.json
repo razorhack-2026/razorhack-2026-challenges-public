@@ -1,0 +1,24 @@
+{
+  "_comment": "Training track secrets. Edit before each event, then rebuild (docker compose run --rm builder). Text flags must be <= 32 ASCII chars. Numeric values: bay_id 1..32767, mb5_value 65536..2147483647 (must need both words), breaker_init 1..32767 with breaker_bit CLEAR, beacon_freq 1..32767.",
+  "bay_id": 4217,
+  "mb5_value": 1234567890,
+  "mb6_value": 101.325,
+  "breaker_init": 26901,
+  "breaker_bit": 9,
+  "beacon_freq": 1420,
+  "beacon_clue": "the 21-cm hydrogen line, in MHz (whole number)",
+  "gateway_name": "ozark-horizon-gw",
+  "flags": {
+    "mb2": "flag{r3g1st3rs_sp34k_4sc11}",
+    "mb3": "flag{m0d1c0n_4ddr3ss_m4th}",
+    "mb4": "flag{b34c0n_l1t}",
+    "mb7": "flag{m4sk_b3f0r3_y0u_wr1t3}",
+    "pl1": "flag{a1rl0ck_cycl3d}",
+    "pl2": "flag{p4t13nc3_1s_4_t1m3r}",
+    "pl3": "flag{3dg3s_n0t_l3v3ls}",
+    "pl4": "flag{s34l_1n_l4tch3d}",
+    "pl5": "flag{f0ur_t0_tw3nty_m1ll14mps}",
+    "ig2": "flag{h1dd3n_1s_n0t_s3cur3}",
+    "ig3": "flag{hm1_wr1t3s_r34ch_th3_plc}"
+  }
+}

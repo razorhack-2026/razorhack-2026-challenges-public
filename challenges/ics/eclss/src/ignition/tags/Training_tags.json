@@ -1,0 +1,30 @@
+{
+  "name": "Training",
+  "tagType": "Folder",
+  "tags": [
+    {
+      "name": "Beacon_Freq",
+      "tagType": "AtomicTag",
+      "dataType": "Int2",
+      "valueSource": "opc",
+      "opcServer": "Ignition OPC UA Server",
+      "opcItemPath": "ns=1;s=[TRAIN_PLC]1.HR1027"
+    },
+    {
+      "name": "IG3_Locked",
+      "tagType": "AtomicTag",
+      "dataType": "Int2",
+      "valueSource": "opc",
+      "opcServer": "Ignition OPC UA Server",
+      "opcItemPath": "ns=1;s=[TRAIN_PLC]1.HR741"
+    },
+    {
+      "name": "Heartbeat",
+      "tagType": "AtomicTag",
+      "dataType": "Int2",
+      "valueSource": "opc",
+      "opcServer": "Ignition OPC UA Server",
+      "opcItemPath": "ns=1;s=[TRAIN_PLC]1.HR2"
+    }
+  ]
+}
