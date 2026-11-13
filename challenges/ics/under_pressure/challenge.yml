@@ -1,0 +1,29 @@
+name: "Under Pressure"
+author: "Murphy \"Murph\" Hall"
+category: ICS
+description: |
+    Well, we got the camera running, but it's nothing but darkness. Let's get the pressure alarm back online by uploading correct ladder logicS.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{crU5h1ng_d0wN_oN_m3}
+
+connection_info: "http://{host}:{port}/"
+requirements:
+    prerequisites:
+        - "Got That On Tape"
+    anonymize: true
+
+tags:
+    - easy
+    - ladder-logic
+topics:
+    - instance:cargo-bay
+    - "quest:Cargobay"
+state: hidden
+version: "0.1"

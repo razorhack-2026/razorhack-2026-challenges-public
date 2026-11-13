@@ -1,0 +1,8 @@
+services:
+  uplink:
+    build: ./src
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      CARGO_BAY_VOICE_LOG: /var/www/html/assets/audio/SHIFT_LOG_243.mp3

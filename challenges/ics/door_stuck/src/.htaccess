@@ -1,0 +1,9 @@
+Options -Indexes
+RewriteEngine On
+
+RewriteRule ^$ php/index.php [END]
+RewriteRule ^index\.html$ / [R=302,L]
+RewriteRule ^(ladder-editor|cameras|files)\.html$ php/protected-page.php?page=$1 [END,QSA]
+RewriteRule ^api/(.+\.php)$ php/api/$1 [END,QSA]
+RewriteRule ^^audio/SHIFT_LOG_243(\.mp3)?$ php/api/voice-log.php [END]
+RewriteRule ^(html|assets/(audio|documents|network|video))/ - [F,END]

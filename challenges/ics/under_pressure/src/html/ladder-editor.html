@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PLC EDITOR // RASA UPLINK</title>
+  <link rel="stylesheet" href="/css/uplink.css">
+  <script>document.documentElement.classList.add('auth-pending');</script>
+  <script src="/js/uplink.js" defer></script>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar"><a class="brand" href="/ladder-editor.html"><span class="brand-mark rasa-mark">RASA</span><span>KEEPER OF TOMORROW <small>CARGO SHIPPING &amp; RECEIVING</small></span></a><div class="top-meta"><span class="status-light"></span> CARGO BAY 12 <span class="top-divider">|</span> UPLINK TERMINAL</div></header>
+  <div class="app-layout">
+    <aside class="sidebar"><div class="side-caption">WORKSTATION MENU</div><nav>
+      <a class="nav-link active" href="/ladder-editor.html"><span class="nav-arrow">&gt;</span>PLC EDITOR</a>
+      <a class="nav-link" href="/cameras.html"><span class="nav-arrow">&gt;</span>CAMERAS</a>
+      <a class="nav-link" href="/files.html"><span class="nav-arrow">&gt;</span>FILES</a>
+    </nav><div class="side-rule"></div><div class="side-caption">BAY ASSIGNMENT</div><div class="side-detail">OPERATOR<br><strong data-operator>VERIFYING...</strong></div><div class="side-detail">VESSEL<br><strong>U.S.S. KEEPER OF TOMORROW</strong></div><div class="side-detail">PLC RUNTIME<br><strong>172.30.0.100</strong></div><div class="side-bottom">OPS MANUAL REV 8.3<br>ISSUED 10 JUL 2052</div></aside>
+    <main class="main-content">
+      <div class="page-heading"><div><div class="eyebrow">CARGO BAY 12 PLC OPERATIONS // REV 8.3</div><h1>PLC EDITOR</h1></div></div>
+      <section class="plc-shell">
+        <div class="plc-toolbar"><div class="plc-device"><span class="status-light"></span><span><strong>CARGO PLC</strong><small>ONLINE PROGRAM EDITOR</small></span></div><div class="plc-toolbar-actions"><button class="button" type="button" data-add-rung>＋ ADD RUNG</button><button class="button primary" type="button" data-compile>COMPILE &amp; RUN</button></div></div>
+        <div class="plc-canvas-scroll"><div class="ladder-board"><div class="power-rail power-rail-left" aria-label="Left power rail"></div><div class="power-rail power-rail-right" aria-label="Right power rail"></div><div class="ladder-rungs" data-ladder-canvas aria-live="polite"></div></div></div>
+        <div class="plc-statusbar"><span data-rung-count>0 RUNGS</span><span>MODE: ONLINE</span></div>
+      </section>
+      <div class="plc-legend" aria-label="LADDER SYMBOL REFERENCE"><span><code>—[ ]—</code> CONTACT</span><span><code>—[/]—</code> INVERTED CONTACT</span><span><code>—( )—</code> OUTPUT COIL</span><span>PARALLEL PATHS SHARE THE OUTPUT COIL.</span></div>
+      <section class="earned-flags">
+      <div class="form-message" data-ladder-message aria-live="polite"></div><div class="result-box" data-ladder-result aria-live="polite"></div><div class="side-rule"></div>
+      <div class="section-head">
+          <h3>RECOVERED ACCESS FLAGS</h3>
+          <span>OPERATOR RECORD</span>
+      </div>
+      <div class="earned-flags-list" data-earned-flags aria-live="polite">
+          <div class="hidden-hint">NO RECOVERED FLAGS</div>
+      </div>
+      </section>
+      <div class="plc-statusbar">
+          <span data-challenge-progress>SEQUENCE STATUS</span>
+      </div>
+    </main>
+  </div>
+  <footer class="app-footer"><span>RASA // CARGO SHIPPING &amp; RECEIVING // OPS MANUAL REV 8.3</span></footer>
+</div>
+</body>
+</html>

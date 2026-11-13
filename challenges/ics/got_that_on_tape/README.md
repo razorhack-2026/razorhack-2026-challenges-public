@@ -1,0 +1,1 @@
+Now that you've logged into the Uplink system, I hope you've refamiliarized yourself with the contents in the file archive. First things first, lets compile and run some ladder logic to get the camera feed back online. Refer to the manual for the expected camera logic.

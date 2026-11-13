@@ -1,0 +1,29 @@
+name: "Where's Charles?"
+author: "Murphy \"Murph\" Hall"
+category: Stego
+description: |
+    This is bad, not only was our control system attacked, but I fear Charles Harvey may not have actually gone home early. Snoop around the uplink, see if you can find anything about his whereabouts.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{fl04tInG_thRu_Sp4C3}
+
+connection_info: "http://{host}:{port}/"
+topics:
+    - instance:cargo-bay
+    - "quest:Cargobay"
+requirements:
+    prerequisites:
+        - "Cargo Bay Forensics"
+    anonymize: true
+
+tags:
+    - medium
+    - audio
+state: hidden
+version: "0.1"

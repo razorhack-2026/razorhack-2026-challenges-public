@@ -1,0 +1,31 @@
+name: "Another Flashing Light"
+author: "Murphy \"Murph\" Hall"
+category: ICS
+description: |
+    So the pressure alarm is on, this could get tricky. Let's get the container alarm logic back up and running. Refer to the manual for expected logic and procedure.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{cont41n3r_is_g0n3?}
+
+files:
+
+connection_info: "http://{host}:{port}/"
+requirements:
+    prerequisites:
+        - "Under Pressure"
+    anonymize: true
+
+tags:
+    - easy
+    - ladder-logic
+topics:
+    - instance:cargo-bay
+    - "quest:Cargobay"
+state: hidden
+version: "0.1"

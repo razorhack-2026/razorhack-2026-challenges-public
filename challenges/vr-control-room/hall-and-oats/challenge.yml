@@ -1,0 +1,28 @@
+# An in-person challenge: teams visit Hall & Oats (the VR control room) at their scheduled time
+# and clear up to four VR challenges, 500 points each. There is no flag: Hall & Oats set each
+# team's count on Admin > VR Control Room (Razorhack-CTFd vr.py, found by the awarded:vr topic),
+# which adds the points as an award, and the pane shows the team its count instead of a flag box.
+# value: 2000 is what the tile shows (all four). Made in the CTFd admin panel first (challenge 91);
+# this file matches it, so the challenge sync updates that challenge in place rather than making
+# another, and removes the flag it had.
+# The schedule image is shown in the description, not downloaded: Razorhack-CTFd serves it from
+# CTFd/plugins/razorhack/assets/challenges/hall-and-oats/ (a copy of VR-Schedule1.png here), so
+# a new schedule goes there too.
+name: "Out of Touch and Out of Time by Hall & Oats"
+author: "Murphy \"Murph\" Hall & Darryl Oats"
+category: "VR Control Room"
+description: |-
+    Come see Hall & Oats at your scheduled time.
+
+    [![Saturday team schedule for the VR control room](/plugins/razorhack/assets/challenges/hall-and-oats/VR-Schedule1.png)](/plugins/razorhack/assets/challenges/hall-and-oats/VR-Schedule1.png)
+
+value: 2000
+type: standard
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Odd Jobs"
+    - "awarded:vr"
+
+state: visible
+version: "0.1"

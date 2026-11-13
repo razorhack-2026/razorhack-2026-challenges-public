@@ -1,0 +1,11 @@
+SHIFT BRIEF // 06 NOV 2074 // # 244
+
+// THIS REPORT WAS WRITTEN AND AUTHORIZED BY MURPHY HALL
+
+The cargo PLC was shut down and its program memory reset before the incoming shift.
+Murphy Hall signed off on the reset.
+
+Charles Harvey is absent from the morning roster. Last logged on duty before the
+incident. Reupload the relevant PLC programs in order, and get cargo bay 12 back up and running.
+
+Hey and while you're at it, see if you can find out what happened to Harvey.

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KEEPER OF TOMORROW // TERMINAL</title>
+  <style>
+    @font-face {
+      font-family: Nasalization;
+      src: url('/assets/fonts/Nasalization%20Rg.otf') format('opentype');
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+
+    :root {
+      --bg:      #0b0c09;
+      --fg:       #cbc9b6;
+      --fg-dim:  #777867;
+      --fg-mid:   #a09f8c;
+      --line:     #3d4032;
+      --err:      #a16f5e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Terminal, monospace;
+      overflow: hidden;
+      position: relative;
+      padding: 24px;
+    }
+
+    /* ── CRT scanlines + vignette ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(190,190,160,0.025) 0px,
+        rgba(190,190,160,0.025) 1px,
+        transparent 2px,
+        transparent 5px
+      );
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4;
+      background: radial-gradient(ellipse at center, transparent 58%, rgba(0,0,0,0.38) 100%);
+    }
+
+    /* ── terminal window ── */
+    .term {
+      position: relative;
+      z-index: 1;
+      width: 460px;
+      max-width: 100%;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      box-shadow: inset 0 0 0 1px #171911;
+    }
+
+    .term-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 12px;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      color: var(--fg-dim);
+      text-transform: uppercase;
+    }
+    .term-bar .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--fg-dim);
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    .term-brand {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .rasa-mark {
+      font-family: Nasalization, sans-serif;
+      color: var(--fg-mid);
+      font-weight: 400;
+      letter-spacing: 0.12em;
+    }
+
+    .term-body {
+      padding: 22px 24px 26px;
+    }
+
+    /* ── main content, revealed after boot ── */
+    #main {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.4s ease;
+    }
+    #main.show {
+      opacity: 1;
+      max-height: none;
+      overflow: visible;
+    }
+
+    .login-head {
+      font-size: 0.78rem;
+      color: var(--fg-mid);
+      margin-bottom: 18px;
+      letter-spacing: 0.02em;
+    }
+    .login-head .path { color: var(--fg-dim); }
+
+    .field {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+    }
+    .field .prompt-chevron {
+      color: var(--fg-mid);
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+    .field label {
+      color: var(--fg-mid);
+      flex-shrink: 0;
+      margin-right: 8px;
+      letter-spacing: 0.02em;
+    }
+    .field label::after {
+      content: ':';
+    }
+
+    .input-row {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      border: none;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      padding: 4px 0;
+    }
+    .input-row:focus-within {
+      border-color: var(--fg-mid);
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      flex: 1;
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--fg);
+      font-family: Terminal, monospace;
+      font-size: 0.85rem;
+      padding: 2px 0;
+      outline: none;
+      letter-spacing: 0.04em;
+    }
+    input::placeholder { color: var(--fg-dim); opacity: 0.6; }
+
+    button {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--fg);
+      font-family: Terminal, monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      padding: 10px 0 2px;
+      margin-top: 8px;
+      text-align: left;
+    }
+    button::before {
+      content: '>';
+      color: var(--fg-mid);
+      margin-right: 6px;
+    }
+    button:hover {
+      color: var(--fg-mid);
+    }
+    button:active {
+      color: var(--fg-dim);
+    }
+    button:disabled {
+      color: var(--fg-dim);
+      cursor: default;
+    }
+
+    #msg {
+      margin-top: 14px;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      min-height: 16px;
+    }
+    #msg.err::before { content: '[!] '; }
+    #msg.ok::before  { content: '[+] '; }
+    #msg.err { color: var(--err); }
+    #msg.ok  { color: var(--fg); font-weight: 700; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 22px 0 18px;
+    }
+
+    .matrix-label {
+      font-size: 0.62rem;
+      color: var(--fg-dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .matrix-label::before {
+      content: '> ';
+      color: var(--fg-mid);
+    }
+
+    #footer {
+      display: none;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    #footer.show {
+      display: block;
+    }
+    .manual-stamp {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--fg-dim);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+    }
+
+    #footer a {
+      display: flex;
+      align-items: center;
+      color: var(--fg);
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+    }
+
+    #footer a::before {
+      content: '>';
+      color: var(--fg-mid);
+      margin-right: 6px;
+    }
+
+    #footer a:hover {
+      color: var(--fg-mid);
+    }
+ 
+    .matrix-wrap {
+      overflow-x: auto;
+    }
+ 
+    table {
+      border-collapse: collapse;
+      font-family: Terminal, monospace;
+      font-size: 0.68rem;
+    }
+    td, th {
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      padding: 0;
+    }
+    th {
+      color: var(--fg-dim);
+      opacity: 0.5;
+      font-size: 0.55rem;
+      font-weight: 400;
+    }
+    td {
+      color: var(--fg-dim);
+      opacity: 0.45;
+    }
+    td.rh {
+      color: var(--fg-dim);
+      opacity: 0.5;
+      font-size: 0.55rem;
+    }
+    td.lit {
+      color: var(--fg);
+      opacity: 1;
+      font-weight: 700;
+      position: relative;
+    }
+    td.lit::after {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border: 1px solid var(--fg-mid);
+      pointer-events: none;
+    }
+    .term {
+      width: 500px;
+      border: 2px solid #34372d;
+      box-shadow: inset 0 0 0 1px #171911;
+    }
+    .term-bar {
+      min-height: 34px;
+      background: #10110d;
+      letter-spacing: 0.08em;
+    }
+    .term-body { padding: 18px 20px 20px; }
+    .field { font-size: 0.78rem; }
+    .input-row { border: 1px solid var(--line); padding: 5px 7px; background: #0d0e0a; }
+    .input-row:focus-within { border-color: var(--fg-mid); }
+    button { padding: 7px 0 2px; }
+    .divider { margin: 16px 0 14px; }
+    #footer { margin-top: 16px; padding-top: 12px; }
+    @media (max-width: 520px) {
+      body { padding: 10px; }
+      .term-body { padding: 16px 14px; }
+      .term-bar { font-size: 0.55rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="term">
+  <div class="term-bar">
+    <span class="term-brand"><span class="rasa-mark">RASA</span><span class="dot"></span>U.S.S. KEEPER OF TOMORROW</span>
+    <span>CARGO BAY 12</span>
+  </div>
+  <div class="term-body">
+    <div id="boot" aria-hidden="true"></div>
+    <div id="main">
+      <div class="field">
+        <label for="user">CREW_ID</label>
+        <div class="input-row">
+          <input type="text" id="user" placeholder="CREW-0000" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="pass">ACCESS_CODE</label>
+        <div class="input-row">
+          <input type="password" id="pass" placeholder="·····" />
+        </div>
+      </div>
+
+      <button id="submitBtn" onclick="tryLogin()">AUTHENTICATE</button>
+
+      <div id="msg"></div>
+
+      <hr class="divider" />
+
+      <div class="matrix-label">CREDENTIAL MATRIX</div>
+      <div class="matrix-wrap">
+        <table id="grid"></table>
+      </div>
+
+      <div id="footer">
+        <span class="manual-stamp">CARGO BAY 12 PLC OPERATIONS MANUAL // REV 8.3</span>
+        <a href="/ladder-editor.html" id="menuLink">PROCEED TO SECTOR UPLINK</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Credential Matrix ─────────────────────────────────────────────────────
+const M = [
+  ['m','z','p','j','k','n','R','x'],
+  ['b','f','S','v','d','o','c','l'],
+  ['g','h','e','a','w','u','t','q'],
+  ['y','r','i','s','n','T','p','k'],
+  ['c','l','f','b','z','m','j','w'],
+  ['4','v','d','o','e','g','h','a'],
+  ['u','q','x','S','y','r','i','n'],
+  ['k','p','t','c','l','b','f','z'],
+];
+
+const COLS = 8, ROWS = 8;
+
+function renderGrid(highlight = []) {
+  const hl = new Set(highlight.map(([c,r]) => `${c},${r}`));
+  const t = document.getElementById('grid');
+  let h = '<thead><tr><th></th>';
+  for (let c = 0; c < COLS; c++) h += `<th>${c}</th>`;
+  h += '</tr></thead><tbody>';
+  for (let r = 0; r < ROWS; r++) {
+    h += `<tr><td class="rh">${r}</td>`;
+    for (let c = 0; c < COLS; c++) {
+      const cls = hl.has(`${c},${r}`) ? ' class="lit"' : '';
+      h += `<td${cls}>${M[r][c]}</td>`;
+    }
+    h += '</tr>';
+  }
+  h += '</tbody>';
+  t.innerHTML = h;
+}
+
+renderGrid();
+
+// ─── Cookies ─────────────────────────────────────────────────────────
+const cookies = [
+  { name: 'session_token',  value: '1:2,1' },
+  { name: 'user_theme',     value: '2:5,3' },
+  { name: 'last_sector',    value: '3:0,5' },
+  { name: 'grid_offset',    value: '4:6,0' },
+  { name: 'crew_pref',      value: '5:3,6' },
+];
+
+cookies.forEach(c => {
+  document.cookie = `${c.name}=${c.value}; path=/; SameSite=Lax`;
+});
+
+const CREW_ID_MAX_DIGITS = 4;
+ 
+function normalizeCrewId(raw) {
+  const cleaned = raw.trim().toUpperCase();
+  const match = cleaned.match(/^(?:CREW-?)?(\d{1,4})$/);
+  if (!match) return null;
+  return 'CREW-' + match[1].padStart(CREW_ID_MAX_DIGITS, '0');
+}
+
+// ─── Login logic ──────────────────────────────────────────────────────
+async function tryLogin() {
+  const userInput = document.getElementById('user');
+  const pass = document.getElementById('pass').value.trim();
+  const msg  = document.getElementById('msg');
+  const btn  = document.getElementById('submitBtn');
+
+  if (userInput.value.trim() === '' || pass === '') {
+    msg.textContent = 'ALL FIELDS REQUIRED.';
+    msg.className = 'err';
+    return;
+  }
+
+  const user = normalizeCrewId(userInput.value);
+  if (!user) {
+    msg.textContent = 'CREW ID MUST MATCH CREW-00XX (E.G. CREW-0007).';
+    msg.className = 'err';
+    return;
+  }
+  userInput.value = user; // reflect the normalized form back in the field
+
+  btn.disabled = true;
+  msg.textContent = 'checking ...';
+  msg.className = '';
+
+  try {
+    const res = await fetch('/api/authenticate.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user, pass }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      msg.textContent = 'ACCESS GRANTED — WELCOME ABOARD. flag{' + pass + '}';
+      msg.className = 'ok';
+      renderGrid(data.highlight || []);
+      document.getElementById('footer').classList.add('show');
+    } else {
+      msg.textContent = 'ACCESS DENIED. INVALID CREDENTIALS.';
+      msg.className = 'err';
+    }
+  } catch (err) {
+    msg.textContent = 'CONNECTION ERROR. TRY AGAIN.';
+    msg.className = 'err';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+// ─── Boot sequence ──────────────────────────────────────────────────
+const bootEl = document.getElementById('boot');
+const mainEl = document.getElementById('main');
+
+function runBoot() {
+  bootEl.remove();
+  mainEl.classList.add('show');
+}
+
+runBoot();
+</script>
+</body>
+</html>

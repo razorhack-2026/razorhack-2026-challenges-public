@@ -1,0 +1,31 @@
+name: "Who Turned The Lights Off"
+author: "Murphy \"Murph\" Hall"
+category: ICS
+description: |
+    The container and pressure alarm are flashing, but the lights are still off. Let's just hope those container doors are closed. Get those lights back on operator!
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{l4t_th3r3_b3_l1ghts}
+
+files:
+
+connection_info: "http://{host}:{port}/"
+requirements:
+    prerequisites:
+        - "Another Flashing Light"
+    anonymize: true
+
+tags:
+    - easy
+    - ladder-logic
+topics:
+    - instance:cargo-bay
+    - "quest:Cargobay"
+state: hidden
+version: "0.1"

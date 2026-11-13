@@ -1,0 +1,29 @@
+name: "Got That On Tape"
+author: "Murphy \"Murph\" Hall"
+category: ICS
+description: |
+    Now that you've logged into the Uplink system, I hope you've refamiliarized yourself with the contents in the file archive. First things first, lets compile and run some ladder logic to get the camera feed back online. Refer to the manual for the expected camera logic.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{1_c4n_s33_cl34rly_n0w}
+
+connection_info: "http://{host}:{port}/"
+requirements:
+    prerequisites:
+        - "Uplink Login"
+    anonymize: true
+
+tags:
+    - easy
+    - ladder-logic
+topics:
+    - instance:cargo-bay
+    - "quest:Cargobay"
+state: hidden
+version: "0.1"

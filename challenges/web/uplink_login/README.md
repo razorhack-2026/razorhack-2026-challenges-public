@@ -1,0 +1,1 @@
+Welcome Cargo Shipping and Receiving Operator. Your first task is to log into the Uplink system for Cargo Bay 12, our last shift had a mishap and we need you to figure it out. Your username will be CREW-00XX, where XX is your team number. 

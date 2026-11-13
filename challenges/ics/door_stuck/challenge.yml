@@ -1,0 +1,33 @@
+name: "Door Stuck"
+author: "Murphy \"Murph\" Hall"
+category: ICS
+description: |
+    Crud, this is not good operator, the third container door is stuck open, and the bay is exposed to the vacuum of space. Let's get that door closed and fast!
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{ord3r_r3st0r3d}
+
+connection_info: "http://{host}:{port}/"
+requirements:
+    prerequisites:
+        - "Who Turned The Lights Off"
+    anonymize: true
+
+tags:
+    - medium
+    - ladder-logic
+topics:
+    - instance:cargo-bay
+    - "quest:Cargobay"
+state: hidden
+version: "0.1"
+hints:
+    - content: "Try to unlatch that door command coil!"
+      cost: 50
+    

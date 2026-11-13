@@ -1,0 +1,31 @@
+name: "Cargo Bay Forensics"
+author: "Murphy \"Murph\" Hall"
+category: Forensics
+description: |
+    Looks like things are under control for now operator. Investigate the captured cargo-bay network traffic and determine what happened during Charles Harvey's shift.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{g0T_y0uR_CArG0!}
+
+files:
+
+connection_info: "http://{host}:{port}/"
+requirements:
+    prerequisites:
+        - "Door Stuck"
+    anonymize: true
+
+tags:
+    - medium
+    - pcap
+topics:
+    - instance:cargo-bay
+    - "quest:Cargobay"
+state: hidden
+version: "0.1"
