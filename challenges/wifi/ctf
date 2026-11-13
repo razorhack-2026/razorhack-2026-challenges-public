@@ -1,0 +1,482 @@
+#!/bin/bash
+
+usage() {
+    echo "Usage: $0 {install|start|stop}"
+    echo "  install  - install required host packages (run once per VM)"
+    echo "  start    - spin up the Wi-Fi challenges (run as root)"
+    echo "  stop     - tear down the Wi-Fi challenges (run as root)"
+    exit 1
+}
+
+PKGS_apt="hostapd wpasupplicant dnsmasq macchanger iw kmod iproute2 util-linux rfkill socat psmisc procps ca-certificates curl iptables"
+PKGS_dnf="hostapd wpa_supplicant dnsmasq macchanger iw kmod iproute util-linux socat psmisc procps-ng ca-certificates curl iptables kernel-modules-extra"
+PKGS_pacman="hostapd wpa_supplicant dnsmasq macchanger iw kmod iproute2 util-linux socat psmisc procps-ng ca-certificates curl iptables"
+PKGS_zypper="hostapd wpa_supplicant dnsmasq macchanger iw kmod iproute2 util-linux socat psmisc procps ca-certificates curl iptables"
+PKGS_apk="hostapd wpa_supplicant dnsmasq macchanger iw kmod iproute2 util-linux socat psmisc procps ca-certificates curl iptables"
+
+ROOT_DIR=$PWD
+SSH_ENTRYPOINT_PORT=2222
+NUM_RADIOS=21
+GATEWAY="192.168.1.1"
+SSH_ENTRYPOINT_INTERFACE="eth0"
+
+# Player container egress: public internet only (bridge defined in docker-compose.yml)
+EGRESS_BRIDGE="br-ctf"
+EGRESS_CHAIN="CTF-EGRESS"
+EGRESS_BLOCKED_NETS="10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 169.254.0.0/16 100.64.0.0/10 127.0.0.0/8 224.0.0.0/4 240.0.0.0/4"
+
+REQUIRED_CMDS="docker iptables hostapd wpa_supplicant dnsmasq macchanger iw modprobe rmmod ip nsenter socat fuser pkill sysctl rfkill"
+
+PM=""
+SUDO=""
+
+setup_privilege() {
+    if [ "$(id -u)" -eq 0 ]; then
+        SUDO=""
+        return 0
+    fi
+
+    if [ "$1" = "root" ]; then
+        echo "ERROR: './ctf start' must run as root - it loads kernel modules and moves interfaces between network namespaces." >&2
+        echo "       Try: sudo ./ctf start" >&2
+        exit 1
+    fi
+
+    if command -v sudo >/dev/null 2>&1; then
+        SUDO="sudo"
+    else
+        echo "ERROR: run this as root, or install sudo." >&2
+        exit 1
+    fi
+}
+
+detect_pm() {
+    for candidate in apt-get dnf yum pacman zypper apk; do
+        if command -v "$candidate" >/dev/null 2>&1; then
+            case "$candidate" in
+                apt-get) PM="apt" ;;
+                dnf|yum) PM="dnf" ;;
+                *)       PM="$candidate" ;;
+            esac
+            PM_BIN="$candidate"
+            return 0
+        fi
+    done
+    return 1
+}
+
+pm_install() {
+    pm_install_batch "$@" && return 0
+    echo "--- batch install failed, retrying package by package ---"
+    for pkg in "$@"; do
+        pm_install_batch "$pkg" || echo "WARNING: could not install '$pkg' (may not exist on this distro)" >&2
+    done
+    return 0
+}
+
+pm_install_batch() {
+    case "$PM" in
+        apt)    DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y --no-install-recommends "$@" ;;
+        dnf)    $SUDO "$PM_BIN" install -y "$@" ;;
+        pacman) $SUDO pacman -S --needed --noconfirm "$@" ;;
+        zypper) $SUDO zypper --non-interactive install "$@" ;;
+        apk)    $SUDO apk add "$@" ;;
+        *)      return 1 ;;
+    esac
+}
+
+pm_refresh() {
+    case "$PM" in
+        apt)    $SUDO apt-get update ;;
+        pacman) $SUDO pacman -Sy ;;
+        zypper) $SUDO zypper --non-interactive refresh ;;
+        apk)    $SUDO apk update ;;
+        *)      return 0 ;;
+    esac
+}
+
+have_compose() {
+    docker compose version >/dev/null 2>&1
+}
+
+install_docker() {
+    if command -v docker >/dev/null 2>&1; then
+        echo "--- docker already present, skipping engine install ---"
+        return 0
+    fi
+
+    case "$PM" in
+        apt)    pm_install docker.io ;;
+        dnf)    pm_install moby-engine || pm_install docker ;;
+        pacman) pm_install docker ;;
+        zypper) pm_install docker ;;
+        apk)    pm_install docker ;;
+    esac
+
+    if ! command -v docker >/dev/null 2>&1; then
+        echo "--- no docker package available, falling back to get.docker.com ---"
+        if command -v curl >/dev/null 2>&1; then
+            curl -fsSL https://get.docker.com -o /tmp/get-docker.sh &&
+                $SUDO sh /tmp/get-docker.sh
+            rm -f /tmp/get-docker.sh
+        else
+            echo "WARNING: curl missing, cannot run the Docker install script" >&2
+        fi
+    fi
+}
+
+install_compose() {
+    if have_compose; then
+        echo "--- docker compose v2 already present, skipping ---"
+        return 0
+    fi
+
+    case "$PM" in
+        apt)
+            for pkg in docker-compose-plugin docker-compose-v2; do
+                have_compose && break
+                pm_install_batch "$pkg" >/dev/null 2>&1 || true
+            done
+            if ! have_compose &&
+                apt-cache policy docker-compose 2>/dev/null | sed -n 's/.*Candidate: //p' | grep -q '^2'; then
+                pm_install_batch docker-compose >/dev/null 2>&1 || true
+            fi
+            ;;
+        dnf)    pm_install_batch docker-compose >/dev/null 2>&1 || true ;;
+        pacman) pm_install_batch docker-compose >/dev/null 2>&1 || true ;;
+        zypper) pm_install_batch docker-compose >/dev/null 2>&1 || true ;;
+        apk)    pm_install_batch docker-cli-compose >/dev/null 2>&1 || true ;;
+    esac
+
+    have_compose && return 0
+
+    echo "--- installing the Compose v2 plugin binary from GitHub ---"
+    if ! command -v curl >/dev/null 2>&1; then
+        echo "WARNING: curl missing, cannot fetch the Compose plugin" >&2
+        return 1
+    fi
+
+    plugin_dir="/usr/local/lib/docker/cli-plugins"
+    $SUDO mkdir -p "$plugin_dir"
+    $SUDO curl -fsSL \
+        "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m)" \
+        -o "$plugin_dir/docker-compose" &&
+        $SUDO chmod +x "$plugin_dir/docker-compose"
+}
+
+start_docker_daemon() {
+    command -v systemctl >/dev/null 2>&1 || return 0
+    $SUDO systemctl enable --now docker >/dev/null 2>&1 ||
+        echo "WARNING: could not enable docker.service - start the daemon yourself before './ctf start'" >&2
+}
+
+verify_install() {
+    PATH="$PATH:/usr/local/sbin:/usr/sbin:/sbin"
+
+    missing=""
+    for cmd in $REQUIRED_CMDS; do
+        command -v "$cmd" >/dev/null 2>&1 || missing="$missing $cmd"
+    done
+    have_compose || missing="$missing docker-compose-v2"
+
+    if ! modinfo mac80211_hwsim >/dev/null 2>&1; then
+        echo "WARNING: kernel module 'mac80211_hwsim' not found - this VM cannot simulate radios." >&2
+        echo "         Install your distro's extra kernel modules package and re-check." >&2
+    fi
+
+    if [ -n "$missing" ]; then
+        echo "ERROR: still missing:$missing" >&2
+        echo "       Install those by hand for this distro, then rerun './ctf install'." >&2
+        return 1
+    fi
+
+    echo "--- install OK: $(docker --version), $(docker compose version) ---"
+}
+
+cmd_install() {
+    setup_privilege
+
+    if ! detect_pm; then
+        echo "ERROR: no supported package manager (apt-get, dnf, yum, pacman, zypper, apk)." >&2
+        echo "       Install these by hand:$REQUIRED_CMDS plus docker compose v2." >&2
+        exit 1
+    fi
+    echo "--- package manager: $PM_BIN ---"
+
+    pm_refresh || true
+
+    eval "pkgs=\$PKGS_$PM"
+    pm_install $pkgs
+
+    install_docker
+    install_compose
+    start_docker_daemon
+
+    verify_install
+}
+
+fw_remove() {
+    while iptables -D DOCKER-USER -i "$EGRESS_BRIDGE" -j "$EGRESS_CHAIN" 2>/dev/null; do :; done
+    while iptables -D INPUT -i "$EGRESS_BRIDGE" -j DROP 2>/dev/null; do :; done
+    iptables -F "$EGRESS_CHAIN" 2>/dev/null || true
+    iptables -X "$EGRESS_CHAIN" 2>/dev/null || true
+}
+
+# The player is root with NET_ADMIN/NET_RAW, so egress must be enforced here on the
+# host, matched on the bridge interface (source IPs and MACs can be spoofed).
+fw_apply() {
+    if ! iptables -n -L DOCKER-USER >/dev/null 2>&1; then
+        echo "ERROR: iptables chain DOCKER-USER not found - is the Docker daemon running?" >&2
+        exit 1
+    fi
+
+    fw_remove
+
+    iptables -N "$EGRESS_CHAIN" || exit 1
+    for net in $EGRESS_BLOCKED_NETS; do
+        iptables -A "$EGRESS_CHAIN" -d "$net" -j REJECT || exit 1
+    done
+    iptables -A "$EGRESS_CHAIN" -p tcp --dport 25 -j REJECT || exit 1
+    iptables -A "$EGRESS_CHAIN" -j ACCEPT || exit 1
+
+    # Forwarded traffic: public internet only. Traffic to the host itself: nothing.
+    iptables -I DOCKER-USER -i "$EGRESS_BRIDGE" -j "$EGRESS_CHAIN" || exit 1
+    iptables -I INPUT 1 -i "$EGRESS_BRIDGE" -j DROP || exit 1
+}
+
+cmd_start() {
+    setup_privilege root
+
+    set -x
+
+    cd "$ROOT_DIR"
+
+    # === Cleanup ===
+    docker compose -f docker-compose.yml down --remove-orphans || true
+
+    pkill hostapd || true
+    pkill wpa_supplicant || true
+    pkill dnsmasq || true
+
+    fuser -k "${SSH_ENTRYPOINT_PORT}/tcp" 2>/dev/null || true
+
+    # === Player Egress Firewall (before the container gets a network) ===
+    fw_apply
+
+    # === Start Docker Services ===
+    docker compose -f docker-compose.yml up -d --build
+
+    # === Get Container PID ===
+    mkdir -p /var/run/netns
+    pid=$(docker inspect -f '{{.State.Pid}}' ctf)
+
+    # === SSH Management Proxy ===
+    SSH_ENTRYPOINT_IP=$(ip -4 addr show "$SSH_ENTRYPOINT_INTERFACE" |
+        awk '/inet / {print $2}' |
+        cut -d/ -f1 |
+        head -n1)
+
+    if [ -z "$SSH_ENTRYPOINT_IP" ]; then
+        echo "ERROR: No IPv4 address found on $SSH_ENTRYPOINT_INTERFACE"
+        exit 1
+    fi
+
+    socat \
+        "TCP-LISTEN:$SSH_ENTRYPOINT_PORT,bind=$SSH_ENTRYPOINT_IP,reuseaddr,fork" \
+        "EXEC:$ROOT_DIR/scripts/ctf-ssh-proxy.sh $pid" \
+        >/dev/null 2>&1 &
+
+    # === Host Wireless Setup ===
+    rfkill unblock all
+
+    # === Create Simulated Wireless Interfaces ===
+    rmmod mac80211_hwsim
+    modprobe mac80211_hwsim radios=$NUM_RADIOS
+
+    num_wlan=$(ip link show | grep -c wlan)
+    if [ "$num_wlan" -lt "$NUM_RADIOS" ]; then
+        echo "ERROR: expected $NUM_RADIOS wlan interfaces after modprobe, found $num_wlan." >&2
+        echo "mac80211_hwsim likely failed to reload (check: rmmod may have failed because it was still in use from a prior run) and is stuck with a stale radio count. Fix: fully stop leftover hostapd/wpa_supplicant/docker state, then 'rmmod mac80211_hwsim' manually until it succeeds before rerunning." >&2
+        exit 1
+    fi
+
+    # === Give CTF Container Wireless Interfaces ===
+    ln -s /proc/$pid/ns/net /var/run/netns/$pid
+
+    phy0=$(cat /sys/class/net/wlan0/phy80211/name)
+    phy1=$(cat /sys/class/net/wlan1/phy80211/name)
+    phy2=$(cat /sys/class/net/wlan2/phy80211/name)
+
+    iw phy "$phy0" set netns "$pid"
+    iw phy "$phy1" set netns "$pid"
+    iw phy "$phy2" set netns "$pid"
+
+    sleep 1
+
+    # Fix ARP issue with multiple interfaces on same network
+    sysctl -w net.ipv4.conf.all.arp_ignore=1
+
+    # === Configure Access Points and Clients ===
+    cd "$ROOT_DIR/config"
+
+    # Recon AP
+    macchanger -m 00:26:12:D5:E9:23 wlan3  # SpaceX
+    hostapd -K -B AP/guest.conf
+
+    # Guest Clients
+    macchanger -m 00:40:BE:DF:F3:CC wlan4  # Boeing Defense & Space
+    wpa_supplicant -c client/guest.conf -i wlan4 -K -B
+
+    macchanger -m 44:51:DB:CD:F6:6F wlan5  # Raytheon BBN
+    wpa_supplicant -c client/guest.conf -i wlan5 -K -B
+
+    macchanger -m 00:19:8A:C5:5C:DE wlan6  # Northrop Grumman
+    wpa_supplicant -c client/guest.conf -i wlan6 -K -B
+
+    macchanger -m 70:B3:D5:9E:E4:FC wlan7  # Lockheed THAAD
+    wpa_supplicant -c client/guest.conf -i wlan7 -K -B
+
+    # Hidden AP for PSK Cracking
+    macchanger -r wlan8
+    hostapd -K -B AP/bridged.conf
+    ip addr add "$GATEWAY/24" dev wlan8
+
+    # === DHCP / DNS ===
+    dnsmasq --conf-file="$ROOT_DIR/config/dnsmasq.conf"
+
+    # === PostgreSQL Wireless Station ===
+    pid_postgres=$(docker inspect -f '{{.State.Pid}}' ctf-postgres)
+    ln -sf /proc/$pid_postgres/ns/net /var/run/netns/$pid_postgres
+
+    phy9=$(cat /sys/class/net/wlan9/phy80211/name)
+    iw phy "$phy9" set netns "$pid_postgres"
+
+    sleep 1
+
+    ip netns exec "$pid_postgres" ip link set wlan9 name wlan0
+    ip netns exec "$pid_postgres" ip link set wlan0 address A8:69:8C:4F:1D:92
+    ip netns exec "$pid_postgres" ip link set wlan0 up
+
+    # === Kiosk Wireless Stations ===
+    pid_kiosk1=$(docker inspect -f '{{.State.Pid}}' ctf-kiosk1)
+    ln -sf /proc/$pid_kiosk1/ns/net /var/run/netns/$pid_kiosk1
+
+    phy18=$(cat /sys/class/net/wlan18/phy80211/name)
+    iw phy "$phy18" set netns "$pid_kiosk1"
+
+    sleep 1
+
+    ip netns exec "$pid_kiosk1" ip link set wlan18 name wlan0
+    ip netns exec "$pid_kiosk1" ip link set wlan0 address F0:4A:2B:3C:88:E1
+    ip netns exec "$pid_kiosk1" ip link set wlan0 up
+
+    pid_kiosk2=$(docker inspect -f '{{.State.Pid}}' ctf-kiosk2)
+    ln -sf /proc/$pid_kiosk2/ns/net /var/run/netns/$pid_kiosk2
+
+    phy19=$(cat /sys/class/net/wlan19/phy80211/name)
+    iw phy "$phy19" set netns "$pid_kiosk2"
+
+    sleep 1
+
+    ip netns exec "$pid_kiosk2" ip link set wlan19 name wlan0
+    ip netns exec "$pid_kiosk2" ip link set wlan0 address F0:4A:2B:9A:15:47
+    ip netns exec "$pid_kiosk2" ip link set wlan0 up
+
+    # === Router (real ODINS_EYES AP + override-signal listener on the SAME phy) ===
+    pid_router=$(docker inspect -f '{{.State.Pid}}' ctf-router)
+    ln -sf /proc/$pid_router/ns/net /var/run/netns/$pid_router
+
+    phy10=$(cat /sys/class/net/wlan10/phy80211/name)
+    iw phy "$phy10" set netns "$pid_router"
+
+    sleep 1
+
+    ip netns exec "$pid_router" ip link set wlan10 name wlan0
+    ip netns exec "$pid_router" ip link set wlan0 address 02:00:00:00:13:01
+    ip netns exec "$pid_router" ip link set wlan0 up
+
+    # Muninn — host-side stock decoy station, static IP, no DHCP.
+    macchanger -m 02:00:00:00:13:11 wlan11
+    wpa_supplicant -c client/5ghz.conf -i wlan11 -K -B
+    ip addr add 10.13.0.11/24 dev wlan11 2>/dev/null || true
+
+    # Huginn — telemetry-exporting station (stock wpa_supplicant, in container)
+    pid_huginn=$(docker inspect -f '{{.State.Pid}}' ctf-huginn)
+    ln -sf /proc/$pid_huginn/ns/net /var/run/netns/$pid_huginn
+
+    phy20=$(cat /sys/class/net/wlan20/phy80211/name)
+    iw phy "$phy20" set netns "$pid_huginn"
+
+    sleep 1
+
+    ip netns exec "$pid_huginn" ip link set wlan20 name wlan0
+    ip netns exec "$pid_huginn" ip link set wlan0 address 02:00:00:00:13:10
+    ip netns exec "$pid_huginn" ip link set wlan0 up
+
+    # === WPA3 AP ===
+    macchanger -r wlan12
+    hostapd -K -B AP/WPA3.conf
+
+    # === Extra APs ===
+    macchanger -r wlan13
+    hostapd -K -B AP/extra.conf
+
+    macchanger -r wlan14
+    hostapd -K -B AP/extra2.conf
+
+    macchanger -r wlan15
+    hostapd -K -B AP/extra3.conf
+
+    macchanger -r wlan16
+    hostapd -K -B AP/extra4.conf
+
+    macchanger -r wlan17
+    hostapd -K -B AP/extra5.conf
+
+    cd "$ROOT_DIR"
+}
+
+cmd_stop() {
+    setup_privilege root
+
+    set -x
+
+    cd "$ROOT_DIR"
+
+    # === Stop Docker Services ===
+    docker compose -f docker-compose.yml down --remove-orphans || true
+
+    # === Remove Player Egress Firewall ===
+    fw_remove
+
+    # === Stop Wireless Daemons ===
+    pkill hostapd || true
+    pkill wpa_supplicant || true
+    pkill dnsmasq || true
+
+    # === Stop SSH Management Proxy ===
+    fuser -k "${SSH_ENTRYPOINT_PORT}/tcp" 2>/dev/null || true
+
+    # === Remove Simulated Wireless Interfaces ===
+    rmmod mac80211_hwsim 2>/dev/null || true
+
+    # === Clean Up Network Namespace Links ===
+    find /var/run/netns -mindepth 1 -delete 2>/dev/null || true
+
+    set +x
+}
+
+case "$1" in
+    install)
+        cmd_install
+        ;;
+    start)
+        cmd_start
+        ;;
+    stop)
+        cmd_stop
+        ;;
+    *)
+        usage
+        ;;
+esac

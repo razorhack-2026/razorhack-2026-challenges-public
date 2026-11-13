@@ -1,0 +1,43 @@
+# Source writeup: solution/challenge2.md
+name: "Breaking and Entering"
+author: "Lt. Rico Kopernicus"
+category: Wi-Fi
+description: |
+    Something hidden is running on the Icarus. It's password-protected, so it
+    must be important. Find a way to get the password.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{suhninnwittyeesoe}"
+      data: case_insensitive
+
+hints:
+    - content: "You should figure out what `airodump-ng`, `aireplay-ng`, and `aircrack-ng` can do when combined."
+      cost: 100
+
+# No handout files — competitor gets network/VM access, not a download.
+
+requirements:
+    prerequisites:
+        - "Behind Enemy Lines"
+    anonymize: true
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - medium
+
+topics:
+    - "quest:Wi-Fi Range"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

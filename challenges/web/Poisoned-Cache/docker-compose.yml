@@ -1,0 +1,26 @@
+services:
+  # One shared network namespace, mirroring a Fargate task: ctf-console joins
+  # ctf-redis's namespace, so the console reaches Redis on 127.0.0.1 and the
+  # console's 8080 is published from here. Redis binds 127.0.0.1 only (seed.sh),
+  # so players reach it solely through the console's SSRF.
+  ctf-redis:
+    build:
+      dockerfile: ./build/Dockerfile.redis
+    image: ctf-redis
+    container_name: ctf-redis
+    ports:
+      # host:container (ctf-console's port, published from the shared namespace)
+      - "8080:8080"
+
+  ctf-console:
+    build:
+      dockerfile: ./build/Dockerfile.console
+    image: ctf-console
+    container_name: ctf-console
+    network_mode: "service:ctf-redis"
+    depends_on:
+      - ctf-redis
+    environment:
+      REDIS_HOST: "127.0.0.1"
+      REDIS_PORT: "6379"
+      FLAG: "flag{s3nd_1n_th3_g0ph3r}"

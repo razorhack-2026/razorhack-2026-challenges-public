@@ -1,0 +1,49 @@
+# Source writeup: solution/challenge4.md
+name: "Trust the Owner, Not the Caller"
+author: "Lt. Rico Kopernicus"
+category: Forensics
+description: |
+    The kiosk's "Crew Roster Lookup" widget has been showing "service temporarily degraded".
+    Figure out what happened and see if it gives us another way into the database.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{w4rd3ns_m4st3r_k3y}"
+      data: case_insensitive
+
+hints:
+    - key: "hint_1"
+      content: "What does the kiosk runbook say is used to lookup crew members? See if you can abuse it to read tables you couldn't before."
+      cost: 25
+    - key: "hint_2"
+      content: 'Look at the code of the database function `crew_lookup` using `\df+`. Figure out how to get it to read data from any table.'
+      cost: 25
+      requirements:
+            - hint_1
+
+# No handout files — competitor gets network/VM access, not a download.
+
+requirements:
+    prerequisites:
+        - "The Logs Never Forget"
+    anonymize: true
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - hard
+
+topics:
+    - "quest:Wi-Fi Range"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

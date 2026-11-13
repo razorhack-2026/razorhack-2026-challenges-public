@@ -1,0 +1,43 @@
+name: "RazorVault"
+author: "Lt. Rico Kopernicus"
+category: Wi-Fi
+description: |
+    There's a WPA3-protected network called `RazorVault` on the Icarus. Sounds like
+    somebody really wanted to keep people out of whatever's on the network. Find a
+    way to get the password.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{winterfalcon}"
+      data: case_insensitive
+
+# No handout files — competitor gets network/VM access, not a download.
+
+hints:
+    - content: "Use rockyou.txt with this: https://github.com/blunderbuss-wctf/wacker. Follow the tool's README to install it."
+      cost: 100
+
+requirements:
+    prerequisites:
+        - "Breaking and Entering"
+    anonymize: true
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - insane
+
+topics:
+    - "arc:0:Training"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

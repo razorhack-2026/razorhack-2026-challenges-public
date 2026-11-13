@@ -1,0 +1,196 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #e9ebee;
+    color: #1f2328;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    margin: 0;
+    padding: 2rem 1rem;
+}
+
+.portal {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #c7cdd4;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.portal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: #1a3a6b;
+    color: #ffffff;
+    padding: 1rem 1.5rem;
+}
+
+.portal-logo {
+    flex-shrink: 0;
+}
+
+.portal-header h1 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.portal-header .subtitle {
+    margin: 0.15rem 0 0;
+    color: #c7d4e6;
+    font-size: 0.85rem;
+}
+
+.portal-body {
+    padding: 1.5rem;
+}
+
+.portal-footer {
+    border-top: 1px solid #c7cdd4;
+    padding: 0.75rem 1.5rem;
+    color: #6a737d;
+    font-size: 0.75rem;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #c7cdd4;
+    margin: 0 0 1.5rem;
+}
+
+.tabs a {
+    padding: 0.6rem 1rem;
+    color: #44546a;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-bottom: 3px solid transparent;
+}
+
+.tabs a:hover {
+    color: #1a3a6b;
+}
+
+.tabs a.active {
+    color: #1a3a6b;
+    border-bottom-color: #1a3a6b;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 1.1rem;
+    color: #1f2328;
+    border-bottom: 1px solid #e1e4e8;
+    padding-bottom: 0.4rem;
+}
+
+.form-card {
+    border: 1px solid #d7dbe0;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.form-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #f3f4f6;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #d7dbe0;
+}
+
+.form-type-badge {
+    background: #dde6f0;
+    color: #1a3a6b;
+    border-radius: 3px;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.form-status {
+    margin-left: auto;
+    color: #44546a;
+    font-size: 0.85rem;
+}
+
+.form-fields {
+    margin: 0;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.form-fields dt {
+    font-weight: 600;
+    color: #44546a;
+    text-transform: capitalize;
+}
+
+.form-fields dd {
+    margin: 0 0 0.5rem;
+}
+
+.submission-form {
+    margin-bottom: 1.5rem;
+}
+
+.submission-form label {
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #44546a;
+}
+
+.submission-form input[type="text"],
+.submission-form input[type="date"],
+.submission-form textarea,
+.submission-form select {
+    display: block;
+    width: 100%;
+    margin-top: 0.3rem;
+    background: #ffffff;
+    color: #1f2328;
+    border: 1px solid #c7cdd4;
+    border-radius: 3px;
+    padding: 0.5rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.submission-form input[type="text"]:focus,
+.submission-form input[type="date"]:focus,
+.submission-form textarea:focus,
+.submission-form select:focus {
+    outline: none;
+    border-color: #1a3a6b;
+}
+
+.submission-form button {
+    background: #1a3a6b;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    padding: 0.55rem 1.4rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.submission-form button:hover {
+    background: #142d54;
+}
+
+.footnote {
+    color: #6a737d;
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.override-code {
+    font-family: "Segoe UI Mono", Consolas, monospace;
+    background: #10161c;
+    color: #7fd1ae;
+    border-radius: 3px;
+    padding: 0.6rem 0.8rem;
+    display: inline-block;
+}

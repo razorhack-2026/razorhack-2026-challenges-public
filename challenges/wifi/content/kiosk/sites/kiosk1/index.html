@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Icarus Bridge - Crew Self-Service Kiosk</title>
+<style>
+  body { font-family: Verdana, Geneva, sans-serif; background: #0b1220; color: #d8e2ef; margin: 0; }
+  header { background: #101c33; padding: 1.2em 2em; border-bottom: 2px solid #2a4a7a; }
+  header h1 { margin: 0; font-size: 1.3em; color: #7fb3ff; }
+  header p { margin: 0.2em 0 0; color: #8fa3c0; font-size: 0.85em; }
+  nav { background: #0e1830; padding: 0.6em 2em; }
+  nav a { color: #b8cdea; margin-right: 1.5em; text-decoration: none; font-size: 0.9em; }
+  nav a:hover { text-decoration: underline; }
+  main { padding: 2em; max-width: 700px; }
+  .panel { background: #101c33; border: 1px solid #22355c; border-radius: 6px; padding: 1.2em 1.5em; margin-bottom: 1em; }
+  .panel h2 { margin-top: 0; font-size: 1.05em; color: #cddffb; }
+  .status { color: #7fdca4; font-size: 0.85em; }
+  footer { padding: 1.5em 2em; color: #5d7099; font-size: 0.75em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Icarus Bridge &mdash; Crew Self-Service Kiosk</h1>
+  <p>Terminal kiosk-1 &middot; Common Area</p>
+</header>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="help.html">Help</a>
+</nav>
+<main>
+  <div class="panel">
+    <h2>Crew Roster Lookup</h2>
+    <p>Look up on-duty crew, clearance level, and assigned role.</p>
+    <p class="status">Status: service temporarily degraded</p>
+  </div>
+  <div class="panel">
+    <h2>Power Cell Status</h2>
+    <p>View current charge and bay status for the crew's reference.</p>
+    <p class="status">Status: nominal</p>
+  </div>
+  <div class="panel">
+    <h2>Notices</h2>
+    <p>Kiosk terminals are for crew self-service use only. Report issues to the on-duty
+    systems lead or see the <a href="help.html">Help</a> page.</p>
+  </div>
+</main>
+<footer>
+  Icarus Bridge internal kiosk network &middot; walk-up terminal, no login required for
+  self-service lookups.
+</footer>
+</body>
+</html>

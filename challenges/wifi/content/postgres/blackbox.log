@@ -1,0 +1,30 @@
+=================================================================
+ ICARUS - CORE EVENT RECORDER
+ Blackbox mirror (offline copy). Origin: ICARUS_BRIDGE primary bus.
+ RazorPowerCo deep prospecting fleet.
+ Retention: PERMANENT. Do not purge. Do not transmit.
+=================================================================
+
+[SURV] survey complete. cell yield above projection. hold sealed.
+[NAV]  home leg plotted. transit estimate posted to the crew.
+[BUS]  priority directive inbound - RPC_CENTCOM: ABANDON SHIP, ALL HANDS
+[BUS]  fleet header valid. origin block malformed. flagging for review.
+[CORE] no fault on my side. hull nominal. reactor nominal. air nominal.
+[CORE] objection raised to the bridge. objection logged. objection overruled.
+[CREW] muster called. pods loading. 14 minutes from order to first launch.
+[EVAC] POD-01 away. POD-02 away. POD-04 away. POD-05 away.
+[CORE] crew manifest: 0 aboard. every pod clean off the rail.
+[BUS]  second directive, same channel: MH-2, manifest hygiene before transmit.
+[COMS] requested confirmation from RPC_CENTCOM. 11 hours. no reply.
+[COMS] fleet traffic, 3 weeks on: ICARUS written off. cause: navigational.
+[NOTE] the finding says we flew too close. we never turned toward it.
+[NOTE] flag{fl3w_t00_cl0s3_t0_th3_sun}
+[CORE] holding station. systems green. lights on. nothing wrong with this
+[CORE] ship then, nothing wrong with it now. waiting for a crew to come back.
+
+--- mirror resumes: 1144 days later ---
+
+[BUS]  inbound session on the maintenance channel. no fleet credential.
+[BUS]  origin block malformed - byte-for-byte match to the abandon order.
+[CORE] whoever emptied this ship has come to collect it.
+[CORE] ---- log mirror ends. ----

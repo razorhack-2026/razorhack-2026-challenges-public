@@ -1,0 +1,49 @@
+name: "Zero-G Salvage"
+author: "Lt. Rico Kopernicus"
+category: Web
+description: |
+    The Icarus just put a shot straight through our displacement drive!
+    Without it, there's no way we're jumping out of this solar system any
+    time soon. Drifting on what's left of our reserves, we've limped into
+    range of an independent salvage exchange that runs out here:
+    Zero-G Salvage — commodities, salvaged parts, the works.
+
+    We caught a break: the only working replacement part in the sector just
+    surfaced on the exchange's listings — a sealed "temporal anomaly"
+    artifact that reads, unmistakably, as a displacement-drive housing.
+    We have a little bit of steel and iron stores in our hold, and Zero-G
+    gives all new accounts a starting bonus of 5,000 credits. That alone
+    won't cover the cost of buying that part though.
+
+    Find a way to earn enough credits to buy it and repair our ship!
+
+# ── Scoring — do not edit (uniform dynamic scoring, GM meeting 2026-08-17) ──
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - type: static
+      content: flag{1_21_g1g4w4tts_0f_pr0f1t}
+      data: case_insensitive
+
+hints:
+    - content: "That bulk discount is pretty nice. I wonder if whoever made this website put limits on the quantity."
+      cost: 50
+    - content: "Check out how that price lock works. Maybe you can modify and make the requests yourself."
+      cost: 50
+
+# ── Live-service challenge: host/port finalized at deploy time ──
+connection_info: "http://{host}:{port}"
+
+tags:
+    - medium
+
+topics:
+    - "arc:3:The Chaos"
+    - instance:zero-g-salvage
+
+state: hidden
+version: "0.1"

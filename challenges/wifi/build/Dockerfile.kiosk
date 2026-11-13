@@ -1,0 +1,30 @@
+FROM nginx:stable
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y \
+        wpasupplicant \
+        iw \
+        iproute2 \
+        isc-dhcp-client \
+        iputils-ping \
+        net-tools \
+        socat \
+        && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG KIOSK_SITE
+ARG DECOY_PORT
+ARG DECOY_BANNER
+
+ENV DECOY_PORT="${DECOY_PORT}"
+ENV DECOY_BANNER="${DECOY_BANNER}"
+
+COPY config/client/bridged.conf /etc/wpa_supplicant/client-bridged.conf
+COPY content/kiosk/kiosk_startup.sh /usr/local/bin/kiosk_startup.sh
+COPY content/kiosk/sites/${KIOSK_SITE}/ /usr/share/nginx/html/
+
+RUN chmod +x /usr/local/bin/kiosk_startup.sh
+
+CMD ["/usr/local/bin/kiosk_startup.sh"]

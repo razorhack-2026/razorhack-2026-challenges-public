@@ -1,0 +1,50 @@
+name: "Poisoned Cache"
+author: "Lt. Rico Kopernicus"
+category: Web
+description: |
+    Something *really* bad is happening! Our shields just shut down and something
+    foreign is broadcasting beacon data from our damage control system. I tried to
+    restart the system, but it just keeps erroring. Bring our shields back up,
+    track down the beacon, and remove it - quickly!
+
+    Also, just so you know, our shield emitter system only arms with a specific
+    hardware activation code, don't ask me why. The person who made it left the
+    company decades ago. All we know is that it's the first 16 hex characters
+    (lowercase) of:
+
+    `HMAC-SHA256(key = firmware:key, message = hull:serial + ":" + reactor:seed)`
+
+    You might be able to find those values on the shield system's cache. I don't
+    remember what its caching service is called though. Something like Regex?
+    Redux? Red Ice?
+
+# ── Scoring — do not edit (uniform dynamic scoring, GM meeting 2026-08-17) ──
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - type: static
+      content: flag{s3nd_1n_th3_g0ph3r}
+      data: case_insensitive
+
+hints:
+    - content: "Try restarting the system. Maybe it will point you to something useful."
+      cost: 10
+    - content: "HTTPS doesn't seem to work right now. There might be another protocol you can use, it's name is similar to a groundhog but not quite."
+      cost: 50
+
+# ── Live-service challenge: host/port finalized at deploy time ──
+connection_info: "http://{host}:{port}"
+
+tags:
+    - medium
+
+topics:
+    - "arc:3:The Chaos"
+    - instance:poisoned-cache
+
+state: hidden
+version: "0.1"

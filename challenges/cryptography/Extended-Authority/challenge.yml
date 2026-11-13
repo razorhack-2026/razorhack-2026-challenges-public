@@ -1,0 +1,41 @@
+name: "Extended Authority"
+author: "Lt. Rico Kopernicus"
+category: Cryptography
+description: |
+    Central Command swears its fleet directives can't be faked - every order carries a
+    "Directive Authentication v1" checksum, and they use a shared signing secret. It's
+    a fixed byte string held only by Centcom and its fleet. We believe this isn't enough.
+    See if you can submit a forged directive that successfully authenticates.
+
+    ```
+    checksum = SHA256(secret || directive)
+    ```
+
+# ── Scoring — do not edit (uniform dynamic scoring, GM meeting 2026-08-17) ──
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - type: static
+      content: flag{f0rg3d_th3_0rd3r}
+      data: case_insensitive
+
+hints:
+    - content: "The gateway looks at the last order defined in a directive. Maybe you can extend the example directive with your own extra order."
+      cost: 50
+
+# ── Live-service challenge: host/port finalized at deploy time ──
+connection_info: "http://{host}:{port}"
+
+tags:
+    - medium
+
+topics:
+    - "arc:1:The Prologue"
+    - instance:extended-authority
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,61 @@
+FROM gcc:13 AS bridgebuild
+COPY content/postgres/bridge_ctl.c /tmp/bridge_ctl.c
+RUN gcc -O2 -static -s -o /tmp/bridge_ctl /tmp/bridge_ctl.c
+
+FROM postgres:16
+
+USER root
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y \
+        wpasupplicant \
+        iw \
+        iproute2 \
+        isc-dhcp-client \
+        iputils-ping \
+        net-tools \
+        && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY config/client/bridged.conf /etc/wpa_supplicant/client-bridged.conf
+COPY content/postgres/postgres_startup.sh /usr/local/bin/postgres_startup.sh
+
+# Host-based auth rules (installed into PGDATA by the initdb hook below)
+COPY config/postgres/pg_hba.conf /etc/postgresql/pg_hba.conf
+
+# initdb hooks: logging/auth config + base schema, roles and seed rows
+COPY content/postgres/00-configure.sh /docker-entrypoint-initdb.d/00-configure.sh
+COPY content/postgres/01-schema.sql  /docker-entrypoint-initdb.d/01-schema.sql
+
+# Sensitive operator history, replayed once the real server is logging
+COPY content/postgres/history.sql /usr/local/bin/history.sql
+
+# Heap-recovery seed (DB Challenge 4), replayed post-start with logging silenced
+COPY content/postgres/heap.sql /usr/local/bin/heap.sql
+
+# Easter-egg black-box fragment: a legacy recorder file left on the box outside
+# PGDATA. Deliberately unreferenced anywhere else - it exists only to be found
+# by someone exploring the filesystem through the icarus_svc file-read primitive.
+COPY content/postgres/blackbox.log /opt/icarus/blackbox.log
+
+# Bridge core-control helper (DB Challenge 5). NOT setuid: 0755 so the postgres
+# uid can execute it via COPY ... FROM PROGRAM. It carries no plaintext flag.
+COPY --from=bridgebuild /tmp/bridge_ctl /opt/icarus/bridge_ctl
+
+RUN chmod +x /usr/local/bin/postgres_startup.sh /docker-entrypoint-initdb.d/00-configure.sh && \
+    chmod 0755 /opt/icarus && chmod 0644 /opt/icarus/blackbox.log && \
+    chown root:root /opt/icarus/bridge_ctl && chmod 0755 /opt/icarus/bridge_ctl && \
+    # Seed scripts hold flag material at rest. icarus_svc is in
+    # pg_read_server_files, so leaving these readable by the postgres uid would
+    # let SELECT pg_read_file('/usr/local/bin/history.sql') hand over the log
+    # challenge's flag directly.
+    chown root:root /usr/local/bin/history.sql /usr/local/bin/heap.sql && \
+    chmod 0400 /usr/local/bin/history.sql /usr/local/bin/heap.sql
+
+# NOTE: the postgres:16 base sets STOPSIGNAL SIGINT (fast shutdown). Keep it -
+# it is what stops `docker stop` from hanging on the idle-in-transaction holder
+# sessions that DB Challenge 4 relies on (smart shutdown would wait forever).
+
+CMD ["/usr/local/bin/postgres_startup.sh"]

@@ -1,0 +1,46 @@
+name: "Rollback"
+author: "Lt. Rico Kopernicus"
+category: Pwn
+description: |
+    The **MCPJam Console** runs on the same machine as the inspector,
+    and it guards the reactor master override code behind an admin
+    endpoint. Find out how to get past it.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{th3_pr353nt_c3113d_th3y_w4nt_th31r_53cur1ty_b4ck}"
+      data: case_insensitive
+
+hints:
+    - content: "The console is part of a git repository. See what the changelog says happened in previous versions."
+      cost: 50
+
+# Chained: needs the Jam Session foothold first.
+requirements:
+    prerequisites:
+        - "Jam Session"
+    anonymize: true
+
+# Same live deployment as Jam Session (this folder) — host/port finalized at
+# deploy time.
+connection_info: "http://{host}:{port}"
+
+tags:
+    - medium
+    - web
+    - git
+
+topics:
+    - "quest:MCP Party"
+    - instance:mcpjam
+
+state: hidden
+version: "0.1"

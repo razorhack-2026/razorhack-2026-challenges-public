@@ -1,0 +1,35 @@
+name: "Rubber Stamp"
+author: "Lt. Rico Kopernicus"
+category: Pwn
+description: |
+    If you didn't know, to get anything done you have to get it approved through RazorPowerCo's
+    form portal, Rubber Stamp. Man, I hate paperwork. Your sink drain is clogged? Fill out the
+    form. You wanna take off for a day to rest your overworked mind? Fill out the form. Even if
+    you just want another soap bar for the shower, you have to fill out the form and wait for
+    approval. But somehow, all the higher-ranking officers get their stuff done almost immediately.
+    There has to be some secret way they get things approved WAY faster than we can. I managed to
+    pull Rubber Stamp's source code using my IT creds (I still don't know why they let me access the
+    main RPC code base). See if you can find a way to bypass approval and get us some goodies.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - type: static
+      content: flag{ev3ryth1ng_g3ts_rubb3r_st4mp3d}
+      data: case_insensitive
+hints:
+    - content: "The app stores your forms as a cookie. That means you can modify it to add your own stuff, such as putting malicious text as a form parameter and adding a custom write path."
+      cost: 100
+files:
+    - dist/Rubber_Stamp_src_DO_NOT_DISTRIBUTE.zip
+connection_info: "http://{host}:{port}/"
+tags:
+    - medium
+
+topics:
+    - "quest:Odd Jobs"
+    - instance:rubber-stamp
+state: hidden
+version: "0.1"

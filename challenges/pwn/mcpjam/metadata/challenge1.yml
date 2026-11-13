@@ -1,0 +1,40 @@
+name: "Jam Session"
+author: "Lt. Rico Kopernicus"
+category: Pwn
+description: |
+    RazerPowerCo ships every drone bay with **MCPJam Inspector** for
+    poking at the Model Context Protocol tools. We found the one for
+    the reactor maintenance bay on the Icarus running an older version,
+    see if you can gain access to it.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{mcpj4mm1n9}"
+      data: case_insensitive
+
+hints:
+    - content: "CVE-2026-23744"
+      cost: 100
+
+# Live service (docker-compose.yml) — host/port finalized at deploy time.
+connection_info: "http://{host}:{port}"
+
+tags:
+    - medium
+    - web
+    - rce
+
+topics:
+    - "quest:MCP Party"
+    - instance:mcpjam
+
+state: hidden
+version: "0.1"

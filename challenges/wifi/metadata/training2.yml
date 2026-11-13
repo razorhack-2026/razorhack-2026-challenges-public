@@ -1,0 +1,51 @@
+name: "Mailbox Shenanigans"
+author: "Lt. Rico Kopernicus"
+category: Wi-Fi
+description: |
+    By default, Wi-Fi interfaces are configured to only listen to broadcast packets or packets
+    that have the device's MAC address attached.  It's like the Wi-Fi card is shuffling through
+    an apartment mailbox and looking for letters addressed to itself or to everyone.  It will
+    disregard anything specifically addressed to a different person (or device).  However, we
+    can tell the interface to read everything it can and ignore who it is addressed to, allowing
+    you to conduct wireless network reconnaissance.  There is a suite of Linux tools designed
+    around Wi-Fi hacking called *Aircrack-ng* that can be used to place interfaces into *monitor*
+    mode, among many other uses.  The machine already has the tools installed, and they will be
+    used for all the wireless challenges.
+
+    Place the `wlan0` interface into monitor mode.  What is its name after doing this?
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{wlan0mon}"
+      data: case_insensitive
+
+# No handout files — competitor gets network/VM access, not a download.
+
+hints:
+    - content: "`airmon-ng start wlan0`"
+      cost: 10
+
+requirements:
+    prerequisites:
+        - "Systems Check"
+    anonymize: true
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - training
+
+topics:
+    - "arc:0:Training"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

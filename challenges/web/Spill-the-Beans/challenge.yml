@@ -1,0 +1,42 @@
+name: "Spill the Beans"
+author: "Lt. Rico Kopernicus"
+category: Web
+description: |
+    We need to decommission the autonomous drilling rig on 2000 SY178, but I can't
+    access the console's secrets to see if we need to wipe anything. Something must
+    have corrupted the admin login to its terminal. If I remember correctly, the
+    software was written in PHP by some intern years ago, so honestly, there's probably
+    some vulnerability still lingering in the code. See if you can extract the secrets
+    and find anything we need to take care of.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - type: static
+      content: flag{n1c3_s3ss10n_8uddY}
+      data: case_insensitive
+
+hints:
+    - title: "Getting Admin Access"
+      content: "Cookies are yummy. What's your favorite? Mine is chocolate chip. :)"
+      cost: 10
+    - title: "Modules Hint"
+      content: "Look at the URL for the modules. It seems to load them by filename. Could you enter your own file path there?"
+      cost: 10
+    - title: "Profile Hint"
+      content: "You can set whatever as your name in the profile tab, and it stores it in the php session. Maybe you can write something malicious there and have something else access it."
+      cost: 25
+
+# ── Live-service challenge: host/port finalized at deploy time ──
+connection_info: "http://{host}:{port}"
+
+tags:
+    - easy
+
+topics:
+    - "arc:2:Buildup"
+    - instance:spill-the-beans
+state: hidden
+version: "0.1"

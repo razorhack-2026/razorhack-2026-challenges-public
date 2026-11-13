@@ -1,0 +1,51 @@
+# Source writeup: solution/challenge6.md
+name: "The Heap Never Let Go"
+author: "Lt. Rico Kopernicus"
+category: Forensics
+description: |
+    Something is still running against the database. Maybe some runtime
+    crashed on the flight computer? Some service worker never closed its
+    connection? Find out what's happening.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{d34d_tupl3s_t3ll_t4l3s}"
+      data: case_insensitive
+
+hints:
+    - key: "hint_1"
+      content: "The `pg_stat_activity` view shows all running processes in the database. Check if something is stuck running in the background."
+      cost: 25
+    - key: "hint_2"
+      content: "There are processes stuck running, and they have a held `backend_xmin`. Google what that means and what you can do from there."
+      cost: 25
+      requirements:
+            - hint_1
+
+# No handout files — competitor gets network/VM access, not a download.
+
+# Skips Black Box (bonus easter egg) so it never blocks the chain.
+requirements:
+    prerequisites:
+        - "Trust the Owner, Not the Caller"
+    anonymize: true
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - hard
+
+topics:
+    - "quest:Wi-Fi Range"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,46 @@
+# Source writeup: solution/challenge5.md
+name: "Black Box"
+author: "Lt. Rico Kopernicus"
+category: Forensics
+description: |
+    Planes usually have a black box logging everything that happens on them.
+    See if you can find something like that in the Icarus bridge.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{fl3w_t00_cl0s3_t0_th3_sun}"
+      data: case_insensitive
+
+hints:
+    - content: "You know how to read files by now. Try exploring the rest of the database's machine."
+      cost: 50
+
+# No handout files — competitor gets network/VM access, not a download.
+# Hidden/bonus easter-egg challenge — writeup lists difficulty as
+# "Easy (hidden / bonus)".
+
+requirements:
+    prerequisites:
+        - "Trust the Owner, Not the Caller"
+    anonymize: true
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - easy
+    - bonus
+
+topics:
+    - "quest:Wi-Fi Range"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

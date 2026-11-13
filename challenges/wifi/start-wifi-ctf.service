@@ -1,0 +1,16 @@
+[Unit]
+Description=Autostart for wifi-ctf
+After=network-online.target docker.service
+Wants=network-online.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStart=./ctf start
+WorkingDirectory=/home/kali/razorhack-2026/challenges/wifi
+Restart=on-failure
+RemainAfterExit=yes
+User=root
+
+[Install]
+WantedBy=default.target

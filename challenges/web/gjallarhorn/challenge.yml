@@ -1,0 +1,48 @@
+name: "The Gjallarhorn"
+author: "Lt. Rico Kopernicus"
+category: Web
+description: |
+    Woah, so you're telling me somebody made this AI defense network almost a century
+    ago? And it signaling for help from us, the IT department? Huh... It sounds like just a
+    computer virus to me, and in my professional Information Technology opinion, it seems
+    like whoever made this whole thing should've included some Bitdefender. Rookies, am I
+    right? Well anyway, if Surtr came from the Icarus, Dr. Rookit has got to be behind this,
+    I just know it. Here's the channel Heimdall opened to us, it looks like the console to
+    some space weapon called the Gjallarhorn (I'm starting to see a pattern here). It looks
+    like its time we become the antivirus.
+
+# ── Scoring — do not edit (uniform dynamic scoring, GM meeting 2026-08-17) ──
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - type: static
+      content: flag{h34rd_th3_gj4ll4rh0rn}
+      data: case_insensitive
+
+hints:
+    - content: "Look at the nodes adjacent to Hati, then look at the ones whose repair requests got canceled. Which ones are common between those?"
+      cost: 50
+    - content: "Look closely at Heimdall's core and Hati's relay signal reach. Seems like they spell out something in the Elder Script that his core has stored."
+      cost: 50
+
+# ── Live-service challenge: host/port finalized at deploy time ──
+connection_info: "http://{host}:{port}"
+
+requirements:
+    prerequisites:
+        - "Something in the Static"
+    anonymize: true
+
+tags:
+    - hard
+
+topics:
+    - "arc:3:The Chaos"
+    - instance:gjallarhorn
+
+state: hidden
+version: "0.1"

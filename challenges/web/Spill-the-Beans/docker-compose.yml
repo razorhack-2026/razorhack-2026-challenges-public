@@ -1,0 +1,12 @@
+services:
+  ctf-console:
+    build:
+      context: .
+      dockerfile: ./src/app/Dockerfile
+    image: ctf-spill-the-beans
+    container_name: ctf-spill-the-beans
+    environment:
+      FLAG: "flag{n1c3_s3ss10n_8uddY}"
+    ports:
+      # host:container
+      - "8080:80"

@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Directive Gateway</title>
+  <style>
+    body {
+      background: #0a0e14;
+      color: #c8d3e0;
+      font-family: "DejaVu Sans Mono", monospace;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.5;
+    }
+
+    h1 {
+      color: #8fb7ff;
+      letter-spacing: 2px;
+      font-size: 1.3rem;
+      margin: 0 0 .5rem;
+    }
+
+    .sub {
+      color: #5f6f85;
+      font-size: .8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel {
+      border: 1px solid #223049;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 0 0 1.25rem;
+      background: #0d131d;
+    }
+
+    .cols {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      max-width: 1200px;
+    }
+
+    .col {
+      flex: 1 1 400px;
+      min-width: 320px;
+    }
+
+    .status {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: .3rem .9rem;
+      font-size: .82rem;
+      margin: 0;
+    }
+
+    .status dt {
+      color: #5f6f85;
+    }
+
+    .status dd {
+      margin: 0;
+      color: #c8d3e0;
+      word-break: break-all;
+    }
+
+    .status .ok {
+      color: #6ee7a8;
+    }
+
+    .status .idle {
+      color: #ffd166;
+    }
+
+    .note {
+      color: #5f6f85;
+      font-size: .8rem;
+      margin: .8rem 0 0;
+    }
+
+    .cap {
+      color: #5f6f85;
+      font-size: .78rem;
+      margin: 0 0 .2rem;
+    }
+
+    .panel h2 {
+      margin: 0 0 .6rem;
+      font-size: .95rem;
+      color: #cddffb;
+      letter-spacing: 1px;
+    }
+
+    pre {
+      background: #060a10;
+      border: 1px solid #1a2536;
+      border-radius: 4px;
+      padding: .8rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin: .5rem 0 0;
+    }
+
+    .lbl {
+      color: #5f6f85;
+      display: block;
+      margin-top: .6rem;
+    }
+
+    .val {
+      color: #6ee7a8;
+    }
+
+    #last-directive {
+      word-break: break-all;
+    }
+
+    #last-directive .jline {
+      display: block;
+      padding-left: 5em;
+      text-indent: -5em;
+    }
+
+    .warn {
+      color: #ffd166;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      background: #060a10;
+      border: 1px solid #1a2536;
+      border-radius: 4px;
+      color: #c8d3e0;
+      font-family: inherit;
+      font-size: .85rem;
+      padding: .5rem .6rem;
+      margin-top: .3rem;
+    }
+
+    button {
+      margin-top: .9rem;
+      background: #14324f;
+      border: 1px solid #2f5a86;
+      border-radius: 4px;
+      color: #cfe3ff;
+      font-family: inherit;
+      font-size: .85rem;
+      letter-spacing: 1px;
+      padding: .5rem 1.1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1b4368;
+    }
+
+    #result {
+      color: #9dc7ff;
+      min-height: 1.2rem;
+    }
+
+    .syncrow {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      margin-top: .9rem;
+    }
+
+    .syncrow button {
+      margin-top: 0;
+    }
+
+    .loader {
+      display: flex;
+      align-items: center;
+      line-height: 1;
+    }
+
+    .spinner {
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid #223049;
+      border-top-color: #6ee7a8;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .wave span {
+      display: inline-block;
+      font-weight: bold;
+      font-size: 1.3rem;
+      line-height: 1;
+      animation: wave 1.2s ease-in-out infinite;
+    }
+
+    .wave span:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .wave span:nth-child(3) {
+      animation-delay: .3s;
+    }
+
+    @keyframes wave {
+
+      0%,
+      60%,
+      100% {
+        transform: translateY(0);
+      }
+
+      30% {
+        transform: translateY(-.45em);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>KEEPER OF TOMORROW DIRECTIVE GATEWAY</h1>
+
+  <div class="cols">
+    <div class="col">
+      <div class="panel">
+        <h2>RPC CENTCOM UPLINK</h2>
+        <dl class="status">
+          <dt>CHANNEL</dt>
+          <dd>rpc-centcom.fleet.rpo &middot; command bus v3</dd>
+          <dt>LINK</dt>
+          <dd class="ok">ESTABLISHED</dd>
+          <dt>AUTH</dt>
+          <dd>Directive Authentication v1 (SHA-256)</dd>
+          <dt>TRAFFIC</dt>
+          <dd id="st-traffic" class="{{ 'ok' if status.active else 'idle' }}">{{ status.traffic }}</dd>
+          <dt>LAST RX</dt>
+          <dd id="st-lastrx">{{ status.last_rx }}</dd>
+          <dt>QUEUE</dt>
+          <dd id="st-queue">{{ status.queue }} orders pending</dd>
+        </dl>
+        <div class="syncrow">
+          <button id="sync" type="button">SYNC</button>
+          <span id="sync-load" class="loader"></span>
+        </div>
+        <p class="note" id="last-synced">last synced: never</p>
+      </div>
+
+      <div class="panel">
+        <h2>LAST RECEIVED DIRECTIVE</h2>
+        <p class="cap">Last remote transmission from the RPC_CENTCOM uplink.</p>
+        <pre class="val"
+          id="last-directive">{% for line in sample_json.split('\n') %}<span class="jline">{{ line | safe }}</span>{% endfor %}</pre>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel">
+        <h2>LOCAL DIRECTIVE SUBMISSION</h2>
+        <label class="lbl" for="in-directive">directive_hex</label>
+        <input id="in-directive" autocomplete="off" spellcheck="false" placeholder="hex-encoded directive">
+        <label class="lbl" for="in-checksum">checksum</label>
+        <input id="in-checksum" autocomplete="off" spellcheck="false"
+          placeholder="Directive Authentication v1 checksum">
+        <button id="go" type="button">SUBMIT</button>
+        <pre id="result"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function authenticate() {
+      const out = document.getElementById("result");
+      out.innerHTML = '<span class="wave"><span>.</span><span>.</span><span>.</span></span>';
+      try {
+        const resp = await fetch("/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            directive_hex: document.getElementById("in-directive").value.trim(),
+            checksum: document.getElementById("in-checksum").value.trim(),
+          }),
+        });
+        out.textContent = await resp.text();
+        sync();
+      } catch (e) {
+        out.textContent = "request failed: " + e;
+      }
+    }
+    document.getElementById("go").addEventListener("click", authenticate);
+
+    async function sync() {
+      const btn = document.getElementById("sync");
+      const load = document.getElementById("sync-load");
+      btn.disabled = true;
+      load.innerHTML = '<span class="spinner"></span>';
+      try {
+        const s = await (await fetch("/status")).json();
+        document.getElementById("st-queue").textContent = s.queue + " orders pending";
+        const tr = document.getElementById("st-traffic");
+        tr.textContent = s.traffic;
+        tr.className = s.active ? "ok" : "idle";
+        document.getElementById("st-lastrx").textContent = s.last_rx;
+        document.getElementById("last-synced").textContent =
+          "last synced: " + new Date().toLocaleTimeString();
+      } catch (e) {
+        /* keep the last-known values on a failed sync */
+      } finally {
+        btn.disabled = false;
+        load.innerHTML = "";
+      }
+    }
+    document.getElementById("sync").addEventListener("click", sync);
+  </script>
+</body>
+
+</html>

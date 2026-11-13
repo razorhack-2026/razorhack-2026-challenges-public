@@ -1,0 +1,18 @@
+# Huginn: the telemetry-exporting station on ODINS_EYES.
+
+FROM debian:bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get -o Acquire::Retries=5 update && \
+    apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+        wpasupplicant iw iproute2 socat \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /opt/huginn
+COPY config/client/5ghz.conf /etc/wpa_supplicant/client-5ghz.conf
+COPY content/huginn/telemetry.log /opt/huginn/telemetry.log
+COPY content/huginn/huginn_startup.sh /usr/local/bin/huginn_startup.sh
+
+RUN chmod +x /usr/local/bin/huginn_startup.sh
+
+CMD ["/usr/local/bin/huginn_startup.sh"]

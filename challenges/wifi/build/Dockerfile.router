@@ -1,0 +1,26 @@
+# The real ODINS_EYES AP, plus a monitor-mode interface on the same phy that
+# watches for a raw over-the-air override signal (a Probe Request carrying a
+# specific vendor IE) and disables the AP's BSS via hostapd_cli when it sees
+# a valid one.
+
+FROM debian:bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        hostapd \
+        iw \
+        iproute2 \
+        python3 \
+        python3-scapy \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY config/AP/5ghz.conf /etc/hostapd/odins-eyes.conf
+
+RUN mkdir -p /opt/router
+COPY content/router/passkey_listener.py /opt/router/passkey_listener.py
+COPY content/router/router_startup.sh /usr/local/bin/router_startup.sh
+
+RUN chmod +x /usr/local/bin/router_startup.sh
+
+CMD ["/usr/local/bin/router_startup.sh"]

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Damage Control Console</title>
+  <style>
+    body {
+      background: #0a0e14;
+      color: #c8d3e0;
+      font-family: "DejaVu Sans Mono", monospace;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #8fb7ff;
+      letter-spacing: 2px;
+      font-size: 1.3rem;
+      margin: 0 0 .25rem;
+    }
+
+    .sub {
+      color: #5f6f85;
+      font-size: .8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel {
+      border: 1px solid #223049;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0 1.25rem 0;
+      background: #0d131d;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      padding: .35rem 0;
+      border-bottom: 1px dashed #1a2536;
+    }
+
+    .ok {
+      color: #6ee7a8;
+    }
+
+    .bad {
+      color: #ff6b6b;
+    }
+
+    .warn {
+      color: #ffd166;
+    }
+
+    input[type=text] {
+      width: 100%;
+      box-sizing: border-box;
+      background: #060a10;
+      border: 1px solid #2a3a56;
+      color: #c8d3e0;
+      padding: .55rem;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+
+    button {
+      margin-top: .6rem;
+      background: #1c2f4d;
+      color: #cfe0ff;
+      border: 1px solid #33507e;
+      padding: .5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    pre {
+      background: #060a10;
+      border: 1px solid #1a2536;
+      padding: .8rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .flag {
+      border: 1px solid #6ee7a8;
+      background: #0c1f16;
+      color: #9dffc8;
+      padding: 1rem;
+      border-radius: 6px;
+      font-size: 1.05rem;
+    }
+
+    .banner {
+      border: 1px solid #ff6b6b;
+      background: #1f0c0c;
+      color: #ff9a9a;
+      padding: .8rem 1rem;
+      border-radius: 6px;
+      margin: 1.25rem 0 1.25rem 0;
+    }
+
+    .danger {
+      border: 1px solid #7d2b2b;
+      border-radius: 6px;
+      margin-top: 2rem;
+      background: #160c0c;
+    }
+
+    .dz-head {
+      background: #1f0c0c;
+      color: #ff9a9a;
+      font-weight: bold;
+      padding: .6rem 1rem;
+      border-bottom: 1px solid #7d2b2b;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .dz-body {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+    }
+
+    .btn-danger {
+      margin: 0;
+      background: transparent;
+      color: #ff6b6b;
+      border: 1px solid #7d2b2b;
+    }
+
+    .btn-danger:hover {
+      background: #3a1414;
+    }
+
+    .wave span {
+      display: inline-block;
+      font-weight: bold;
+      font-size: 1.3rem;
+      line-height: 1;
+      animation: wave 1.2s ease-in-out infinite;
+    }
+
+    .wave span:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .wave span:nth-child(3) {
+      animation-delay: .3s;
+    }
+
+    @keyframes wave {
+
+      0%,
+      60%,
+      100% {
+        transform: translateY(0);
+      }
+
+      30% {
+        transform: translateY(-.45em);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>KEEPER OF TOMORROW &mdash; DAMAGE CONTROL CONSOLE</h1>
+
+  <div id="ship-state">
+    {% if not state.reachable %}
+    <div class="banner">SHIP STATE UNREACHABLE</div>
+    {% elif not state.healthy %}
+    <div class="banner">CRITICAL &mdash; shield activation signature INVALID{% if state.beacon_present %} &middot;
+      INTRUDER BEACON DETECTED{% endif %}. Please restart the system.</div>
+    {% endif %}
+
+    <div class="panel">
+      <div class="row"><span>Impact sensors</span>
+        <span class="ok">
+          {{ 'ONLINE' }}</span>
+      </div>
+      <div class="row"><span>Shield emitters</span>
+        <span class="{{ 'ok' if state.shields_online else 'bad' }}">
+          {{ 'ONLINE' if state.shields_online else 'OFFLINE' }}</span>
+      </div>
+      <div class="row"><span>Intruder beacon</span>
+        <span class="{{ 'bad' if state.beacon_present else 'ok' }}">
+          {{ 'PRESENT' if state.beacon_present else 'CLEARED' }}</span>
+      </div>
+      <div class="row"><span>Hull integrity monitor</span>
+        <span class="{{ 'ok' if state.healthy else 'warn' }}">
+          {{ 'NOMINAL' if state.healthy else 'DEGRADED' }}</span>
+      </div>
+    </div>
+
+    {% if state.healthy %}
+    <div class="flag">SHIELDS RESTORED. Intruder purged.<br>{{ flag }}</div>
+    {% endif %}
+  </div>
+
+  <div class="panel">
+    <strong>Sensor telemetry uplink</strong>
+    <div class="sub">Pull a status feed from a sensor by URL.</div>
+    <form id="telemetry-form">
+      <input type="text" id="telemetry-url" name="url" placeholder="http://sensor-07.internal/telemetry" autofocus>
+      <button type="submit">FETCH TELEMETRY</button>
+    </form>
+    <div id="sensor-wrap" style="display:none">
+      <div class="sub" style="margin-top:1rem">sensor response:</div>
+      <pre id="sensor-out"></pre>
+    </div>
+  </div>
+
+  <div class="danger">
+    <div class="dz-head">Danger zone</div>
+    <div class="dz-body">
+      <div>
+        <div><strong>Restart damage control system</strong></div>
+        <div class="sub" style="margin:0">Reinitialize ship systems. Re-applies default state cache.</div>
+      </div>
+      <div>
+        <button class="btn-danger" id="restart-btn" type="button">Restart system</button>
+        <span id="restart-confirm" style="display:none; gap:.6rem; align-items:center">
+          <button class="btn-danger" id="restart-go" type="button">Confirm restart</button>
+          <a href="#" id="restart-cancel" style="color:#5f6f85">Cancel</a>
+        </span>
+      </div>
+    </div>
+    <div id="restart-warn" class="sub" style="display:none; margin:0 1.25rem 1rem; color:#ffd166">
+      This reinitializes all ship systems and cannot be undone. Confirm to proceed.</div>
+    <pre class="bad" id="restart-out" style="display:none; margin:0 1.25rem 1rem"></pre>
+  </div>
+
+  <script>
+    (function () {
+      function refreshState() {
+        fetch("/").then(function (r) { return r.text(); }).then(function (html) {
+          var fresh = new DOMParser().parseFromString(html, "text/html")
+            .getElementById("ship-state");
+          if (fresh) document.getElementById("ship-state").innerHTML = fresh.innerHTML;
+        }).catch(function () { });
+      }
+
+      function post(path, body, out, done) {
+        out.style.display = "block";
+        out.innerHTML = '<span class="wave"><span>.</span><span>.</span><span>.</span></span>';
+        fetch(path, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body
+        }).then(function (r) { return r.text(); })
+          .then(function (t) { out.textContent = t; if (done) done(); })
+          .catch(function (e) { out.textContent = "[request failed] " + e; });
+      }
+
+      document.getElementById("telemetry-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        document.getElementById("sensor-wrap").style.display = "block";
+        post("/telemetry",
+          "url=" + encodeURIComponent(document.getElementById("telemetry-url").value),
+          document.getElementById("sensor-out"), refreshState);
+      });
+
+      var btn = document.getElementById("restart-btn");
+      var confirmBox = document.getElementById("restart-confirm");
+      var warn = document.getElementById("restart-warn");
+      btn.addEventListener("click", function () {
+        btn.style.display = "none";
+        confirmBox.style.display = "inline-flex";
+        warn.style.display = "block";
+      });
+      document.getElementById("restart-cancel").addEventListener("click", function (e) {
+        e.preventDefault();
+        confirmBox.style.display = "none";
+        warn.style.display = "none";
+        btn.style.display = "inline-block";
+      });
+      document.getElementById("restart-go").addEventListener("click", function () {
+        post("/system/restart", "confirmed=1", document.getElementById("restart-out"));
+        confirmBox.style.display = "none";
+        warn.style.display = "none";
+        btn.style.display = "inline-block";
+      });
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+services:
+  ctf-directive:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: ctf-directive
+    container_name: ctf-directive
+    environment:
+      FLAG: "flag{f0rg3d_th3_0rd3r}"
+    ports:
+      # host:container
+      - "8888:8080"
+    restart: unless-stopped

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Defense Mesh Console</title>
+</head>
+
+<body>
+	<div id="app">
+		<header>
+			<span class="logo">HEIMDALL</span><span class="sub">DEFENSE MESH CONSOLE</span>
+			<span class="title">THE GJALLARHORN</span><span class="spacer"></span><span id="clock"></span>
+		</header>
+		<main>
+			<section id="mapwrap">
+				<div id="mapbox"><canvas id="map"></canvas>
+					<div id="pingbox"><input type="text" id="ping-q" placeholder="SATELLITE ID" autocomplete="off"
+							spellcheck="false" /><button type="button" id="b-ping">PING</button></div>
+					<div id="zoom"><button type="button" id="b-zin">+</button><button type="button"
+							id="b-zout">-</button><button type="button" id="b-zreset">RESET</button>
+					</div>
+				</div>
+				<div id="toolbar">
+					<button type="button" id="b-relay">HATI RELAY REACH</button>
+					<button type="button" id="b-clear">CLEAR SELECTION</button>
+					<span id="selinfo">0 NODES SELECTED</span>
+					<span class="spacer"></span>
+					<button type="button" id="b-purge" class="danger">PURGE</button>
+				</div>
+				<div id="nodeinfo">CLICK A NODE. DRAG SELECTS AN AREA (SHIFT-DRAG DESELECTS). WHEEL ZOOMS, RIGHT-DRAG
+					PANS.
+					CLICK A REGION NAME TO TOGGLE THE REGION. CLICK THE CENTRE GLYPH FOR THE CORE.</div>
+			</section>
+			<section id="chatwrap">
+				<div id="chathead">CHANNEL // MESH-OPS <span class="spacer"></span><span id="chatstate"></span></div>
+				<div id="chat"></div>
+				<div id="chatctl">
+					<button type="button" id="c-play">PAUSE</button>
+					<input id="c-scrub" type="range" min="0" value="0" />
+					<select id="c-speed">
+						<option value="0.5">0.5x</option>
+						<option value="1" selected>1x</option>
+						<option value="2">2x</option>
+						<option value="4">4x</option>
+					</select>
+					<button type="button" id="c-end">END</button>
+				</div>
+			</section>
+		</main>
+		<div id="modal" hidden>
+			<div id="modalbox"><button type="button" id="modalx">CLOSE</button>
+				<div id="modalbody"></div>
+			</div>
+		</div>
+	</div>
+	<script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

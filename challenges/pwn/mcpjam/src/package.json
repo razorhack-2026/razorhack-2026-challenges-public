@@ -1,0 +1,13 @@
+{
+  "name": "@mcpjam/inspector",
+  "version": "1.4.2",
+  "description": "MCPJam Inspector (maintenance build)",
+  "private": true,
+  "type": "commonjs",
+  "bin": {
+    "inspector": "server.js"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}

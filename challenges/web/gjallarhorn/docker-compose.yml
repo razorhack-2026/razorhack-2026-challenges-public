@@ -1,0 +1,18 @@
+services:
+    gjallarhorn:
+        build:
+            context: ./src
+        ports:
+            - "8080:8080"
+        environment:
+            - FLAG=flag{h34rd_th3_gj4ll4rh0rn}
+            # number of reverse proxies in front of the container (0 = none). Rate limits key on the
+            # client IP from X-Forwarded-For; leave at 0 and every team behind a proxy shares one
+            # bucket. Set too high on a direct-exposed container and clients can spoof their IP.
+            - TRUST_PROXY=${TRUST_PROXY:-0}
+        read_only: true
+        tmpfs: [/tmp]
+        cap_drop: [ALL]
+        security_opt: ["no-new-privileges:true"]
+        mem_limit: 256m
+        restart: unless-stopped

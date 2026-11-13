@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Icarus Bridge - Security & Audit Terminal</title>
+<style>
+  body { font-family: Verdana, Geneva, sans-serif; background: #170b0b; color: #ecdada; margin: 0; }
+  header { background: #2b1414; padding: 1.2em 2em; border-bottom: 2px solid #6a2a2a; }
+  header h1 { margin: 0; font-size: 1.3em; color: #ff9b7f; }
+  header p { margin: 0.2em 0 0; color: #c08f8f; font-size: 0.85em; }
+  main { padding: 2em; max-width: 700px; }
+  .panel { background: #241010; border: 1px solid #4a2222; border-radius: 6px; padding: 1.2em 1.5em; margin-bottom: 1em; }
+  .panel h2 { margin-top: 0; font-size: 1.05em; color: #f2c8c8; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+  td, th { text-align: left; padding: 0.3em 0.5em; border-bottom: 1px solid #4a2222; }
+  .ok { color: #7fdca4; }
+  footer { padding: 1.5em 2em; color: #7a5a5a; font-size: 0.75em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Icarus Bridge &mdash; Security &amp; Audit Terminal</h1>
+  <p>Terminal kiosk-2 &middot; Ops Corridor &middot; Restricted staff use</p>
+</header>
+<main>
+  <div class="panel">
+    <h2>Audit Window</h2>
+    <table>
+      <tr><th>Shift</th><th>Status</th></tr>
+      <tr><td>Current</td><td class="ok">audit-start logged</td></tr>
+      <tr><td>Previous</td><td class="ok">audit-end logged</td></tr>
+    </table>
+  </div>
+  <div class="panel">
+    <h2>Physical Security</h2>
+    <p>All bay doors nominal. No tamper alerts in the last 24 hours.</p>
+  </div>
+  <div class="panel">
+    <h2>Access</h2>
+    <p>This terminal is for Security staff only. Report unattended access
+    attempts to WARDEN.</p>
+  </div>
+</main>
+<footer>
+  Icarus Bridge internal security network.
+</footer>
+</body>
+</html>

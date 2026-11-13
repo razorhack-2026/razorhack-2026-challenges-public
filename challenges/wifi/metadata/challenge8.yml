@@ -1,0 +1,87 @@
+# Source writeup: solution/challenge8.md
+name: "Something in the Static"
+author: "Lt. Rico Kopernicus"
+category: Wi-Fi
+description: |
+    Our frequency analyzer flagged something strange on the 5180 MHz band.
+    The signals are steady and deliberate when it's in range, and they've
+    been repeating for hours. Nothing we know about is on that frequency.
+    I captured a .png it transmitted, but it drifted out of range before
+    I could get a look at its beacons. The file itself seems off: its WAY
+    bigger than a regular photo at that resolution. Something is out there,
+    and I'd like to know what it wants.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{5ur7r_i5_w4tchin9}"
+      data: case_insensitive
+
+files:
+    - ../dist/challenge8/capture.png
+
+# Two hint chains: Wi-Fi (wifi_hint_*) and capture.png (png_hint_*).
+# Each hint requires the previous one in its chain to be unlocked first.
+hints:
+    - title: "Wi-Fi Hint 1"
+      key: wifi_hint_1
+      content: "It drifted away before I could look at the beacons, so you should try taking a look at them."
+      cost: 10
+    - title: "Wi-Fi Hint 2"
+      key: wifi_hint_2
+      content: "All packets broadcasted by APs have IEEE 802.11 headers. Look up at what kinds of headers can be on beacon frames."
+      cost: 25
+      requirements:
+          - wifi_hint_1
+    - title: "Wi-Fi Hint 3"
+      key: wifi_hint_3
+      content: "The beacons have a Vendor IE element.  Maybe you can send some override code to the AP using it."
+      cost: 50
+      requirements:
+          - wifi_hint_2
+    - title: "Wi-Fi Hint 4"
+      key: wifi_hint_4
+      content: "One of the clients connected to the satellite is broadcasting data. Once you get them to connect to you, find out what it's sending."
+      cost: 10
+      requirements:
+          - wifi_hint_3
+    - title: "capture.png Hint 1"
+      key: png_hint_1
+      content: "This file is abnormally large for a .png of this resolution.  Maybe there's something hidden within?"
+      cost: 10
+    - title: "capture.png Hint 2"
+      key: png_hint_2
+      content: "What do you call someone who can speak multiple languages?"
+      cost: 10
+      requirements:
+          - png_hint_1
+    - title: "capture.png Hint 3"
+      key: png_hint_3
+      content: "Wow, this file can speak .png, .pdf, and .zip!"
+      cost: 50
+      requirements:
+          - png_hint_2
+
+requirements:
+    prerequisites:
+        - "Breaking and Entering"
+    anonymize: true
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - insane
+
+topics:
+    - "arc:2:Buildup"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

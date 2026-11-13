@@ -1,0 +1,88 @@
+services:
+  ctf:
+    build:
+      dockerfile: ./build/Dockerfile
+    image: ctf
+    container_name: ctf
+    hostname: debian
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    # Internet-only egress: the host firewall rules in `ctf` (fw_apply) restrict br-ctf.
+    networks:
+      - ctf-internet
+    dns:
+      - 1.1.1.1
+      - 9.9.9.9
+
+  ctf-postgres:
+    build:
+      dockerfile: ./build/Dockerfile.postgres
+    image: ctf-postgres
+    container_name: ctf-postgres
+    network_mode: none
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Xk7pQ2mL9wR4tZ8v
+      POSTGRES_DB: icarus_core
+
+  ctf-kiosk1:
+    build:
+      dockerfile: ./build/Dockerfile.kiosk
+      args:
+        KIOSK_SITE: kiosk1
+        DECOY_PORT: "22"
+        DECOY_BANNER: 'SSH-2.0-OpenSSH_9.2p1 Debian-2\r\n'
+    image: ctf-kiosk1
+    container_name: ctf-kiosk1
+    network_mode: none
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  ctf-kiosk2:
+    build:
+      dockerfile: ./build/Dockerfile.kiosk
+      args:
+        KIOSK_SITE: kiosk2
+        DECOY_PORT: "22"
+        DECOY_BANNER: 'SSH-2.0-OpenSSH_9.2p1 Debian-2\r\n'
+    image: ctf-kiosk2
+    container_name: ctf-kiosk2
+    network_mode: none
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  ctf-huginn:
+    build:
+      dockerfile: ./build/Dockerfile.huginn
+    image: ctf-huginn
+    container_name: ctf-huginn
+    network_mode: none
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+  ctf-router:
+    build:
+      dockerfile: ./build/Dockerfile.router
+    image: ctf-router
+    container_name: ctf-router
+    network_mode: none
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+networks:
+  ctf-internet:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-ctf
+    ipam:
+      config:
+        # Must not overlap 192.168.1.0/24 or 10.13.0.0/24 (used by the challenges)
+        - subnet: 172.29.250.0/24

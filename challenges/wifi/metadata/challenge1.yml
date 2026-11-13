@@ -1,0 +1,44 @@
+# Source writeup: solution/challenge1.md
+name: "Behind Enemy Lines"
+author: "Lt. Rico Kopernicus"
+category: Wi-Fi
+description: |
+    There's an unsecured wireless control system network on the Icarus. We know
+    that RTX (Raytheon) supplied networking devices for the ship, see if you can
+    find one on this network and get the MAC address.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{44:51:DB:CD:F6:6F}"
+      data: case_insensitive
+
+hints:
+    - content: "There are free websites that let you look up the vendor behind a MAC address."
+      cost: 50
+
+# No handout files — competitor gets network/VM access, not a download.
+
+requirements:
+    prerequisites:
+        - "Yo, those are my packets, bro…"
+    anonymize: true
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - easy
+
+topics:
+    - "quest:Wi-Fi Range"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

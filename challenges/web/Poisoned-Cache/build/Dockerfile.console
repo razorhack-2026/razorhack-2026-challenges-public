@@ -1,0 +1,24 @@
+FROM python:3.12-slim
+
+ENV DEBIAN_FRONTEND=noninteractive PYTHONUNBUFFERED=1
+
+# libcurl (+ toolchain) is needed to build pycurl; the resulting libcurl speaks
+# gopher, which is what makes the intended Redis-over-SSRF solve possible.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        pkg-config \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY src/console/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+COPY src/console/app.py /app/app.py
+COPY src/console/templates /app/templates
+
+EXPOSE 8080
+CMD ["python", "app.py"]

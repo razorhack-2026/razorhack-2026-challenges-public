@@ -1,0 +1,46 @@
+# Source writeup: solution/challenge3.md
+name: "The Logs Never Forget"
+author: "Lt. Rico Kopernicus"
+category: Forensics
+description: |
+    Cracking `Icarus_Bridge` was only the doorway. Now that you're on the
+    network, the Icarus's crew database is in reach - but the interesting
+    stuff isn't in the tables anymore. Someone must've tidied up. Get onto the
+    database and find what they thought they'd erased.
+
+    Note: `w3m` (a terminal-based browser) is installed if you need to access webpages.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{th3_l0gs_r3m3mb3r_ev3ryth1ng}"
+      data: case_insensitive
+
+hints:
+    - content: "Postgres has ways to `ls` directories and read files from the machine it's running on. Use them to check the common places Postgres logs are located."
+      cost: 50
+
+# No handout files — competitor gets network/VM access, not a download.
+requirements:
+    prerequisites:
+        - "Breaking and Entering"
+    anonymize: true
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - hard
+
+topics:
+    - "quest:Wi-Fi Range"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

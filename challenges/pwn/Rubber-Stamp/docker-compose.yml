@@ -1,0 +1,12 @@
+services:
+  ctf-console:
+    build:
+      context: .
+      dockerfile: ./src/app/Dockerfile
+    image: ctf-rubber-stamp
+    container_name: ctf-rubber-stamp
+    environment:
+      FLAG: "flag{ev3ryth1ng_g3ts_rubb3r_st4mp3d}"
+    ports:
+      # host:container
+      - "8080:80"

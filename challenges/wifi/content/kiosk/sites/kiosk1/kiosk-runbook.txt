@@ -1,0 +1,42 @@
+Icarus Bridge - Kiosk Terminal Troubleshooting Runbook
+=========================================================
+Facilities / IT reference only. Do not post at the terminal.
+
+Common issues
+--------------
+
+1. Terminal frozen or unresponsive
+   Power-cycle the terminal from the rear panel switch. Allow ~60 seconds
+   for the self-service session to reinitialize.
+
+2. Touchscreen misaligned
+   Run the calibration utility from the maintenance menu (hold the corner
+   tap for 5 seconds during boot).
+
+3. Roster lookup / power cell status not loading
+   Kiosk sessions authenticate against icarus_core as the `guest` role;
+   no password prompt should appear (trust auth is scoped to the kiosk
+   subnet). If a password prompt appears, the terminal's local client is
+   misconfigured - do not enter arbitrary credentials, escalate to the DB
+   team instead.
+
+4. Printer/receipt jam (kiosk-3 only)
+   Clear the jam per the sticker inside the front panel. Do not force the
+   feed roller.
+
+5. Idle timeout too short/long
+   Adjustable in ops_config (kiosk.idle_timeout_s). Contact the systems
+   lead before changing - self-service sessions should not sit open
+   unattended for long periods.
+
+6. Crew Roster Lookup panel showing "service temporarily degraded"
+   Roster search was moved behind a single self-service database function
+   (crew_lookup) instead of a direct table grant. The kiosk widget
+   is still being revalidated after that change; the function itself is
+   live. Do not re-enable the old direct-grant workaround.
+
+Escalation
+----------
+Kiosk hardware: Facilities
+Self-service database issues: Systems Lead (BEACON)
+Physical security / tampering: WARDEN

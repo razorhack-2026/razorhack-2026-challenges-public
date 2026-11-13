@@ -1,0 +1,20 @@
+services:
+    # One shared network namespace, mirroring a Fargate task: the frontend
+    # (nginx) joins the backend's namespace and proxies /api/* to
+    # 127.0.0.1:3001. The backend listens on 127.0.0.1 only, so the frontend's
+    # 8080 is the only port players can reach.
+    frontend:
+        build:
+            context: ./src/app
+        network_mode: "service:backend"
+        depends_on:
+            - backend
+    # Owns the shared namespace, so the frontend's 8080 is published here.
+    # The API itself is loopback-only - reachable from the frontend, not the host.
+    backend:
+        build:
+            context: ./src/server
+        ports:
+            - "8080:8080"
+        environment:
+            - FLAG=flag{1_21_g1g4w4tts_0f_pr0f1t}

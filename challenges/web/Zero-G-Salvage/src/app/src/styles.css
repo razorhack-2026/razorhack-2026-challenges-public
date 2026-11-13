@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	background-color: var(--color-slate-950);
+}
+
+body {
+	margin: 0;
+	font-family: system-ui, sans-serif;
+}
+
+@keyframes ticker-scroll {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+.ticker-track {
+	animation: ticker-scroll 32s linear infinite;
+}
+
+@keyframes credit-pop {
+	0% {
+		opacity: 0;
+		transform: translate(-50%, 0) scale(0.9);
+	}
+	15% {
+		opacity: 1;
+		transform: translate(-50%, -10px) scale(1.05);
+	}
+	80% {
+		opacity: 1;
+		transform: translate(-50%, -22px) scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: translate(-50%, -30px) scale(1);
+	}
+}
+
+.credit-pop {
+	animation: credit-pop 1.5s ease-out forwards;
+}

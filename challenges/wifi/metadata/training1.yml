@@ -1,0 +1,40 @@
+name: "Systems Check"
+author: "Lt. Rico Kopernicus"
+category: Wi-Fi
+description: |
+    To start peering into the invisible wireless networks around you, your
+    device must have a compatible Wi-Fi card connected. Any device that can
+    use Wi-Fi has a Wi-Fi card (with an antenna), whether connected internally
+    or externally through USB. In Linux, they show up as network interfaces
+    with the name `wlan`. Your VM has some interfaces connected already. One way
+    to see them is to use the `ip a` command.
+
+    How many wireless interfaces are connected to the machine?
+    The format for these challenges is `flag{<answer>}`.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - type: static
+      content: "flag{3}"
+      data: case_insensitive
+
+# No handout files — competitor gets network/VM access, not a download.
+
+connection_info: "ssh -p {port} root@{host} (password: password)"
+
+tags:
+    - training
+
+topics:
+    - "arc:0:Training"
+    - instance:wifi
+
+state: hidden
+version: "0.1"

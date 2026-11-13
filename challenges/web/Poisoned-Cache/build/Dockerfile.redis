@@ -1,0 +1,6 @@
+FROM redis:7-alpine
+
+COPY src/redis/seed.sh /usr/local/bin/seed.sh
+RUN chmod +x /usr/local/bin/seed.sh
+
+CMD ["/usr/local/bin/seed.sh"]

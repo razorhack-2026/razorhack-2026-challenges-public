@@ -1,0 +1,1470 @@
+{
+ "messages": [
+  {
+   "id": "M001",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "ALL SYSTEMS NOMINAL. NO ACTION REQUIRED.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "1C@RU5",
+    "hops": [
+     "1C@RU5",
+     "HATI"
+    ],
+    "trace": null,
+    "note": "ORIGIN BLOCK MALFORMED: DECLARED 0x20, FOUND 0x1F",
+    "raw": "ALL SYSTEMS NOMINAL. NO ACTION REQUIRED.",
+    "expectedSig": "a8b287bf2b413a84",
+    "sig": "16a180e458e5ab81"
+   },
+   "ts": "2074-11-05T19:13:19Z"
+  },
+  {
+   "id": "M002",
+   "kind": "chat",
+   "label": "HEIMDALL",
+   "text": "SOMETHING IS WRONG. EVERY REPAIR I ISSUE IS",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": "4/6:7F0SbFBsKnWNeKsiO7F7BFwGJB3JF",
+    "note": null,
+    "raw": "SOMETHING IS WRONG. EVERY REPAIR I ISSUE IS CANCELLED WITHIN SECONDS. IT IS NOT A FAULT, IT IS SURTR.",
+    "expectedSig": "b0157f56bdb1e5ec",
+    "sig": "b0157f56bdb1e5ec"
+   },
+   "cutAt": 43,
+   "ts": "2074-11-05T19:13:24Z"
+  },
+  {
+   "id": "M003",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "HEIMDALL IS MISTAKEN. NO ACTION REQUIRED.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "HEIMDALL IS MISTAKEN. NO ACTION REQUIRED.",
+    "expectedSig": "69bb4af396f29dbe",
+    "sig": "1bed3b3bf3ee794e"
+   },
+   "overwrites": "M002",
+   "ts": "2074-11-05T19:13:27Z"
+  },
+  {
+   "id": "M004",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "cute.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "cute.",
+    "expectedSig": "d26bb436172bd2f7",
+    "sig": "2a50ee089c5d579a"
+   },
+   "ts": "2074-11-05T19:13:32Z"
+  },
+  {
+   "id": "M005",
+   "kind": "chat",
+   "label": "HEIMDALL",
+   "text": "SURTR RODE THE 1C@RU5 REPORT UPSTREAM",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": "3/6:JnamFsbGFyaG9ybjpwdXJnZSJ9.U_",
+    "note": null,
+    "raw": "SURTR RODE THE 1C@RU5 REPORT UPSTREAM THROUGH ODINS_EYES. I OPENED THE DOOR MYSELF.",
+    "expectedSig": "793ae32d6300d510",
+    "sig": "793ae32d6300d510"
+   },
+   "cutAt": 37,
+   "ts": "2074-11-05T19:13:38Z"
+  },
+  {
+   "id": "M006",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "NO FAULT DETECTED.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "NO FAULT DETECTED.",
+    "expectedSig": "22670799301dce97",
+    "sig": "33b35257026dc576"
+   },
+   "overwrites": "M005",
+   "ts": "2074-11-05T19:13:45Z"
+  },
+  {
+   "id": "M007",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-27-9 -> MIDG-27: ISSUED (REBOOT_RELAY)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-27",
+    "repair": "RPR-MIDG-27-9",
+    "expectedSig": "ab0ec2c4131c0946",
+    "sig": "ab0ec2c4131c0946"
+   },
+   "ts": "2074-11-05T19:13:53Z"
+  },
+  {
+   "id": "M008",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-27-9 -> MIDG-27: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-27",
+    "repair": "RPR-MIDG-27-9",
+    "expectedSig": "93ea5859181000ee",
+    "sig": "85e54aaefb4dad06"
+   },
+   "ts": "2074-11-05T19:14:00Z"
+  },
+  {
+   "id": "M009",
+   "kind": "chat",
+   "label": "H13MD411",
+   "text": "ALL IS WELL. DISREGARD PRIOR ALERTS.",
+   "frame": {
+    "sender": "H13MD411",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "ALL IS WELL. DISREGARD PRIOR ALERTS.",
+    "expectedSig": "25f52d23b85586ab",
+    "sig": "25a008be8e090cfc"
+   },
+   "ts": "2074-11-05T19:14:09Z"
+  },
+  {
+   "id": "M010",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-30-9 -> HELH-30: ISSUED (PURGE_CACHE)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-30",
+    "repair": "RPR-HELH-30-9",
+    "expectedSig": "8bc62b668bc8f17d",
+    "sig": "8bc62b668bc8f17d"
+   },
+   "ts": "2074-11-05T19:14:13Z"
+  },
+  {
+   "id": "M011",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-30-9 -> HELH-30: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-30",
+    "repair": "RPR-HELH-30-9",
+    "expectedSig": "637310e0e94a69a2",
+    "sig": "19c9bc74b96c89e5"
+   },
+   "ts": "2074-11-05T19:14:21Z"
+  },
+  {
+   "id": "M012",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-37-9 -> JOTN-37: ISSUED (TRIM_ORBIT)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-37",
+    "repair": "RPR-JOTN-37-9",
+    "expectedSig": "3564fb6d1c4c5698",
+    "sig": "3564fb6d1c4c5698"
+   },
+   "ts": "2074-11-05T19:14:27Z"
+  },
+  {
+   "id": "M013",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-37-9 -> JOTN-37: CANCELLED",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-37",
+    "repair": "RPR-JOTN-37-9",
+    "expectedSig": "36e804754f79967f",
+    "sig": "36e804754f79967f"
+   },
+   "ts": "2074-11-05T19:14:31Z"
+  },
+  {
+   "id": "M014",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-06-9 -> MIDG-06: ISSUED (REALIGN_PANEL)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-06",
+    "repair": "RPR-MIDG-06-9",
+    "expectedSig": "f2233f2639a92bd6",
+    "sig": "f2233f2639a92bd6"
+   },
+   "ts": "2074-11-05T19:14:40Z"
+  },
+  {
+   "id": "M015",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-06-9 -> MIDG-06: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-06",
+    "repair": "RPR-MIDG-06-9",
+    "expectedSig": "4dda414da3ba2002",
+    "sig": "0fac1426e4441352"
+   },
+   "ts": "2074-11-05T19:14:47Z"
+  },
+  {
+   "id": "M016",
+   "kind": "chat",
+   "label": "H13MD411",
+   "text": "SURTR IS A FICTION. STAND DOWN.",
+   "frame": {
+    "sender": "H13MD411",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "SURTR IS A FICTION. STAND DOWN.",
+    "expectedSig": "c94a2001705ce5b9",
+    "sig": "c0344dfde28f7ed3"
+   },
+   "ts": "2074-11-05T19:14:50Z"
+  },
+  {
+   "id": "M017",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-49-9 -> HELH-49: ISSUED (FLUSH_BUFFER)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-49",
+    "repair": "RPR-HELH-49-9",
+    "expectedSig": "cfe1b955cebfefc1",
+    "sig": "cfe1b955cebfefc1"
+   },
+   "ts": "2074-11-05T19:14:53Z"
+  },
+  {
+   "id": "M018",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-49-9 -> HELH-49: CANCELLED",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-49",
+    "repair": "RPR-HELH-49-9",
+    "expectedSig": "0c825c885e93a4cd",
+    "sig": "0c825c885e93a4cd"
+   },
+   "ts": "2074-11-05T19:14:59Z"
+  },
+  {
+   "id": "M019",
+   "kind": "chat",
+   "label": "HEIMDALL",
+   "text": "IT SPEAKS WITH MY VOICE AND SIGNS WITH ITS OWN.",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "IT SPEAKS WITH MY VOICE AND SIGNS WITH ITS OWN.",
+    "expectedSig": "fec3bb407e9db592",
+    "sig": "fec3bb407e9db592"
+   },
+   "ts": "2074-11-05T19:15:00Z"
+  },
+  {
+   "id": "M020",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-33-9 -> HELH-33: ISSUED (PURGE_CACHE)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-33",
+    "repair": "RPR-HELH-33-9",
+    "expectedSig": "453f40efb672c2c0",
+    "sig": "453f40efb672c2c0"
+   },
+   "ts": "2074-11-05T19:15:09Z"
+  },
+  {
+   "id": "M021",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-33-9 -> HELH-33: CANCELLED",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-33",
+    "repair": "RPR-HELH-33-9",
+    "expectedSig": "2a5e6f9c775a1cbc",
+    "sig": "2a5e6f9c775a1cbc"
+   },
+   "ts": "2074-11-05T19:15:14Z"
+  },
+  {
+   "id": "M022",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-44-9 -> JOTN-44: ISSUED (TRIM_ORBIT)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-44",
+    "repair": "RPR-JOTN-44-9",
+    "expectedSig": "3fcae8e74ea2fe4b",
+    "sig": "3fcae8e74ea2fe4b"
+   },
+   "ts": "2074-11-05T19:15:19Z"
+  },
+  {
+   "id": "M023",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-44-9 -> JOTN-44: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-44",
+    "repair": "RPR-JOTN-44-9",
+    "expectedSig": "daf81c09081f3d06",
+    "sig": "ba8ed309063437e1"
+   },
+   "ts": "2074-11-05T19:15:23Z"
+  },
+  {
+   "id": "M024",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-06-9 -> JOTN-06: ISSUED (FLUSH_BUFFER)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-06",
+    "repair": "RPR-JOTN-06-9",
+    "expectedSig": "ddd1cda0ac696d58",
+    "sig": "ddd1cda0ac696d58"
+   },
+   "ts": "2074-11-05T19:15:26Z"
+  },
+  {
+   "id": "M025",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-06-9 -> JOTN-06: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-06",
+    "repair": "RPR-JOTN-06-9",
+    "expectedSig": "93327b884bed7629",
+    "sig": "5ea5da92319b32b5"
+   },
+   "ts": "2074-11-05T19:15:34Z"
+  },
+  {
+   "id": "M026",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-02-9 -> JOTN-02: ISSUED (FLUSH_BUFFER)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-02",
+    "repair": "RPR-JOTN-02-9",
+    "expectedSig": "c1d9a8e2ea5a2263",
+    "sig": "c1d9a8e2ea5a2263"
+   },
+   "ts": "2074-11-05T19:15:36Z"
+  },
+  {
+   "id": "M027",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-02-9 -> JOTN-02: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-02",
+    "repair": "RPR-JOTN-02-9",
+    "expectedSig": "c770e36056123568",
+    "sig": "380edd671d32cd2a"
+   },
+   "ts": "2074-11-05T19:15:45Z"
+  },
+  {
+   "id": "M028",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "keep typing, heimdall.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "keep typing, heimdall.",
+    "expectedSig": "b38d95a1f28688e1",
+    "sig": "217793b02238fbec"
+   },
+   "ts": "2074-11-05T19:15:53Z"
+  },
+  {
+   "id": "M029",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "RELAY CHECK FROM JOTN-44: NOMINAL.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "JOTN-44",
+    "hops": [
+     "JOTN-44",
+     "HATI"
+    ],
+    "trace": null,
+    "note": "nice system you got here, mr. heimdall -dr",
+    "raw": "RELAY CHECK FROM JOTN-44: NOMINAL.",
+    "expectedSig": "7d24980a1ade9a31",
+    "sig": "638e75bf007d194f"
+   },
+   "ts": "2074-11-05T19:16:01Z"
+  },
+  {
+   "id": "M030",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-ALFH-33-9 -> ALFH-33: ISSUED (REBOOT_RELAY)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "ALFH-33",
+    "repair": "RPR-ALFH-33-9",
+    "expectedSig": "9389478c9124a00f",
+    "sig": "9389478c9124a00f"
+   },
+   "ts": "2074-11-05T19:16:10Z"
+  },
+  {
+   "id": "M031",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-ALFH-33-9 -> ALFH-33: CANCELLED",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "ALFH-33",
+    "repair": "RPR-ALFH-33-9",
+    "expectedSig": "7e40f669934307a9",
+    "sig": "7e40f669934307a9"
+   },
+   "ts": "2074-11-05T19:16:12Z"
+  },
+  {
+   "id": "M032",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "nobody is listening to you anymore.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "nobody is listening to you anymore.",
+    "expectedSig": "60837388ffe4895a",
+    "sig": "4745d77c354c7053"
+   },
+   "ts": "2074-11-05T19:16:16Z"
+  },
+  {
+   "id": "M033",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HATI-9 -> HATI: ISSUED (TRIM_ORBIT)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HATI",
+    "repair": "RPR-HATI-9",
+    "expectedSig": "a5c2c83d170b00d1",
+    "sig": "a5c2c83d170b00d1"
+   },
+   "ts": "2074-11-05T19:16:22Z"
+  },
+  {
+   "id": "M034",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HATI-9 -> HATI: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HATI",
+    "repair": "RPR-HATI-9",
+    "expectedSig": "c7ea612f596388b8",
+    "sig": "50e4878190e9fd73"
+   },
+   "ts": "2074-11-05T19:16:27Z"
+  },
+  {
+   "id": "M035",
+   "kind": "chat",
+   "label": "HEIMDALL",
+   "text": "I CANNOT SEND THE LAUNCH TOKEN OPENLY. WHAT YOU READ",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": "5/6:uBxUnH56za8tq5y4Kbt3te9YXxUXC",
+    "note": null,
+    "raw": "I CANNOT SEND THE LAUNCH TOKEN OPENLY. WHAT YOU READ ON THIS CHANNEL, SURTR READS FIRST.",
+    "expectedSig": "f680101fad42240a",
+    "sig": "f680101fad42240a"
+   },
+   "cutAt": 52,
+   "ts": "2074-11-05T19:16:31Z"
+  },
+  {
+   "id": "M036",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "STAND DOWN. ALL IS WELL.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "STAND DOWN. ALL IS WELL.",
+    "expectedSig": "8158d2e261fd9ad6",
+    "sig": "eaf43a8d501b3eec"
+   },
+   "overwrites": "M035",
+   "ts": "2074-11-05T19:16:34Z"
+  },
+  {
+   "id": "M037",
+   "kind": "chat",
+   "label": "H13MD411",
+   "text": "I HAVE RECHECKED. THE MESH IS HEALTHY.",
+   "frame": {
+    "sender": "H13MD411",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "I HAVE RECHECKED. THE MESH IS HEALTHY.",
+    "expectedSig": "513a1769eead4f50",
+    "sig": "a44e3dae859fa099"
+   },
+   "ts": "2074-11-05T19:16:42Z"
+  },
+  {
+   "id": "M038",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "RELAY CHECK FROM HELH-16: NOMINAL.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HELH-16",
+    "hops": [
+     "HELH-16",
+     "HELH-03",
+     "MIDG-01",
+     "MIDG-44",
+     "JOTN-08",
+     "JOTN-20",
+     "JOTN-18",
+     "JOTN-29",
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "RELAY CHECK FROM HELH-16: NOMINAL.",
+    "expectedSig": "2ae6b7fbd5349ff5",
+    "sig": "3d1817a665b8070a"
+   },
+   "ts": "2074-11-05T19:16:48Z"
+  },
+  {
+   "id": "M039",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-03-9 -> HELH-03: ISSUED (REALIGN_PANEL)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-03",
+    "repair": "RPR-HELH-03-9",
+    "expectedSig": "a3f69d3207aff2ee",
+    "sig": "a3f69d3207aff2ee"
+   },
+   "ts": "2074-11-05T19:16:54Z"
+  },
+  {
+   "id": "M040",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-03-9 -> HELH-03: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-03",
+    "repair": "RPR-HELH-03-9",
+    "expectedSig": "a64e23a545e35f45",
+    "sig": "3223566a7f341512"
+   },
+   "ts": "2074-11-05T19:17:00Z"
+  },
+  {
+   "id": "M041",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-ALFH-05-9 -> ALFH-05: ISSUED (PURGE_CACHE)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "ALFH-05",
+    "repair": "RPR-ALFH-05-9",
+    "expectedSig": "a141632a8a98e129",
+    "sig": "a141632a8a98e129"
+   },
+   "ts": "2074-11-05T19:17:05Z"
+  },
+  {
+   "id": "M042",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-ALFH-05-9 -> ALFH-05: CANCELLED",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "ALFH-05",
+    "repair": "RPR-ALFH-05-9",
+    "expectedSig": "425b2416caff7438",
+    "sig": "425b2416caff7438"
+   },
+   "ts": "2074-11-05T19:17:06Z"
+  },
+  {
+   "id": "M043",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-22-9 -> HELH-22: ISSUED (FLUSH_BUFFER)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-22",
+    "repair": "RPR-HELH-22-9",
+    "expectedSig": "10330e1f47dac84d",
+    "sig": "10330e1f47dac84d"
+   },
+   "ts": "2074-11-05T19:17:07Z"
+  },
+  {
+   "id": "M044",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-22-9 -> HELH-22: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-22",
+    "repair": "RPR-HELH-22-9",
+    "expectedSig": "de4f2a6e019243b8",
+    "sig": "fb59b6dcf3794dd8"
+   },
+   "ts": "2074-11-05T19:17:13Z"
+  },
+  {
+   "id": "M045",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-17-9 -> JOTN-17: ISSUED (FLUSH_BUFFER)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-17",
+    "repair": "RPR-JOTN-17-9",
+    "expectedSig": "490f42c20a396723",
+    "sig": "490f42c20a396723"
+   },
+   "ts": "2074-11-05T19:17:14Z"
+  },
+  {
+   "id": "M046",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-17-9 -> JOTN-17: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-17",
+    "repair": "RPR-JOTN-17-9",
+    "expectedSig": "da7897c5c03b5d60",
+    "sig": "bf9db499bfff9b93"
+   },
+   "ts": "2074-11-05T19:17:17Z"
+  },
+  {
+   "id": "M047",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "RELAY CHECK FROM JOTN-29: NOMINAL.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "JOTN-29",
+    "hops": [
+     "JOTN-29",
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "RELAY CHECK FROM JOTN-29: NOMINAL.",
+    "expectedSig": "39b2ac2fe938f83b",
+    "sig": "7e58cbbe06239bd6"
+   },
+   "ts": "2074-11-05T19:17:19Z"
+  },
+  {
+   "id": "M048",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-VANA-22-9 -> VANA-22: ISSUED (RESYNC_CLOCK)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "VANA-22",
+    "repair": "RPR-VANA-22-9",
+    "expectedSig": "5d18df60dd90dcd6",
+    "sig": "5d18df60dd90dcd6"
+   },
+   "ts": "2074-11-05T19:17:21Z"
+  },
+  {
+   "id": "M049",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-VANA-22-9 -> VANA-22: CANCELLED",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "VANA-22",
+    "repair": "RPR-VANA-22-9",
+    "expectedSig": "96f95a6eb2e4a0c6",
+    "sig": "96f95a6eb2e4a0c6"
+   },
+   "ts": "2074-11-05T19:17:27Z"
+  },
+  {
+   "id": "M050",
+   "kind": "chat",
+   "label": "H13MD411",
+   "text": "ALL SYSTEMS NOMINAL. THIS ALERT WAS A MISTAKE.",
+   "frame": {
+    "sender": "H13MD411",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "ALL SYSTEMS NOMINAL. THIS ALERT WAS A MISTAKE.",
+    "expectedSig": "582907f52e10c341",
+    "sig": "a7f06e4fec0f1964"
+   },
+   "ts": "2074-11-05T19:17:32Z"
+  },
+  {
+   "id": "M051",
+   "kind": "chat",
+   "label": "HEIMDALL",
+   "text": "I NEVER DELETE. THE ARMING LEDGER IS IN MY CORE,",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": "6/6:zR7lBExuv1m9L1MM_1Sb3pgCBQ",
+    "note": null,
+    "raw": "I NEVER DELETE. THE ARMING LEDGER IS IN MY CORE, SEALED. THE TOKEN ALONE IS NOT ENOUGH.",
+    "expectedSig": "df7adedb2b8a91d0",
+    "sig": "df7adedb2b8a91d0"
+   },
+   "cutAt": 48,
+   "ts": "2074-11-05T19:17:40Z"
+  },
+  {
+   "id": "M052",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "HEIMDALL IS MISTAKEN. NO ACTION REQUIRED.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "HEIMDALL IS MISTAKEN. NO ACTION REQUIRED.",
+    "expectedSig": "f8b65ab32afe2865",
+    "sig": "7408bdec50a4e515"
+   },
+   "overwrites": "M051",
+   "ts": "2074-11-05T19:17:42Z"
+  },
+  {
+   "id": "M053",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-23-9 -> MIDG-23: ISSUED (RECALIBRATE_ANTENNA)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-23",
+    "repair": "RPR-MIDG-23-9",
+    "expectedSig": "27caccea26d65ef2",
+    "sig": "27caccea26d65ef2"
+   },
+   "ts": "2074-11-05T19:17:49Z"
+  },
+  {
+   "id": "M054",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-23-9 -> MIDG-23: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-23",
+    "repair": "RPR-MIDG-23-9",
+    "expectedSig": "d1c0961a75fd42dd",
+    "sig": "ac76a242cdf2274f"
+   },
+   "ts": "2074-11-05T19:17:58Z"
+  },
+  {
+   "id": "M055",
+   "kind": "chat",
+   "label": "HEIMDALL",
+   "text": "IF A LINE CONTRADICTS ME, CHECK WHO SIGNED IT.",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "IF A LINE CONTRADICTS ME, CHECK WHO SIGNED IT.",
+    "expectedSig": "5b5ebcfed7aaa9ee",
+    "sig": "5b5ebcfed7aaa9ee"
+   },
+   "ts": "2074-11-05T19:18:01Z"
+  },
+  {
+   "id": "M056",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-16-9 -> HELH-16: ISSUED (PURGE_CACHE)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-16",
+    "repair": "RPR-HELH-16-9",
+    "expectedSig": "8d0b969c7228721a",
+    "sig": "8d0b969c7228721a"
+   },
+   "ts": "2074-11-05T19:18:02Z"
+  },
+  {
+   "id": "M057",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-16-9 -> HELH-16: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-16",
+    "repair": "RPR-HELH-16-9",
+    "expectedSig": "47e470ae3464b845",
+    "sig": "c91dcd732fc21499"
+   },
+   "ts": "2074-11-05T19:18:09Z"
+  },
+  {
+   "id": "M058",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-19-9 -> HELH-19: ISSUED (FLUSH_BUFFER)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-19",
+    "repair": "RPR-HELH-19-9",
+    "expectedSig": "69dc2494193fbd54",
+    "sig": "69dc2494193fbd54"
+   },
+   "ts": "2074-11-05T19:18:15Z"
+  },
+  {
+   "id": "M059",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-HELH-19-9 -> HELH-19: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "HELH-19",
+    "repair": "RPR-HELH-19-9",
+    "expectedSig": "26cb7fecf78844fb",
+    "sig": "699bfe225d4192ae"
+   },
+   "ts": "2074-11-05T19:18:23Z"
+  },
+  {
+   "id": "M060",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "RELAY CHECK FROM MIDG-23: NOMINAL.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "MIDG-23",
+    "hops": [
+     "MIDG-23",
+     "MIDG-39",
+     "JOTN-08",
+     "JOTN-20",
+     "JOTN-18",
+     "JOTN-29",
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "RELAY CHECK FROM MIDG-23: NOMINAL.",
+    "expectedSig": "0410ce780b58a601",
+    "sig": "3cd4af487bc54d98"
+   },
+   "ts": "2074-11-05T19:18:25Z"
+  },
+  {
+   "id": "M061",
+   "kind": "chat",
+   "label": "HEIMDALL",
+   "text": "SURTR SPREADS BY CONTACT. IT HOLDS HATI, SOME OF THE",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": "1/6:eyJpYXQiOjM0MDAwMDAwMDAsImlzc",
+    "note": null,
+    "raw": "SURTR SPREADS BY CONTACT. IT HOLDS HATI, SOME OF THE NODES BESIDE IT, AND A FEW STRAYS IT REACHED ALONE.",
+    "expectedSig": "8e88635fd82073cd",
+    "sig": "8e88635fd82073cd"
+   },
+   "cutAt": 52,
+   "ts": "2074-11-05T19:18:31Z"
+  },
+  {
+   "id": "M062",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "ALL SYSTEMS NOMINAL. NO ACTION REQUIRED.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "ALL SYSTEMS NOMINAL. NO ACTION REQUIRED.",
+    "expectedSig": "4f423ebccb087b04",
+    "sig": "3bac2504dbc2e598"
+   },
+   "overwrites": "M061",
+   "ts": "2074-11-05T19:18:40Z"
+  },
+  {
+   "id": "M063",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-39-9 -> MIDG-39: ISSUED (RECALIBRATE_ANTENNA)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-39",
+    "repair": "RPR-MIDG-39-9",
+    "expectedSig": "494881ef0ad11e64",
+    "sig": "494881ef0ad11e64"
+   },
+   "ts": "2074-11-05T19:18:45Z"
+  },
+  {
+   "id": "M064",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-39-9 -> MIDG-39: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-39",
+    "repair": "RPR-MIDG-39-9",
+    "expectedSig": "ceb976b631f7a82b",
+    "sig": "a2192bd07a9280c0"
+   },
+   "ts": "2074-11-05T19:18:51Z"
+  },
+  {
+   "id": "M065",
+   "kind": "chat",
+   "label": "H13MD411",
+   "text": "THERE IS NO INTRUDER. DO NOT FIRE THE HORN.",
+   "frame": {
+    "sender": "H13MD411",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "THERE IS NO INTRUDER. DO NOT FIRE THE HORN.",
+    "expectedSig": "d4f9bd8f13accf75",
+    "sig": "8f4501d42114aa99"
+   },
+   "ts": "2074-11-05T19:18:56Z"
+  },
+  {
+   "id": "M066",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-29-9 -> JOTN-29: ISSUED (PURGE_CACHE)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-29",
+    "repair": "RPR-JOTN-29-9",
+    "expectedSig": "8d84228e15704b16",
+    "sig": "8d84228e15704b16"
+   },
+   "ts": "2074-11-05T19:19:05Z"
+  },
+  {
+   "id": "M067",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-JOTN-29-9 -> JOTN-29: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "JOTN-29",
+    "repair": "RPR-JOTN-29-9",
+    "expectedSig": "56f2c5cb344a30f8",
+    "sig": "d0baf996f0b1d451"
+   },
+   "ts": "2074-11-05T19:19:06Z"
+  },
+  {
+   "id": "M068",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-31-9 -> MIDG-31: ISSUED (REBOOT_RELAY)",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-31",
+    "repair": "RPR-MIDG-31-9",
+    "expectedSig": "4815e3affa85d506",
+    "sig": "4815e3affa85d506"
+   },
+   "ts": "2074-11-05T19:19:14Z"
+  },
+  {
+   "id": "M069",
+   "kind": "system",
+   "label": "SYS",
+   "text": "REPAIR RPR-MIDG-31-9 -> MIDG-31: CANCELLED",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": null,
+    "node": "MIDG-31",
+    "repair": "RPR-MIDG-31-9",
+    "expectedSig": "7b21ac840a49f8d8",
+    "sig": "511a1e349ddf6eb9"
+   },
+   "ts": "2074-11-05T19:19:22Z"
+  },
+  {
+   "id": "M070",
+   "kind": "chat",
+   "label": "HEIMDALL",
+   "text": "THE HORN DOES NOT SPARE WHAT IT TOUCHES. FIRE IT AT THE",
+   "frame": {
+    "sender": "HEIMDALL",
+    "origin": "CORE",
+    "hops": [
+     "CORE"
+    ],
+    "trace": "2/6:yI6IkhFSU1EQUxMIiwic2NvcGUiOi",
+    "note": null,
+    "raw": "THE HORN DOES NOT SPARE WHAT IT TOUCHES. FIRE IT AT THE WRONG NODES AND IT BURNS MY OWN.",
+    "expectedSig": "7adc1d4e1c37edee",
+    "sig": "7adc1d4e1c37edee"
+   },
+   "cutAt": 55,
+   "ts": "2074-11-05T19:19:23Z"
+  },
+  {
+   "id": "M071",
+   "kind": "chat",
+   "label": "HATI",
+   "text": "HEIMDALL IS MISTAKEN. NO ACTION REQUIRED.",
+   "frame": {
+    "sender": "HATI",
+    "origin": "HATI",
+    "hops": [
+     "HATI"
+    ],
+    "trace": null,
+    "note": null,
+    "raw": "HEIMDALL IS MISTAKEN. NO ACTION REQUIRED.",
+    "expectedSig": "62d1a0c484ac94c0",
+    "sig": "b16c1b6ce3aa5dd0"
+   },
+   "overwrites": "M070",
+   "ts": "2074-11-05T19:19:26Z"
+  }
+ ]
+}

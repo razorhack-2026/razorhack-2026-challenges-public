@@ -1,0 +1,18 @@
+services:
+  mcpjam:
+    build: .
+    image: ctf-mcpjam-inspector:1.4.2
+    container_name: mcpjam
+    hostname: bay07-maintenance
+    ports:
+      - "6274:6274"
+    environment:
+      # Stage 1 (Jam Session)
+      FLAG: flag{mcpj4mm1n9}
+      # Stage 2 (Rollback)
+      FLAG2: flag{th3_pr353nt_c3113d_th3y_w4nt_th31r_53cur1ty_b4ck}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    pids_limit: 256

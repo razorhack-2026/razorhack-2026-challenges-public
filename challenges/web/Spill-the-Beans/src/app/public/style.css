@@ -1,0 +1,174 @@
+body {
+	background: #0b0f14;
+	color: #c8f7c5;
+	font-family: "Courier New", Courier, monospace;
+	max-width: 720px;
+	margin: 2rem auto;
+	padding: 0 1rem;
+}
+
+h1,
+h2 {
+	color: #7fffd4;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	border-bottom: 1px solid #2a3a33;
+	padding-bottom: 0.4rem;
+}
+
+a {
+	color: #7fffd4;
+}
+
+nav.console-nav {
+	display: flex;
+	gap: 1rem;
+	margin: 1rem 0 1.5rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px dashed #2a3a33;
+}
+
+nav.console-nav a {
+	text-decoration: none;
+	border: 1px solid #2a3a33;
+	padding: 0.3rem 0.6rem;
+}
+
+nav.console-nav a:hover {
+	background: #16211c;
+}
+
+nav.console-nav a.active {
+	background: #1c2e24;
+	border-color: #7fffd4;
+}
+
+ul.module-list {
+	list-style: none;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+ul.module-list a {
+	display: inline-block;
+	border: 1px solid #2a3a33;
+	padding: 0.4rem 0.8rem;
+	text-decoration: none;
+}
+
+ul.module-list a:hover {
+	background: #16211c;
+}
+
+ul.module-list a.active {
+	background: #1c2e24;
+	border-color: #7fffd4;
+}
+
+.module-output {
+	border: 1px solid #2a3a33;
+	padding: 1rem;
+	margin-top: 1rem;
+}
+
+.access-denied {
+	border: 1px solid #ff6b6b;
+	background: #1a0f0f;
+	padding: 1rem;
+	margin-top: 1rem;
+}
+
+.access-denied h2 {
+	color: #ff6b6b;
+	border-bottom-color: #4a2323;
+}
+
+.access-denied p {
+	color: #f2b8b8;
+}
+
+.data-table {
+	border-collapse: collapse;
+	margin-top: 0.75rem;
+	width: 100%;
+}
+
+.data-table th,
+.data-table td {
+	border: 1px solid #2a3a33;
+	padding: 0.3rem 0.6rem;
+	text-align: left;
+}
+
+.data-table th {
+	color: #7fffd4;
+	font-weight: normal;
+	white-space: nowrap;
+}
+
+.profile-container {
+	display: flex;
+	gap: 20px;
+}
+
+.user-badge {
+	position: fixed;
+	top: 1rem;
+	right: 1rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	border: 1px solid #2a3a33;
+	background: #0b0f14;
+	padding: 0.4rem 0.8rem;
+}
+
+.user-badge-avatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 1px solid #2a3a33;
+}
+
+.user-badge-name {
+	font-size: 0.9rem;
+}
+
+.profile-picture {
+	display: block;
+	width: 96px;
+	height: 96px;
+	margin-bottom: 1rem;
+	border: 1px solid #2a3a33;
+	border-radius: 50%;
+}
+
+form label {
+	display: block;
+	margin-bottom: 0.5rem;
+}
+
+input[type="text"] {
+	background: #0b0f14;
+	color: #c8f7c5;
+	border: 1px solid #2a3a33;
+	padding: 0.3rem;
+	width: 100%;
+	max-width: 320px;
+	font-family: inherit;
+}
+
+button {
+	background: #1c2e24;
+	color: #7fffd4;
+	border: 1px solid #2a3a33;
+	padding: 0.4rem 0.9rem;
+	font-family: inherit;
+	cursor: pointer;
+}
+
+button:hover {
+	background: #233a2d;
+}
