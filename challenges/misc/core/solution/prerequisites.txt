@@ -1,0 +1,7 @@
+flag{stop_touching_my_things}
+flag{comm_d1str3ss_ackn0wl3dg3d}
+flag{dock_h4ndsh4k3_r3pl4y3d}
+flag{l1f3_br3ath3_3a5y}
+flag{n4v_36.0659,-94.1737}
+flag{power_on_lets_go}
+flag{8Char_1sym_1num_Cap}

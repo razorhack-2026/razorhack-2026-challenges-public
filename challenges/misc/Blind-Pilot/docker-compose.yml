@@ -1,0 +1,7 @@
+services:
+  blind-pilot:
+    build:
+      context: ./src
+    ports:
+      - "5103:1337"
+    restart: unless-stopped

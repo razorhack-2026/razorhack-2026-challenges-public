@@ -1,0 +1,34 @@
+name: Reactor Access
+author: Tyrian Sol
+category: Web
+description: >-
+  The Keeper of Tomorrow's reactor controls are locked at player clearance.
+  Investigate the control interface, gain administrator access, and trigger SCRAM
+  to recover the core token.
+
+  The flag is returned by `POST /api/reactor/scram` once you are authenticated as an
+  administrator.
+type: dynamic
+extra:
+  initial: 500
+  decay: 100
+  minimum: 100
+flags:
+- flag{8Char_1sym_1num_Cap}
+files: []
+tags:
+- easy
+- web
+- jwt
+- authentication
+topics:
+- instance:pwr
+- "arc:3:The Chaos"
+state: hidden
+version: '0.1'
+connection_info: "http://{host}:{port}"
+hints:
+- content: Front-end configs sometimes leak more than they should.
+  cost: 20
+- content: If you can sign your own token, you can choose your own role.
+  cost: 40

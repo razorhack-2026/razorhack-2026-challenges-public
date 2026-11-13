@@ -1,0 +1,24 @@
+name: "Moonwalk"
+author: Tyrian Sol
+category: Web
+description: |
+    Dexterity and quick reflexes are important skills for a valiant member of this ship. Test your reflexes in a fast-paced exercise: press the key from 1 to 4 that matches the next asteroid. The pace increases as you progress, and a single mistake ends the run. Complete the course to receive your clearance.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - flag{0n3_sm4ll_st3p_f0r_4_scr1pt}
+files:
+    - dist/connection.txt
+connection_info: "http://{host}:{port}"
+tags:
+    - medium
+
+topics:
+    - "arc:1:The Prologue"
+    - instance:moonwalk
+state: hidden
+version: "0.1"

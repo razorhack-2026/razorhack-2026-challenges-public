@@ -1,0 +1,26 @@
+name: "Cryopod"
+author: Tyrian Sol
+category: Web
+description: |
+    The crew member cleared of nanites is still asleep in cryopod C-3. The autodoc reports that the wake sequence is missing. Restore the sequence before the occupant's vitals drift.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - flag{didumakeitin1?}
+files: []
+tags:
+    - medium
+    - timing
+
+topics:
+    - "arc:1:The Prologue"
+    - instance:cryopod
+state: hidden
+version: "0.1"
+connection_info: "http://{host}:{port}"
+hints:
+    - content: "The pod is slow to say yes. It is even slower to say yes, yes."
+      cost: 20

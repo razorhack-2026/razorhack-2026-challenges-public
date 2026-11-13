@@ -1,0 +1,12 @@
+# PHASE INVERTER LOG - RELIANT
+# STATUS: HARMONICS DRIFTING
+# NOTE FROM SYSOP: "they stacked a notebook cipher under a block cipher again"
+
+[LAYER A - OUTER]
+A block cipher protects this layer. Its key is derived from the subsystem name.
+
+[LAYER B - INNER]
+A schoolbook cipher uses the name stencilled on each crate shipped with this swarm.
+
+[LAYER C - DECOY]
+freq=432Hz is a joke. Do not tune to it.

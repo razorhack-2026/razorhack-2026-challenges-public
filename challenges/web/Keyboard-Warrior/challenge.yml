@@ -1,0 +1,24 @@
+name: "Keyboard Warrior"
+author: Tyrian Sol
+category: Web
+description: |
+    As one of your tasks on this ship, you will be writing many logs and reports that will need to be done quickly and with few errors. Complete a four-level typing assessment. Each prompt grows longer and more difficult, with higher speed and accuracy targets. Pass the final assessment to receive your clearance report.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - flag{l1ghtn1ng_f4st}
+files:
+    - dist/connection.txt
+connection_info: "http://{host}:{port}"
+tags:
+    - hard
+
+topics:
+    - "arc:1:The Prologue"
+    - instance:keyboard-warrior
+state: hidden
+version: "0.1"

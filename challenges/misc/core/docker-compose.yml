@@ -1,0 +1,5 @@
+services:
+  core:
+    build: .
+    ports:
+      - "127.0.0.1:8082:8082"

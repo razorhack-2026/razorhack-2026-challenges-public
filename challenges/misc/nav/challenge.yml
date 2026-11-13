@@ -1,0 +1,32 @@
+name: 'Wrong Direction'
+author: Tyrian Sol
+category: Misc
+description: 'The RazorPowerCo autopilot dumped a corrupted navigation log before
+  going offline. Microbots obscured the true jump coordinates. Recover the correct destination.
+  Submit the decoded coordinates, including the comma and sign, inside the standard flag braces.'
+type: dynamic
+extra:
+  initial: 500
+  decay: 100
+  minimum: 100
+flags:
+- flag{n4v_36.0659,-94.1737}
+files:
+- dist/nav_log.txt
+topics:
+    - "arc:2:Buildup"
+
+tags:
+- easy
+- encoding
+- base64
+- beginner
+state: hidden
+version: '0.1'
+hints:
+- content: Segment E is encoded for transport, not storage.
+  cost: 10
+- content: '64 is the encoding; ROT is for Segment A.'
+  cost: 25
+- content: Base64-decode segment E and submit the result verbatim.
+  cost: 50

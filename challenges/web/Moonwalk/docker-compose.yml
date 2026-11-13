@@ -1,0 +1,7 @@
+services:
+  moonwalk:
+    build:
+      context: ./src
+    ports:
+      - "5102:5000"
+    restart: unless-stopped

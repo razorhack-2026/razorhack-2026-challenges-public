@@ -1,0 +1,32 @@
+name: 'Minor Calculations'
+author: Tyrian Sol
+category: Misc
+description: My calculations appear to have an error. Life support won't accept the current atmosphere mix. The status endpoint (`GET /api/status`)
+  gives a fresh set of gas constraints and a short-lived request ID. Double-check my findings and calculate the
+  nitrogen and oxygen amounts. Since we are on a time constraint, submit them to the mix endpoint before the ID expires.
+type: dynamic
+extra:
+  initial: 500
+  decay: 100
+  minimum: 100
+flags:
+- flag{l1f3_br3ath3_3a5y}
+files: []
+tags:
+- easy
+- programming
+- scripting
+- api
+topics:
+- instance:life
+- "arc:2:Buildup"
+state: hidden
+version: '0.1'
+connection_info: "http://{host}:{port}"
+hints:
+- content: Ar and trace are handed to you in the constraints. O2 follows from trace,
+    and N2 is whatever is left of 100.
+  cost: 15
+- content: You cannot do this by hand in 5 seconds. Fetch, solve, and POST in one
+    script, reusing the id you were issued.
+  cost: 30

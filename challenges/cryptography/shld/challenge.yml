@@ -1,0 +1,32 @@
+name: 'This broke again...'
+author: Tyrian Sol
+category: Cryptography
+description: >-
+    The hull plating is drifting out of phase. Hall and Oats dumped the inverter config before the swarm locked the console. Unwrap the blob and read the stable frequency token.
+type: dynamic
+extra:
+  initial: 500
+  decay: 100
+  minimum: 100
+flags:
+- flag{stop_touching_my_things}
+files:
+- dist/shield_phase.bin
+- dist/shield_notes.txt
+tags:
+- medium
+- crypto
+- aes
+- vigenere
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:1:The Prologue"
+
+state: hidden
+version: '0.1'
+hints:
+- content: The .bin file is hex, not raw ciphertext. Undo the outer wrap first.
+  cost: 15
+- content: After AES you still have a Vigenere. The key is MICROBOT. Plaintext starts
+    with SHIELD_ON|
+  cost: 50

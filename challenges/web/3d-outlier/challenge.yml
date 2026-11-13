@@ -1,0 +1,29 @@
+name: "Deep Rooted Tissue"
+author: Tyrian Sol
+category: Web
+description: |
+    Crew Health Evaluation: Soooooo, Jebediah's symptoms appear to be worsening. CT-7 has detected an anomaly in a brain scan, but the signal is too faint to identify by eye. Review the scan and report the lesion location before the exposure window closes. 
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - flag{avoid_eating_foreign_matter}
+files: []
+tags:
+    - hard
+    - image-analysis
+state: hidden
+version: "0.1"
+connection_info: "http://{host}:{port}"
+topics:
+    - instance:deep-rooted-tissue
+    - "quest:Odd Jobs"
+requirements:
+    prerequisites:
+        - "Odd Man Out"
+    anonymize: true
+hints:
+    - content: "One layer lies. Many layers agree."
+      cost: 20

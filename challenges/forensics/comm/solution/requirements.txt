@@ -1,0 +1,2 @@
+PyYAML==6.0.3
+rapidocr_onnxruntime==1.4.4

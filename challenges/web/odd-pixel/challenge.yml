@@ -1,0 +1,23 @@
+name: "Odd Man Out"
+author: Tyrian Sol
+category: Web
+description: |
+    Jebediah has been spending too much time next to some radioactive material. With that said, we have taken some body scans and are detecting anomalies, but we cannot point to the exact location. As a reminder, remember to wear your PPE.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - flag{do_not_skip_safety_briefs}
+files: []
+tags:
+    - easy
+    - image-analysis
+
+topics:
+    - "quest:Odd Jobs"
+    - instance:odd-pixel
+state: hidden
+version: "0.1"
+connection_info: "http://{host}:{port}"

@@ -1,0 +1,35 @@
+name: 'Looking for a handout'
+author: Tyrian Sol
+category: Forensics
+description: >-
+    Enemy activity was captured near the RELIANT's docking clamp. Review the replay, then connect to the docking service to find out what the swarm gathered.
+type: dynamic
+extra:
+  initial: 500
+  decay: 100
+  minimum: 100
+flags:
+- flag{dock_h4ndsh4k3_r3pl4y3d}
+files:
+- dist/dock_handshake.pcap
+tags:
+- medium
+- forensics
+- pcap
+- protocol
+topics:
+- "arc:2:Buildup"
+- instance:dock
+state: hidden
+version: '0.1'
+connection_info: "nc {host} {port}"
+hints:
+- content: Ignore the HTTP stream at first if you want, but it is not only decoy.
+    The docking frames start with a readable magic string.
+  cost: 15
+- content: The trailer is SHA256(key || cmd || nonce) truncated to 8 bytes. The key
+    is in the HTTP chatter.
+  cost: 35
+- content: The nonce in the capture is already spent. Connect to the service and send
+    a fresh OPEN (cmd 0x01, 4-byte little-endian nonce, same digest).
+  cost: 50

@@ -1,0 +1,9 @@
+services:
+  deep_tissue:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: "8000"
+      FLAG: "flag{avoid_eating_foreign_matter}"
+      TIME_LIMIT: "${TIME_LIMIT:-30}"

@@ -1,0 +1,40 @@
+name: 'Can you hear me?'
+author: Tyrian Sol
+category: Forensics
+description: >-
+  Sometimes we can only see what we can hear. Ship-wide comms are stuck on a looping
+  static file. The array is the only subsystem still answering, and intelligence
+  insists something is riding along on channel 7. Help us recover the hidden
+  transmission.
+type: dynamic
+extra:
+  initial: 500
+  decay: 100
+  minimum: 100
+flags:
+- flag{comm_d1str3ss_ackn0wl3dg3d}
+files:
+- dist/static_loop.wav
+tags:
+- medium
+- steganography
+- forensics
+- audio
+- image
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:2:Buildup"
+
+state: hidden
+version: '0.1'
+hints:
+- content: There is nothing to hear. The payload is in the sample values, not the
+    sound.
+  cost: 15
+- content: '"Channel 7" is not a channel. Read the least significant bit of every
+    7th sample.'
+  cost: 35
+- content: Reassemble the bits into bytes, least significant bit first. You are reconstructing
+    a file, not a string - look for a familiar magic header and write the bytes back
+    out.
+  cost: 50

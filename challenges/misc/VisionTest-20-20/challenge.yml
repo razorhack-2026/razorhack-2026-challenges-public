@@ -1,0 +1,21 @@
+name: "VisionTest 20/20"
+author: Tyrian Sol
+category: Misc
+description: |
+    Routine examination. Please find Doctor Sol for your vision test. Only one team member is needed.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - flag{universe}
+tags:
+    - easy
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Odd Jobs"
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,33 @@
+name: 'Wanna Play A Game?'
+author: Tyrian Sol
+category: Misc
+description: >-
+    Hey crew! With all the work you have done so far, I think you deserve some fun. If you haven't done the work, well... this might not be so fun.
+type: dynamic
+extra:
+  initial: 500
+  decay: 100
+  minimum: 100
+flags:
+- flag{g3t_back_2_w0rk}
+files: []
+tags:
+- hard
+- boss
+- composite
+- puzzle
+topics:
+- instance:core
+- "arc:2:Buildup"
+state: hidden
+version: '0.1'
+connection_info: "http://{host}:{port}"
+hints:
+- content: Phase 1 wants every earlier flag, verbatim, in a JSON list named tokens.
+  cost: 15
+- content: 'The grid is Lights Out: a press flips the cell and its orthogonal neighbors.
+    Goal is all zeros.'
+  cost: 30
+- content: Chase lights down the board from the top row. The starting configuration
+    is solvable in well under the move budget.
+  cost: 50

@@ -1,0 +1,8 @@
+services:
+  odd_pixel:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: "8000"
+      FLAG: "${FLAG:?Set FLAG in environment}"

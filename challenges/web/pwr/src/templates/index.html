@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keeper of Tomorrow // Reactor Control</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/config.js"></script>
+</head>
+<body>
+  <div class="frame">
+    <header>
+      <p class="eyebrow">KEEPER OF TOMORROW - PWR BUS</p>
+      <h1>Reactor Control</h1>
+      <p class="status" id="banner">SCRAM locked. Authenticate to continue.</p>
+    </header>
+
+    <section id="login-panel">
+      <h2>Crew login</h2>
+      <form id="login-form">
+        <label>
+          Crew ID
+          <input id="username" name="username" autocomplete="username" placeholder="crew-04" required>
+        </label>
+        <label>
+          Passphrase
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+        </label>
+        <button type="submit">Authenticate</button>
+      </form>
+      <p class="note">Guest access is enabled during lockout. Any crew ID is accepted at player clearance.</p>
+      <p class="error" id="login-error" hidden></p>
+    </section>
+
+    <section id="board-panel" hidden>
+      <h2>Core board</h2>
+      <dl>
+        <div><dt>Session</dt><dd id="who">-</dd></div>
+        <div><dt>Role</dt><dd id="role">-</dd></div>
+        <div><dt>Reactor</dt><dd>HOT / SCRAM ARMED</dd></div>
+      </dl>
+      <button type="button" id="scram">Initiate SCRAM</button>
+      <pre id="scram-out" hidden></pre>
+    </section>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

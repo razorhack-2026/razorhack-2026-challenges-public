@@ -1,0 +1,23 @@
+name: "Blind Pilot"
+author: Tyrian Sol
+category: Misc
+description: |
+    The nav computer fried as we entered the belt. Every rock out here drifts in a straight line, and our short-range radar can only see the cells right next to the hull. The jump gate is on the far side of the field. Fly us out, pilot.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - flag{get0ffthar0ad}
+files:
+    - dist/connection.txt
+connection_info: "nc {host} {port}"
+tags:
+    - hard
+topics:
+    - instance:blind-pilot
+    - "arc:2:Buildup"
+state: hidden
+version: "0.1"

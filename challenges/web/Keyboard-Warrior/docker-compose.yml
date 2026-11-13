@@ -1,0 +1,7 @@
+services:
+  keyboard-warrior:
+    build:
+      context: ./src
+    ports:
+      - "5101:5000"
+    restart: unless-stopped
