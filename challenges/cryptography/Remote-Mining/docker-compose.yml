@@ -1,0 +1,21 @@
+# THE-DRILL, production deployment: ssh -p 2222. The dev deployment is docker-compose.dev.yml.
+# Full guide: THE-DRILL/DEPLOYMENT.md
+name: the-drill
+
+services:
+  the-drill:
+    build:
+      context: .                       # the units come from src/, the server files from THE-DRILL/
+      dockerfile: THE-DRILL/Dockerfile
+    hostname: THE-DRILL
+    environment:
+      TZ: ${TZ:-America/Chicago}       # times shown for unit 3's block releases
+    ports:
+      - "2222:22"                      # ssh -p 2222 'TEAM#01@<host>'
+    volumes:
+      - dcu-progress:/var/lib/dcu      # which units each team has mined survives restarts
+      - ./THE-DRILL/host_keys:/etc/ssh/host_keys  # SSH host keys survive rebuilds and `down -v`
+    restart: unless-stopped
+
+volumes:
+  dcu-progress:

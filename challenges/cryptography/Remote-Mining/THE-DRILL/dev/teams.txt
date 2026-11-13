@@ -1,0 +1,4 @@
+# Dev-only accounts, USERNAME:PASSWORD. Only created by docker-compose.dev.yml,
+# and only these accounts can use the cheat code in code.txt. Placeholders.
+TEAM#AA:dev-aa-pass
+TEAM#BB:dev-bb-pass

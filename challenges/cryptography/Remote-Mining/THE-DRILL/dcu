@@ -1,0 +1,196 @@
+#!/usr/bin/env python3
+"""
+Access Console - the players' interface to the Drill Containment Units.
+
+Usage:
+    dcu              interactive menu
+    dcu status       list the units and their state
+    dcu <unit>       enter a unit directly (1-3, those this server runs)
+    dcu scoreboard   unit 3 standings (also: dcu 0)
+"""
+
+import os
+import select
+import socket
+import sys
+
+UNIT_NAMES = {1: "Termite-01", 2: "Dog-02", 3: "Mole-03"}
+COMPETITIVE_UNIT = 3
+SOCKET_DIR = os.environ.get("DCU_SOCKET_DIR", "/run/dcu")
+# The units this server runs: entrypoint.sh writes them from DCU_UNITS, because a
+# team's SSH session doesn't see the container's environment. Default: all three.
+UNITS_CONF = os.environ.get("DCU_UNITS_CONF", "/etc/dcu/units.conf")
+
+
+def configured_units():
+    try:
+        with open(UNITS_CONF) as f:
+            for line in f:
+                key, _, value = line.strip().partition("=")
+                if key == "units":
+                    units = tuple(sorted({int(u) for u in value.split() if u.isdigit() and int(u) in UNIT_NAMES}))
+                    if units:
+                        return units
+    except OSError:
+        pass
+    return (1, 2, 3)
+
+
+UNITS = configured_units()
+UNIT_RANGE = f"{UNITS[0]}-{UNITS[-1]}" if len(UNITS) > 1 else str(UNITS[0])
+BOLD = "\033[1m"
+BOLD_UNDERLINE = "\033[1;4m"
+RESET = "\033[0m"
+CLEAR = "\033[2J\033[H"
+STATUS_COLORS = {"ONLINE": "\033[96m", "LOCKED": "\033[91m"}  # bright cyan, bright red
+
+HEADER = "\n" + "\n".join(f"{BOLD}{line}{RESET}" for line in (
+    "  ======================================================",
+    "     T H E - D R I L L   //   ACCESS CONSOLE",
+    "  ======================================================",
+))
+
+
+def connect(unit, command):
+    sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    sock.connect(os.path.join(SOCKET_DIR, f"unit{unit}.sock"))
+    sock.sendall(f"{command}\n".encode())
+    return sock
+
+
+def query(unit, command):
+    """Send a one-shot command and return the whole reply."""
+    try:
+        with connect(unit, command) as sock:
+            return sock.makefile().read().rstrip("\n")
+    except OSError:
+        return ""
+
+
+def available(status):
+    return bool(status) and not status.startswith("LOCKED")
+
+
+def color_status(status):
+    """Colour the leading ONLINE/LOCKED word; the rest (times, teams) is styled by the unit."""
+    for word, color in STATUS_COLORS.items():
+        if status.startswith(word):
+            return f"{color}{word}{RESET}{status[len(word):]}"
+    return status
+
+
+def show_units():
+    """Print the unit list. Returns True when the scoreboard is open to this team."""
+    statuses = {unit: query(unit, "STATUS") or "OFFLINE" for unit in UNITS}
+    scoreboard_open = COMPETITIVE_UNIT in UNITS and available(statuses[COMPETITIVE_UNIT])
+    print(HEADER)
+    if scoreboard_open:
+        print(f"     {query(COMPETITIVE_UNIT, 'SCORE')}\n")
+    for unit in UNITS:
+        print(f"     [{unit}]  DRILL CONTAINMENT UNIT {UNIT_NAMES[unit]:<10}   [{color_status(statuses[unit])}]")
+    if scoreboard_open:
+        print("     [0]  SCOREBOARD")
+    print()
+    return scoreboard_open
+
+
+def show_scoreboard():
+    board = query(COMPETITIVE_UNIT, "SCOREBOARD")
+    print(board if board else f"[!] Scoreboard unavailable. DCU {UNIT_NAMES[COMPETITIVE_UNIT]} must be online for your team.")
+
+
+def enter(unit):
+    try:
+        sock = connect(unit, "ENTER")
+    except OSError:
+        print(f"[!] DCU {UNIT_NAMES[unit]} is not responding.")
+        return
+    stdin_open = True
+    try:
+        with sock:
+            while True:
+                watch = [sock, sys.stdin] if stdin_open else [sock]
+                ready, _, _ = select.select(watch, [], [])
+                if sock in ready:
+                    data = sock.recv(4096)
+                    if not data:
+                        break
+                    sys.stdout.write(data.decode(errors="replace"))
+                    sys.stdout.flush()
+                if sys.stdin in ready:
+                    data = os.read(sys.stdin.fileno(), 4096)
+                    if data:
+                        sock.sendall(data)
+                    else:
+                        sock.shutdown(socket.SHUT_WR)
+                        stdin_open = False
+    except KeyboardInterrupt:
+        print("\n[*] Disconnected from unit.")
+    except OSError:
+        print("\n[*] Connection to unit lost.")
+
+
+def pause():
+    """Wait for enter. Returns False if the player closed input."""
+    try:
+        input("\n  [press enter to return to the console]")
+        return True
+    except (EOFError, KeyboardInterrupt):
+        print()
+        return False
+
+
+def menu():
+    # The first draw keeps the login banner visible. After that the screen is
+    # cleared for refreshes and around the scoreboard, but not after a unit
+    # session, so its output (e.g. the flag) stays above the menu.
+    clear = False
+    while True:
+        if clear:
+            print(CLEAR, end="")
+        clear = True
+        scoreboard_open = show_units()
+        options = f"{UNIT_RANGE}, 0 for scoreboard" if scoreboard_open else UNIT_RANGE
+        try:
+            choice = input(f"  {BOLD_UNDERLINE}Select a unit ({options}), enter to refresh, or q to drop to shell>{RESET} ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return
+        if choice in ("q", "quit", "exit"):
+            print("  Type 'dcu' to reopen the console.\n")
+            return
+        if not choice:
+            continue
+        if choice == "0" and scoreboard_open:
+            print(CLEAR, end="")
+            show_scoreboard()
+        elif choice.isdigit() and int(choice) in UNITS:
+            enter(int(choice))
+            clear = False  # straight back to the console, keeping the unit's output
+            continue
+        else:
+            # Anything else is passed to this server's first unit, which answers only what it recognises.
+            reply = query(UNITS[0], f"CODE {choice[:48]}")
+            print(f"  {reply}" if reply else "  Unknown unit.")
+            clear = False  # keep the message visible
+            continue
+        if not pause():
+            return
+
+
+def main():
+    if len(sys.argv) == 1:
+        menu()
+    elif sys.argv[1] == "status":
+        show_units()
+    elif sys.argv[1] in ("0", "scoreboard"):
+        show_scoreboard()
+    elif sys.argv[1].isdigit() and int(sys.argv[1]) in UNITS:
+        enter(int(sys.argv[1]))
+    else:
+        print(__doc__.strip())
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

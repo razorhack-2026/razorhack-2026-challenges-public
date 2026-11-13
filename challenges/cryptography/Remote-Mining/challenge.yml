@@ -1,0 +1,54 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+#
+# Level 1 of 3 of the KALIUM mining series — DCU Termite-01 on THE-DRILL.
+
+# ── Required ─────────────────────────────────────────────────────────────
+name: "Remote Mining"
+author: WALL-D
+category: Cryptography
+description: |
+     KALIUM is a very particular resource. It requires careful attention when being harvested: the drills must maneuver around the intricacies of its surface in order to safely extract the resource without breaking it apart. In the chaos of this. . . _incident_, it seems like the systems we had at RazorPower Co to automate its harvest have fallen short. With that said, we have decided to bring back the classic method from when we first discovered the power source: manual mining! That's right, right now, YOU can connect to THE-DRILL (hosting our state of the art mining machines) and help us continue to extract this valuable resource! Remember, not only is the future of humanity in your hands, but any additional ore mined might factor into your performance bonus at the end of the year!
+
+     Thank you for your help and happy mining,
+     RazorPower Co - Extraction Division
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+# Uniform dynamic scoring (GM meeting 2026-08-17): every challenge starts at
+# 500 and decays as more teams solve it. No per-challenge point values.
+# `decay` and `minimum` are set globally once registration numbers are known —
+# leave the placeholders alone; they'll be filled in one pass before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+flags:
+    - "flag{M!^!n9_Th3_Futur3}"
+
+# ── Files the competitor downloads ───────────────────────────────────────
+# None: the unit is reached over SSH on THE-DRILL.
+files: []
+
+# ── Live service ─────────────────────────────────────────────────────────
+connection_info: "ssh -p {port} 'TEAM#XX@{host}' (XX = your team number, password kalium), then select unit 1 (or run `dcu 1`)"
+# Each team gets its own copy of THE-DRILL (instance:the-drill, shared by Remote Mining,
+# High Value Deposit and Employee of the Year). Only that team can reach it, so every
+# TEAM# account there has the one password above (TEAM_PASSWORD in the copy).
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+tags:
+    - easy
+    - sha256
+    - crypto-mining
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Kalium Rush"
+    - instance:the-drill
+
+state: hidden
+version: "0.1"

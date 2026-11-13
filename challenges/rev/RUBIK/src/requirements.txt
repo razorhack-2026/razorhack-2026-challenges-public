@@ -1,0 +1,5 @@
+numpy>=1.21
+pygame>=2.1
+Pillow>=9.0  # only needed for --gif output
+PyOpenGL>=3.1  # only needed for tesseract3d.py
+Nuitka>=4.3  # only needed to build the binaries (needs a C compiler; patchelf for --onefile on Linux)

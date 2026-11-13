@@ -1,0 +1,7 @@
+flask>=3.0
+insightface>=0.7.3
+onnxruntime
+rapidocr_onnxruntime
+opencv-python
+numpy
+markdown

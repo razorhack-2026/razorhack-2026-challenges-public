@@ -1,0 +1,8 @@
+# Only the units (src/) and the server files go into the image. solution/ never
+# does, and THE-DRILL/dev is mounted only by docker-compose.dev.yml.
+*
+!src/
+!THE-DRILL/
+THE-DRILL/host_keys
+THE-DRILL/dev
+THE-DRILL/DEPLOYMENT.md

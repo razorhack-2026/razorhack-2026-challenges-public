@@ -1,0 +1,31 @@
+{% extends "docs_base.html" %}
+
+{% block content %}
+<div class="topbar">
+  <a href="/">← Home</a>
+  <button data-sign-out>Sign out</button>
+</div>
+
+<div class="progress-steps">{{ lib.name }} documents</div>
+<h2>Welcome, {{ name }}</h2>
+<p class="sub">Pick a document to read. Your access ends in about {{ minutes_left }} minute{{ "" if minutes_left == 1 else "s" }}.</p>
+
+{% if docs %}
+<div class="docs lib-{{ slug }}">
+  {% for d in docs %}
+  <a class="doc-card" href="{{ url_for('docs_view', slug=slug, filename=d.file) }}">
+    <strong>{{ d.title }}</strong>
+    <span class="kind">{{ d.kind }}</span>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty">No documents here yet.</div>
+{% endif %}
+
+{% for other_slug, other in other %}
+<div class="row" style="margin-top:28px">
+  <a class="btn" href="{{ url_for('docs_index', slug=other_slug) }}">Go to {{ other.name }} documents</a>
+</div>
+{% endfor %}
+{% endblock %}

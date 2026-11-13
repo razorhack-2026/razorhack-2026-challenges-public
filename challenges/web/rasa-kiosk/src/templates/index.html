@@ -1,0 +1,547 @@
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+  .step[hidden] { display: none; }
+
+
+  .viewer {
+    background: #000; border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+    aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center;
+  }
+  .viewer img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .meter { height: 6px; background: var(--line); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+  .meter i { display: block; height: 100%; width: 0; background: var(--green); transition: width .2s; }
+  .status { margin-top: 10px; color: var(--muted); min-height: 1.5em; }
+
+  .review { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .review figure { margin: 0; }
+  .review img { width: 100%; aspect-ratio: 3 / 4; object-fit: contain; background: #000; border-radius: 10px; border: 1px solid var(--line); }
+  .review figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-weight: 700; font-size: 13px; letter-spacing: .06em; color: #fff; }
+  label { display: block; margin-top: 20px; font-weight: 600; }
+  input[type=text] {
+    width: 100%; margin-top: 6px; padding: 12px 14px; font: inherit; color: var(--text);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { color: var(--muted); font-weight: 500; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+  td img { width: 44px; height: 44px; object-fit: cover; border-radius: 6px; display: block; }
+  td button { padding: 6px 12px; font-size: 14px; }
+  .thanks { text-align: center; padding: 48px 0; }
+  .thanks h2 { font-size: 32px; }
+
+  .home-grid { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-end; }
+  .result-mark {
+    width: 84px; height: 84px; margin: 0 auto 16px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 800; color: #111;
+  }
+  .result-mark.granted { background: var(--green); }
+  .result-mark.denied { background: var(--red); color: #fff; }
+
+  @media (max-width: 560px) { .review { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+  <!-- The player's camera: frames are read from here and sent to the server, which shows them back -->
+  <video id="cam" autoplay playsinline muted style="position:absolute;width:1px;height:1px;opacity:0"></video>
+
+  <!-- Home -->
+  <section class="step" id="step-home">
+    <div class="home-grid">
+      <div>
+        <div class="progress-steps">Register User</div>
+        <div class="row" style="margin-top:0">
+          <button class="primary big tip" id="btn-add" data-tip="To add a new user to the company">Add New User</button>
+          <button class="big tip" id="btn-update" data-tip="To update the information of an already existing user">Update Info</button>
+        </div>
+      </div>
+      <div>
+        <div class="progress-steps">Document Access</div>
+        <div class="row" style="margin-top:0">
+          <button class="big tip" id="btn-base" data-tip="Guiding documents that all employees might need!">General</button>
+          <button class="big tip" id="btn-high" data-tip="Guiding documents that leaders and management might want!">Admin</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Face scan -->
+  <section class="step" id="step-face" hidden>
+    <div class="progress-steps" id="face-steps">Step 1 of 3</div>
+    <h2>Scan your face</h2>
+    <p class="sub" id="face-sub">Look straight at the camera and hold still until the box turns green.</p>
+    <div class="viewer"><img id="face-img" alt="Camera"></div>
+    <div class="meter"><i id="face-meter"></i></div>
+    <div class="status" id="face-status">Starting camera…</div>
+    <div class="error" id="face-error"></div>
+    <div class="row" id="face-actions" hidden>
+      <button class="primary" id="face-accept">Use this photo</button>
+      <button id="face-retake">Retake</button>
+    </div>
+    <div class="row">
+      <button id="face-upload">Upload a photo</button>
+      <input type="file" id="face-file" accept="image/*" hidden>
+      <button id="face-cancel">Cancel</button>
+    </div>
+  </section>
+
+  <!-- Card scan -->
+  <section class="step" id="step-card" hidden>
+    <div class="progress-steps" id="card-steps">Step 2 of 3</div>
+    <h2>Scan your card</h2>
+    <p class="sub" id="card-sub">Hold your badge flat, facing the camera, until the box turns green.</p>
+    <div class="viewer"><img id="card-img" alt="Camera"></div>
+    <div class="meter"><i id="card-meter"></i></div>
+    <div class="status" id="card-status">Starting camera…</div>
+    <div class="error" id="card-error"></div>
+    <div class="row" id="card-actions" hidden>
+      <button class="primary" id="card-accept">Use this photo</button>
+      <button id="card-retake">Retake</button>
+    </div>
+    <div class="row">
+      <button id="card-upload">Upload a photo of your badge</button>
+      <input type="file" id="card-file" accept="image/*" hidden>
+      <button id="card-cancel">Cancel</button>
+    </div>
+  </section>
+
+  <!-- Review -->
+  <section class="step" id="step-review" hidden>
+    <div class="progress-steps">Step 3 of 3</div>
+    <h2>Confirm your registration</h2>
+    <p class="sub">Make sure both photos look right before saving.</p>
+    <div class="review">
+      <figure><img id="review-face" alt="Your face"><figcaption>Face</figcaption></figure>
+      <figure><img id="review-card" alt="Your card"><figcaption>Card · <span id="review-type"></span></figcaption></figure>
+    </div>
+    <p class="sub" id="review-note" hidden>Looks like your badge was filled in by hand - no problem!
+      The kiosk won't try to read the name on it, so just type your name below.</p>
+    <label for="name">Name on your card
+      <input type="text" id="name" autocomplete="off" placeholder="e.g. Player One">
+    </label>
+    <div class="error" id="review-error"></div>
+    <div class="row">
+      <button class="primary" id="btn-save">Confirm &amp; save</button>
+      <button id="btn-redo-face">Retake face</button>
+      <button id="btn-redo-card">Retake card</button>
+      <button id="btn-review-cancel">Start over</button>
+    </div>
+  </section>
+
+  <!-- Thanks -->
+  <section class="step thanks" id="step-thanks" hidden>
+    <h2>Thanks, <span id="thanks-name"></span>!</h2>
+    <p class="sub">You're registered.</p>
+    <button class="primary" id="btn-home">Done</button>
+  </section>
+
+  <!-- Update Info: review -->
+  <section class="step" id="step-update-review" hidden>
+    <div class="progress-steps">Update Info · Confirm</div>
+    <h2>Confirm your new badge</h2>
+    <p class="sub" id="update-review-text"></p>
+    <div class="review">
+      <figure><img id="update-old-img" alt="Current badge"><figcaption>Current · <span id="update-old-label"></span></figcaption></figure>
+      <figure><img id="update-new-img" alt="New badge"><figcaption>New · <span id="update-new-label"></span></figcaption></figure>
+    </div>
+    <div class="error" id="update-review-error"></div>
+    <div class="row">
+      <button class="primary" id="btn-update-confirm">Confirm update</button>
+      <button id="btn-update-review-cancel">Cancel</button>
+    </div>
+  </section>
+
+  <!-- Login result -->
+  <section class="step thanks" id="step-result" hidden>
+    <div class="progress-steps" id="result-app"></div>
+    <div class="result-mark" id="result-mark"></div>
+    <h2 id="result-title"></h2>
+    <p class="sub" id="result-message"></p>
+    <div class="row" style="justify-content:center">
+      <button class="primary" id="btn-result-done">Done</button>
+      <button id="btn-result-again">Try again</button>
+    </div>
+  </section>
+{% endblock %}
+
+{% block script %}
+<script>
+const $ = (id) => document.getElementById(id);
+const BADGE_COLORS = { red: "var(--red)", green: "var(--green)", purple: "var(--purple)" };
+let pollTimer = null;
+let camStream = null;
+let scanRun = 0;              // bumped to end the running frame loop
+let frameUrl = null;          // object URL of the frame on screen
+let flow = "enroll";          // "enroll" | "base" | "high" | "update"
+let greetName = "";           // name recognized from the face step
+let updateStage = "old";      // Update Info: which badge is being scanned
+let docsUrl = null;           // after a successful General/Admin login: that document library
+let docsTimer = null;
+
+const STEP_TEXT = {
+  enroll: {
+    face: ["Step 1 of 3", "Look straight at the camera and hold still until the box turns green."],
+    card: ["Step 2 of 3", "Hold your badge flat, facing the camera, until the box turns green."],
+  },
+  base: {
+    face: ["General · Step 1 of 2", "Look straight at the camera and hold still."],
+    card: ["General · Step 2 of 2", "Now hold up your badge."],
+  },
+  high: {
+    face: ["Admin · Step 1 of 2", "Look straight at the camera and hold still."],
+    card: ["Admin · Step 2 of 2", "Now hold up your GM or Sponsor badge."],
+  },
+  update: {
+    face: ["Update Info · Step 1 of 3", "Look straight at the camera and hold still."],
+    card_old: ["Update Info · Step 2 of 3", "Hold up your CURRENT badge."],
+    card_new: ["Update Info · Step 3 of 3", "Now hold up your NEW badge. It must carry the same name."],
+  },
+};
+
+function show(step) {
+  document.querySelectorAll(".step").forEach((s) => (s.hidden = s.id !== "step-" + step));
+}
+
+async function api(path, method = "POST", body) {
+  const res = await fetch(path, {
+    method,
+    headers: body ? { "Content-Type": "application/json" } : {},
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || res.statusText);
+  return data;
+}
+
+function badge(label, color) {
+  return `<span class="badge" style="background:${BADGE_COLORS[color] || "#555"}">${label}</span>`;
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+// ---------------------------------------------------------------- home
+// (No registered-users roster: listing registrants and serving their face/badge
+// images would expose biometric data, so that UI and its endpoints were removed.)
+function goHome() {
+  stopPolling();
+  ["face", "card"].forEach((k) => ($(k + "-img").src = ""));
+  show("home");
+}
+
+// ---------------------------------------------------------------- scanning
+function stopPolling() {
+  clearInterval(pollTimer);
+  pollTimer = null;
+  scanRun++;
+  if (camStream) camStream.getTracks().forEach((t) => t.stop());
+  camStream = null;
+  $("cam").srcObject = null;
+  if (frameUrl) URL.revokeObjectURL(frameUrl);
+  frameUrl = null;
+}
+
+function cameraProblem(e) {
+  if (!navigator.mediaDevices) return "Your camera needs a secure (HTTPS) page. Upload a photo instead.";
+  if (e.name === "NotAllowedError") return "Camera access is blocked. Allow it in your browser, or upload a photo.";
+  if (e.name === "NotFoundError") return "No camera found. Upload a photo instead.";
+  if (e.name === "NotReadableError") return "Your camera is in use by another app. Close it, or upload a photo.";
+  return "Couldn't start your camera. Upload a photo instead.";
+}
+
+async function startCamera(kind) {
+  const run = ++scanRun;
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { width: { ideal: 640 }, height: { ideal: 480 },
+               facingMode: { ideal: kind === "face" ? "user" : "environment" } },
+    });
+    if (run !== scanRun) { stream.getTracks().forEach((t) => t.stop()); return; }
+    camStream = stream;
+    $("cam").srcObject = stream;
+    await $("cam").play();
+  } catch (e) {
+    if (run === scanRun) $(kind + "-status").textContent = cameraProblem(e);
+    return;
+  }
+  if (run !== scanRun) return;
+  pollTimer = setInterval(() => pollStatus(kind), 250);
+  sendFrames(kind, run);
+}
+
+// One frame at a time: the next is sent when the server answers, so a busy server just slows the preview.
+async function sendFrames(kind, run) {
+  const video = $("cam");
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext("2d");
+  while (run === scanRun) {
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const jpeg = await new Promise((done) => canvas.toBlob(done, "image/jpeg", 0.9));
+    const res = await fetch(`/api/scan/${kind}/frame`, { method: "POST", body: jpeg }).catch(() => null);
+    const shown = res && res.ok ? await res.blob().catch(() => null) : null;
+    if (run !== scanRun) return;
+    if (shown) {
+      if (frameUrl) URL.revokeObjectURL(frameUrl);
+      frameUrl = URL.createObjectURL(shown);
+      $(kind + "-img").src = frameUrl;
+    } else {
+      await new Promise((done) => setTimeout(done, 300));
+    }
+  }
+}
+
+async function startScan(kind) {
+  stopPolling();
+  show(kind);
+  const key = flow === "update" && kind === "card" ? "card_" + updateStage : kind;
+  const [steps, sub] = STEP_TEXT[flow][key];
+  $(kind + "-steps").textContent = steps;
+  $(kind + "-sub").textContent = kind === "card" && greetName && flow !== "enroll" ? `Hi ${greetName}! ${sub}` : sub;
+  $(kind + "-error").textContent = "";
+  $(kind + "-actions").hidden = true;
+  $(kind + "-accept").hidden = flow !== "enroll";
+  $(kind + "-meter").style.width = "0";
+  $(kind + "-status").textContent = "Starting camera…";
+  $(kind + "-img").src = "";
+  try {
+    await api(`/api/scan/${kind}/start`);
+  } catch (e) {
+    $(kind + "-error").textContent = e.message;
+    return;
+  }
+  startCamera(kind);
+}
+
+async function pollStatus(kind) {
+  let s;
+  try { s = await api("/api/scan/status", "GET"); } catch { return; }
+  if (s.mode !== kind) return;
+
+  const pct = s.elapsed == null ? 0 : Math.min(100, (100 * s.elapsed) / s.focus_seconds);
+  $(kind + "-meter").style.width = pct + "%";
+  let msg = s.message || "";
+  if (kind === "card" && s.color) msg += ` · ${s.color} card`;
+  $(kind + "-status").textContent = msg;
+
+  if (s.captured) {
+    stopPolling();
+    onCaptured(kind, s.color);
+  }
+}
+
+function onCaptured(kind, color) {
+  $(kind + "-meter").style.width = "100%";
+  $(kind + "-img").src = `/api/capture/${kind}?t=${Date.now()}`;  // freeze on the captured photo
+  if (flow !== "enroll") { submitLogin(kind); return; }
+  $(kind + "-status").textContent = kind === "face"
+    ? "Is this a good photo of you?"
+    : `Is this a clear photo of your card?${color ? " (" + color + " card)" : ""}`;
+  $(kind + "-actions").hidden = false;
+}
+
+// Uploaded photos go through the same checks as a camera capture.
+async function uploadPhoto(kind, file) {
+  stopPolling();
+  $(kind + "-error").textContent = "";
+  $(kind + "-actions").hidden = true;
+  $(kind + "-status").textContent = "Checking photo…";
+  const form = new FormData();
+  form.append("photo", file);
+  try {
+    const res = await fetch(`/api/scan/${kind}/upload`, { method: "POST", body: form });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || res.statusText);
+    onCaptured(kind, data.color);
+  } catch (e) {
+    // Rejected: back to the live camera so they can scan or upload another.
+    $(kind + "-error").textContent = e.message;
+    $(kind + "-meter").style.width = "0";
+    startCamera(kind);
+  }
+}
+
+async function accept(kind) {
+  $(kind + "-error").textContent = "";
+  try {
+    await api(`/api/scan/${kind}/accept`);
+  } catch (e) {
+    $(kind + "-error").textContent = e.message;
+    return;
+  }
+  if (kind === "face") {
+    const review = await api("/api/review", "GET");
+    review.ready ? showReview() : startScan("card");
+  } else {
+    showReview();
+  }
+}
+
+// ---------------------------------------------------------------- review
+async function showReview() {
+  stopPolling();
+  const r = await api("/api/review", "GET");
+  if (!r.ready) { startScan("face"); return; }
+  const t = Date.now();
+  $("review-face").src = `/api/capture/face?t=${t}`;
+  $("review-card").src = `/api/capture/card?t=${t}`;
+  $("review-type").innerHTML = badge(r.label, r.color);
+  $("review-note").hidden = !r.handwritten;
+  $("review-error").textContent = "";
+  show("review");
+  $("name").focus();
+}
+
+async function save() {
+  $("btn-save").disabled = true;
+  $("review-error").textContent = "";
+  try {
+    const r = await api("/api/enroll", "POST", { name: $("name").value });
+    $("thanks-name").textContent = r.name;
+    $("name").value = "";
+    show("thanks");
+  } catch (e) {
+    $("review-error").textContent = e.message;
+  } finally {
+    $("btn-save").disabled = false;
+  }
+}
+
+async function cancelAll() {
+  await api("/api/cancel").catch(() => {});
+  goHome();
+}
+
+// ---------------------------------------------------------------- logins
+async function startLogin(level) {
+  flow = level;
+  greetName = "";
+  try {
+    await api(`/api/login/${level}/start`);
+  } catch (e) { alert(e.message); return; }
+  startScan("face");
+}
+
+async function submitLogin(kind) {
+  $(kind + "-status").textContent = kind === "card" ? "Reading badge…" : "Checking…";
+  let r;
+  try {
+    r = await api(flow === "update" ? `/api/update/${kind}` : `/api/login/${kind}`);
+  } catch (e) {
+    $(kind + "-error").textContent = e.message;
+    $(kind + "-actions").hidden = false;
+    return;
+  }
+  if (r.result === "next") {            // face recognized -> badge; or old badge ok -> new badge
+    greetName = r.name;
+    if (flow === "update") updateStage = kind === "face" ? "old" : "new";
+    startScan("card");
+  } else if (r.result === "review") {   // Update Info: both badges scanned
+    showUpdateReview(r);
+  } else if (r.result === "retry") {    // unreadable scan: let them rescan this step
+    $(kind + "-status").textContent = "";
+    $(kind + "-error").textContent = r.message;
+    $(kind + "-actions").hidden = false;
+  } else {
+    showResult(r);
+  }
+}
+
+function showResult(r) {
+  stopPolling();
+  const ok = r.result === "granted";
+  $("result-app").textContent = r.app;
+  $("result-mark").className = "result-mark " + (ok ? "granted" : "denied");
+  $("result-mark").textContent = ok ? "✓" : "✕";
+  $("result-title").textContent = flow === "update"
+    ? (ok ? "Info updated" : "Update denied")
+    : (ok ? "Login successful" : "Access denied");
+  $("result-message").textContent = r.message;
+  $("btn-result-again").hidden = ok;
+  docsUrl = ok ? r.docs_url : null;
+  $("btn-result-done").textContent = docsUrl ? "Open documents" : "Done";
+  if (docsUrl) {
+    $("result-message").textContent = `${r.message} Opening documents…`;
+    docsTimer = setTimeout(openDocs, 1800);
+  }
+  show("result");
+}
+
+// ---------------------------------------------------------------- update info
+async function startUpdate() {
+  flow = "update";
+  greetName = "";
+  updateStage = "old";
+  try {
+    await api("/api/update/start");
+  } catch (e) { alert(e.message); return; }
+  startScan("face");
+}
+
+function showUpdateReview(r) {
+  stopPolling();
+  const t = Date.now();
+  $("update-old-img").src = `/api/update/old_card.jpg?t=${t}`;   // self-scoped: this update session's own badge
+  $("update-new-img").src = `/api/capture/card?t=${t}`;
+  $("update-old-label").innerHTML = badge(r.old_label, r.old_color);
+  $("update-new-label").innerHTML = badge(r.new_label, r.new_color);
+  $("update-review-text").textContent = r.old_label === r.new_label
+    ? `${r.name}, your badge will be replaced. Your level stays ${r.new_label}.`
+    : `${r.name}, your level will change from ${r.old_label} to ${r.new_label}.`;
+  $("update-review-error").textContent = "";
+  show("update-review");
+}
+
+async function confirmUpdate() {
+  $("btn-update-confirm").disabled = true;
+  try {
+    showResult(await api("/api/update/confirm"));
+  } catch (e) {
+    $("update-review-error").textContent = e.message;
+  } finally {
+    $("btn-update-confirm").disabled = false;
+  }
+}
+
+// ---------------------------------------------------------------- wiring
+$("btn-add").onclick = async () => { flow = "enroll"; await api("/api/cancel").catch(() => {}); startScan("face"); };
+$("btn-base").onclick = () => startLogin("base");
+$("btn-high").onclick = () => startLogin("high");
+function openDocs() {
+  clearTimeout(docsTimer);
+  location.href = docsUrl;
+}
+$("btn-result-done").onclick = () => (docsUrl ? openDocs() : goHome());
+$("btn-result-again").onclick = () => (flow === "update" ? startUpdate() : startLogin(flow));
+$("btn-update").onclick = async () => { await api("/api/cancel").catch(() => {}); startUpdate(); };
+$("btn-update-confirm").onclick = confirmUpdate;
+$("btn-update-review-cancel").onclick = cancelAll;
+["face", "card"].forEach((k) => {
+  $(k + "-accept").onclick = () => accept(k);
+  $(k + "-retake").onclick = () => startScan(k);
+  $(k + "-cancel").onclick = cancelAll;
+  $(k + "-upload").onclick = () => $(k + "-file").click();
+  $(k + "-file").onchange = (ev) => {
+    const file = ev.target.files[0];
+    ev.target.value = "";   // let the same file be picked again
+    if (file) uploadPhoto(k, file);
+  };
+});
+$("btn-save").onclick = save;
+$("name").addEventListener("keydown", (e) => { if (e.key === "Enter") save(); });
+$("btn-redo-face").onclick = () => startScan("face");
+$("btn-redo-card").onclick = () => startScan("card");
+$("btn-review-cancel").onclick = cancelAll;
+$("btn-home").onclick = goHome;
+
+goHome();
+</script>
+{% endblock %}

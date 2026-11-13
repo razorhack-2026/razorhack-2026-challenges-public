@@ -1,0 +1,38 @@
+# Source writeup: solution/challenge1.md
+# Challenge 1 of 2 on the RASA security kiosk. The easy "read everything" tier
+# (General library). Same hosted service as challenge2.
+name: "Getting Checked In"
+author: "WALL-D"
+category: Web
+description: |
+    Welcome to RASA! As a part of your onboarding procedure, we ask that you register your card to our databases. Here, onboard the Keeper of Tomorrow, we not only use your cards to scan into places, but a facial ID as well. Please register yourself into our database and read a bit of our onboarding documents to get yourself situated!
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# The real flag is the last line of src/templates/general_documents/Welcome.md.
+flags:
+    - flag{0nb0@rd!ng_th3_k33p3r_0f_t0m0rr0w}
+
+# No handout files — the challenge is the hosted kiosk.
+files: []
+
+# Live service (docker-compose.yml) — host/port finalized at deploy time.
+# Each team's own copy of the kiosk (instance:rasa-kiosk, Razorhack-Infra lib/challenges.json):
+# CTFd fills in its address and port once the team starts it.
+connection_info: "http://{host}:{port}"
+
+topics:
+    - "instance:rasa-kiosk"
+    - "quest:Rasa Kiosk"
+
+tags:
+    - easy
+
+state: hidden
+version: "0.1"

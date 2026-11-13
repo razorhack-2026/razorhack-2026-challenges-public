@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Employee Resources{% endblock %}</title>
+<style>
+  :root {
+    --bg: #111214; --panel: #1b1c20; --line: #2c2e34; --text: #f1f1ef; --muted: #9a9ca3;
+    --red: #e5482a; --green: #5cc08a; --purple: #7b55d6; --accent: #f1f1ef;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; justify-content: center; padding: 32px 16px;
+  }
+  main { width: 100%; max-width: 760px; }
+  header { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+  header h1 { margin: 0; line-height: 0; }
+  header h1 a { color: inherit; display: inline-block; }
+  header h1 svg { height: 40px; width: auto; }
+  header span { color: var(--muted); font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* Starry background: each layer is a 1px dot whose box-shadows are the stars (filled in by script). */
+  .stars { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .stars i { position: absolute; top: 50%; left: 50%; width: 1px; height: 1px; border-radius: 50%; }
+  .stars .base { animation: drift 120s ease-in-out infinite alternate; }
+  /* Twinkle layers: each fades fully in and out on its own timing (set by script). */
+  .stars .tw { opacity: 0; animation: twinkle ease-in-out infinite; }
+  @keyframes drift { to { transform: scale(1.15) rotate(3deg); } }
+  @keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stars i { animation: none; } .stars .tw { opacity: 0.6; } }
+
+  /* Hover description under a button */
+  .tip { position: relative; }
+  .tip::after {
+    content: attr(data-tip); position: absolute; left: 50%; top: calc(100% + 10px); z-index: 5;
+    width: max-content; max-width: 240px; padding: 8px 12px; border-radius: 8px;
+    background: var(--panel); border: 1px solid var(--line); color: var(--text);
+    font-size: 14px; font-weight: 400; line-height: 1.4; text-align: center;
+    opacity: 0; transform: translate(-50%, -4px); pointer-events: none; transition: opacity .15s, transform .15s;
+  }
+  .tip:hover::after, .tip:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
+  .stripe { height: 4px; display: flex; margin-bottom: 28px; border-radius: 2px; overflow: hidden; }
+  .stripe i { flex: 1; } .stripe i:nth-child(1){background:var(--red)} .stripe i:nth-child(2){background:var(--green)} .stripe i:nth-child(3){background:var(--purple)}
+
+  h2 { margin: 0 0 4px; font-size: 22px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .progress-steps { color: var(--muted); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+  button, .btn {
+    font: inherit; font-weight: 600; border-radius: 8px; padding: 12px 20px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--panel); color: var(--text);
+  }
+  .btn { display: inline-block; text-decoration: none; }
+  button.primary, .btn.primary { background: var(--accent); color: #111; border-color: var(--accent); }
+  button:disabled { opacity: 0.45; cursor: default; }
+  button.big { font-size: 18px; padding: 16px 28px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+  .error { color: #ff7a66; margin-top: 12px; min-height: 1.5em; }
+  .empty { color: var(--muted); padding: 16px 0; }
+</style>
+{% block style %}{% endblock %}
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<main>
+  <header>
+    <h1>
+      <a href="/" aria-label="RASA home"><svg viewBox="-4 -4 358 104" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="16" stroke-linejoin="round">
+          <path d="M8 100 V26 Q8 8 26 8 H46 A21 21 0 0 1 46 50 H30 L66 100"/>
+          <path transform="translate(84 0)" d="M6 100 L32 18 Q38 2 44 18 L70 100"/>
+          <path transform="translate(170 0)" d="M78 8 H28 A21 21 0 0 0 28 50 H50 A21 21 0 0 1 50 92 H0"/>
+          <path transform="translate(264 0)" d="M6 100 L32 18 Q38 2 44 18 L70 100"/>
+        </g>
+      </svg></a>
+    </h1>
+    <span>{% block subtitle %}Employee Resources{% endblock %}</span>
+  </header>
+  <div class="stripe"><i></i><i></i><i></i></div>
+
+{% block content %}{% endblock %}
+</main>
+
+<script>
+// ---------------------------------------------------------------- starry background
+function fillStars(el, count, maxSize, maxAlpha) {
+  const r = (lo, hi) => lo + Math.random() * (hi - lo);
+  el.style.boxShadow = Array.from({ length: count }, () =>
+    `${r(-55, 55).toFixed(1)}vw ${r(-55, 55).toFixed(1)}vh ${r(0, 1.5).toFixed(1)}px ` +
+    `${r(0, maxSize).toFixed(1)}px rgba(255,255,255,${r(0.3, maxAlpha).toFixed(2)})`
+  ).join(",");
+}
+function addStarLayer(className, count, maxSize, maxAlpha) {
+  const el = document.createElement("i");
+  el.className = className;
+  fillStars(el, count, maxSize, maxAlpha);
+  document.querySelector(".stars").appendChild(el);
+  return el;
+}
+addStarLayer("base", 260, 0.6, 0.55);   // always-on faint stars, slowly drifting
+for (let i = 0; i < 10; i++) {           // brighter stars fading in and out, out of step
+  const el = addStarLayer("tw", 35, 1.4, 1);
+  const dur = 4 + Math.random() * 6;
+  el.style.animationDuration = dur.toFixed(1) + "s";
+  el.style.animationDelay = (-Math.random() * dur).toFixed(1) + "s";
+}
+
+</script>
+{% block script %}{% endblock %}
+</body>
+</html>

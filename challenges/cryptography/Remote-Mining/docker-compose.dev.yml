@@ -1,0 +1,25 @@
+# Dev deployment: the same image as production, plus the dev-only accounts and
+# cheat code from THE-DRILL/dev. Separate project, port and progress volume, so it can
+# run beside production without sharing scores.
+#   docker compose -f docker-compose.dev.yml up -d --build
+#   ssh -p 2223 'TEAM#AA@localhost'
+name: the-drill-dev
+
+services:
+  the-drill:
+    build:
+      context: .
+      dockerfile: THE-DRILL/Dockerfile
+    hostname: THE-DRILL
+    environment:
+      TZ: ${TZ:-America/Chicago}
+    ports:
+      - "127.0.0.1:2223:22"             # this machine only; dev accounts never reach the network
+    volumes:
+      - dcu-progress:/var/lib/dcu
+      - ./THE-DRILL/host_keys:/etc/ssh/host_keys
+      - ./THE-DRILL/dev:/root/dev:ro   # /root is mode 700, so teams can't read this
+    restart: unless-stopped
+
+volumes:
+  dcu-progress:

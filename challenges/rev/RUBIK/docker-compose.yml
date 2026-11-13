@@ -1,0 +1,17 @@
+# Hosts the HELPER tesseract (the 4D "diagnostic" view) in a browser via noVNC.
+# The main challenge binary (complex_calibration) is a plain download and is NOT
+# part of this deployment — only the helper is hosted, and it does not auto-solve.
+#
+#   docker compose up -d --build
+#   open http://<host>:6080
+name: rubiks2d-tesseract-helper
+
+services:
+  helper:
+    build:
+      context: .                     # challenge root, so dist/ and deploy/ are both reachable
+      dockerfile: deploy/Dockerfile
+    ports:
+      - "6080:6080"                  # noVNC; competitors open http://<host>:6080
+    # Software OpenGL is used, so no GPU/devices are required.
+    restart: unless-stopped

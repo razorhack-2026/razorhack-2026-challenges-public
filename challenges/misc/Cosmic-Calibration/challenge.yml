@@ -1,0 +1,50 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+
+name: "Cosmic Calibration"
+author: "WALL-D"
+category: Misc
+description: |
+    A strange signal has turned off the ships autopilot. In fact, it seems like the entire KEEPER OF TOMORROW's alignment has been thrown off. Luckily, the great minds at RASA had thought about this and created a calibration sequence to get the ship back on track. Unluckily, it doesn't seem to be a simple button you can press.
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+# Uniform dynamic scoring (GM meeting 2026-08-17): every challenge starts at
+# 500 and decays as more teams solve it. No per-challenge point values.
+# `decay` and `minimum` are set globally once registration numbers are known —
+# leave the placeholders alone; they'll be filled in one pass before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+# Recovered by unsealing FLAG_SEALED in rubik2d.py from the solved cube
+# (reveal_flag on a fresh Cube())
+# reseal with a new flag, update src/rubik2d.py's FLAG_SEALED and rebuild dist/.
+flags:
+    - flag{@11_@x!$_@1!gn3d_:D}
+
+# ── Files the competitor downloads ───────────────────────────────────────
+files:
+    - dist/calibration_sequence
+    - dist/RUN.md
+
+# ── Optional: hints ──────────────────────────────────────────────────────
+
+# ── Live service ─────────────────────────────────────────────────────────
+# The browser panel (docker-compose.yml, port 8082). The Linux binary above is
+# the same puzzle for anyone who prefers to run it locally.
+connection_info: "http://{host}:{port}"
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+tags:
+    - easy
+
+topics:
+    - instance:cosmic-calibration
+    - "arc:2:Buildup"
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+state: hidden
+version: "0.1"

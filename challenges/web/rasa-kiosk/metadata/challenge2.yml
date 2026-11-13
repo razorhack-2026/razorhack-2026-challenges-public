@@ -1,0 +1,44 @@
+# Source writeup: solution/challenge2.md
+# Challenge 2 of 2 on the RASA security kiosk. The harder "the kiosk only checks
+# what a badge looks like" tier (Admin library). Same hosted service as challenge1.
+name: "Access Elevation"
+author: "WALL-D"
+category: Web
+description: |
+    You hear the head Control Systems Engineers talking about some delicious donuts they just had. Judging from the frosting stuck to their fingers, you can tell they were the real deal. Yet, when you asked where they got them, they only replied that it's in the "Admin Only Lounge." That's unfair. In the middle of this crisis, they're snacking on donuts and lounging? Furthermore, they've said you're good enough to be promoted to one of them soon, so what's the harm in checking out their world a little bit early? Must be nice having a badge that takes you anywhere, control of some part of the ship, and donuts to snack on...
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+# The real flag is the last line of src/templates/admin_documents/Promotion.md.
+flags:
+    - flag{!n_th3_b!g_l3@gu3s_B)}
+
+# No handout files — the challenge is the hosted kiosk.
+files: []
+
+# Live service (docker-compose.yml) — host/port finalized at deploy time.
+# Each team's own copy of the kiosk (instance:rasa-kiosk, Razorhack-Infra lib/challenges.json):
+# CTFd fills in its address and port once the team starts it.
+connection_info: "http://{host}:{port}"
+
+# Reveal Admin only after the General tier is solved (same kiosk, harder tier).
+requirements:
+    prerequisites:
+        - "Getting Checked In"
+    anonymize: true
+
+topics:
+    - "instance:rasa-kiosk"
+    - "quest:Rasa Kiosk"
+
+tags:
+    - medium
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,70 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+#
+# Challenge 2 of 2 of the Rubik's 2D series — "the tesseract" (tesseract3d.py).
+# Ships with a helper build (tesseract_helper.py) that always shows the 4D view.
+
+# ── Required ─────────────────────────────────────────────────────────────
+name: "R.U.B.I.K (Rocket Universal Bi-Axis Initial (K)alibration)"
+author: "WALL-D"
+# Rev (same reasoning as the Cube challenge; Misc also defensible).
+category: Reverse Engineering
+description: |
+    As you slide the last planet into place, you hear a small chime followed by a "congratulations" from the driving console. After a few hums, an error message pops up on the screen. "It seems like the ships inter-galaxy alignment has been thrown off. Please initiate calibration sequence." The planets you were just sliding around don't just hover back to life again, they seem to morph right in front of you, growing to an amalgamation of mismatched shapes, colors, and far too many orbits. Curse the great minds at RASA! They had thought of everything, but why couldn't they dumb down their rocket science?
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+# Uniform dynamic scoring (GM meeting 2026-08-17): every challenge starts at
+# 500 and decays as more teams solve it. No per-challenge point values.
+# `decay` and `minimum` are set globally once registration numbers are known —
+# leave the placeholders alone; they'll be filled in one pass before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+# Recovered by unsealing FLAG_SEALED in tesseract3d.py from the solved tesseract
+# (reveal_flag on a fresh Tesseract()). Final: it matches solution/WRITEUP.md's
+# Flag section. To change it, reseal (src/seal_flag.py, see the writeup) and
+# rebuild dist/ (both binaries).
+flags:
+    - flag{wh3n_7h3_$t@r$_@1!gn!}
+
+# ── Files the competitor downloads ───────────────────────────────────────
+# ONLY the challenge binary is a free download. The helper (always-on 4D
+# "diagnostic" view) is gated behind the unlockable hint below — so it is NOT
+# listed here. It still ships in dist/ because the hosted deployment builds from
+# it (deploy/Dockerfile COPYs dist/complex_calibration_tesseract); leaving it out
+# of `files:` keeps CTFd from publishing it as a free download.
+files:
+    - dist/complex_calibration
+    # - dist/complex_calibration_tesseract
+
+# ── Hints (unlockable) ─────────────────────────────────────────────────────
+# This exist but will be uploaded when via the CTF website
+# hints:
+#     - { content: "RASA's diagnostics bench left a secondary view of the panel running. Open it in your browser at http://<host>:6080, or download the diagnostic build to run locally: <helper download URL>. It won't recalibrate the panel for you — it only lets you see all of it at once.", cost: 100 }
+
+# ── Live service ─────────────────────────────────────────────────────────
+# The main challenge is a plain download — no always-on service is advertised
+# here. The only hosted component is the diagnostic view, and it is intentionally
+# revealed only through the unlockable hint above (not in connection_info, which
+# CTFd shows openly). Leave connection_info unset.
+
+# ── Challenge chain ──────────────────────────────────────────────────────
+requirements:
+    prerequisites:
+        - "Cosmic Calibration"
+    anonymize: true
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+tags:
+    - hard
+
+topics:
+    - "arc:2:Buildup"
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+state: hidden
+version: "0.1"

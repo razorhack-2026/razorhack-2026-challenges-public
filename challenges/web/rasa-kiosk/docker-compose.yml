@@ -1,0 +1,11 @@
+services:
+  kiosk:
+    build: ./src                 # Dockerfile + app live in src/
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./src/data:/data                      # hackathon.db lives here (auto-created on first run)
+      - ~/.insightface:/root/.insightface     # face models, so they aren't re-downloaded
+      - ./src/templates:/app/templates        # documents can be added without a rebuild
+    stdin_open: true
+    tty: true

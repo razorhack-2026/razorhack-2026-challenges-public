@@ -1,0 +1,7 @@
+# Example accounts for local play, one per line as USERNAME:PASSWORD.
+# These are placeholders for this public release; the event's real accounts are not
+# published. Change them before you expose the server to anyone else, then rebuild.
+# Per-team copies can set TEAM_PASSWORD instead (it overrides every password below).
+TEAM#01:mole-team-01
+TEAM#02:mole-team-02
+TEAM#03:mole-team-03

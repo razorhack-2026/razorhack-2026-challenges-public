@@ -1,0 +1,14 @@
+{% extends "docs_base.html" %}
+
+{% block title %}{{ doc.title }} · {{ lib.name }}{% endblock %}
+
+{% block content %}
+<div class="topbar">
+  <a href="{{ url_for('docs_index', slug=slug) }}">← All {{ lib.name }} documents</a>
+  <button data-sign-out>Sign out</button>
+</div>
+
+<article class="doc lib-{{ slug }}">
+  {% if doc.body %}{{ doc.body }}{% else %}<p class="empty" style="padding:0">This document is empty.</p>{% endif %}
+</article>
+{% endblock %}

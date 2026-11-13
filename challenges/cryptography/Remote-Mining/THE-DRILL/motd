@@ -1,0 +1,22 @@
+
+  [1m######################################################[0m
+  [1m#                                                    #[0m
+  [1m#     T H E - D R I L L    //   SHAFT K   //   07    #[0m
+  [1m#                                                    #[0m
+  [1m######################################################[0m
+
+  [1mRAZORPOWER CO.  //  NOVARE KALIUM OPERATION[0m
+
+  On its initial journey, the ICARUS left drills behind on NOVARE.
+  They are piloted remotely from here, mining KALIUM: a very powerful
+  and unique ore. KALIUM needs special attention to mine. Once a deposit
+  is found, the drill must be handed a specific drill input sequence
+  (DIS). Mining is tricky, but the basic sensors on each DCU give you the
+  approximate shape of the stone.
+
+  Three DRILL CONTAINMENT UNITS are mining remotely on NOVARE.
+
+  Access Console:  dcu          (menu)
+                   dcu status   (unit status)
+                   dcu <1-3>    (enter a unit)
+

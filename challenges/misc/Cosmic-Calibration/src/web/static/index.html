@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RASA Calibration Panel</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #04040c; color: #e8ecfa;
+               font: 16px/1.4 system-ui, sans-serif; }
+  body { display: flex; align-items: center; justify-content: center; }
+  #stage { position: relative; width: min(100vw, 200vh); aspect-ratio: 2 / 1; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; }
+  #hint { position: absolute; left: 0; right: 0; bottom: 1.5%; text-align: center;
+          color: #8c94b6; pointer-events: none; }
+  #restart { position: absolute; top: 2%; right: 1.5%; padding: .3em .8em; cursor: pointer;
+             color: #8c94b6; background: #0a0b1a; border: 1px solid #707aa5; border-radius: 8px; font: inherit; }
+  .overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+             background: rgba(0, 0, 0, .68); }
+  .overlay[hidden] { display: none; }
+  .panel { max-width: 92%; max-height: 92%; box-sizing: border-box; overflow: auto; padding: 1.2em 2em;
+           text-align: center; background: #0a0b1a; border: 2px solid #707aa5; border-radius: 14px; }
+  .panel h1 { margin: .1em 0 .5em; font-size: 1.7em; font-weight: 600; }
+  .panel img { display: block; max-width: 100%; max-height: 52vh; margin: 0 auto; }
+  .quiet { margin: .8em 0 .2em; color: #8c94b6; }
+  #flag { margin: 1em 0; font-size: 1.7em; color: #96c8ff; user-select: all; overflow-wrap: anywhere; }
+  table { margin: 0 auto; border-collapse: collapse; text-align: left; }
+  th { padding: .6em 0 .1em; color: #8c94b6; font-weight: 400; }
+  td { padding: .1em 0; }
+  td:first-child { padding-right: 2em; color: #96c8ff; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="sky" width="1920" height="960"></canvas>
+  <div id="hint">Press Esc for controls</div>
+  <button id="restart" type="button">Restart</button>
+
+  <div class="overlay" id="start">
+    <div class="panel">
+      <h1>Calibrate ship to this position</h1>
+      <img src="/target.png" alt="The calibrated position">
+      <p class="quiet">Press any key to begin</p>
+    </div>
+  </div>
+
+  <div class="overlay" id="help" hidden>
+    <div class="panel">
+      <h1>Controls</h1>
+      <table>
+        <tr><th colspan="2">Turns</th></tr>
+        <tr><td>U D L R F B</td><td>orbit turns</td></tr>
+        <tr><td>M E S</td><td>central orbit turns</td></tr>
+        <tr><td>X Y Z</td><td>rotate system</td></tr>
+        <tr><td>Shift + key</td><td>inverse (U')</td></tr>
+        <tr><th colspan="2">View</th></tr>
+        <tr><td>Mouse wheel</td><td>zoom the circles</td></tr>
+        <tr><td>Esc</td><td>show/hide this screen</td></tr>
+      </table>
+      <p class="quiet">Esc  close</p>
+    </div>
+  </div>
+
+  <div class="overlay" id="solved" hidden>
+    <div class="panel">
+      <h1>Solved!</h1>
+      <div>The control panel has been recalibrated</div>
+      <div id="flag"></div>
+      <p class="quiet">Esc  close</p>
+    </div>
+  </div>
+</div>
+<script src="/panel.js"></script>
+</body>
+</html>

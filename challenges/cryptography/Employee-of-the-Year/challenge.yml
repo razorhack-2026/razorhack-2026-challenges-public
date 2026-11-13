@@ -1,0 +1,73 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+#
+# Level 3 of 3 of the KALIUM mining series — DCU Mole-03 on THE-DRILL.
+# Competitive: one shared block every 30 minutes, first team to mine it wins it.
+# THE-DRILL (the SSH server) and Mole-03's unit file live in ../Remote-Mining/.
+
+name: "Employee of the Year - Kalium Collector"
+author: "WALL-D"
+category: Cryptography
+description: |
+    Hey!
+
+    Thank you again for helping extract those KALIUM deposits. It's nice to see our company values so thoughtfully reflected in an employee! I've been getting a ton of messages from the Extraction Division as well highlighting your efforts, and I will be sure to have this noted in your performance review at the end of the year. Now that you have a bit of experience, I'd like to ask you to help out one more time. On NOVARE, we not only found KALIUM, we found a mother-load deposit. The more we mine, the larger the vein seems to grow. Typically, we would have multiple units working on this deposit at once, but, given the circumstance, we're moving everyone who has manually mined a deposit onto this one to not maximize productivity and shareholder investments. This deposit is a bit harder than the last, and we're only mining one section at a time, so once a team has input the correct DIS, the drill will lock out until we reach the next section. I hope to see good work from you again, and thank you for all you've done!
+
+    Your humble HR representative,
+    WALL-D
+
+    [A new block to mine will appear every 30 minutes. Once a team mines the block, it is locked out for everybody until the next block appears. Scoring: Team's Score * 100 (if you solve 5 blocks, you get 500 points)]
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+# Uniform dynamic scoring (GM meeting 2026-08-17): every challenge starts at
+# 500 and decays as more teams solve it. No per-challenge point values.
+# `decay` and `minimum` are set globally once registration numbers are known —
+# leave the placeholders alone; they'll be filled in one pass before the event.
+#
+# TODO(WALL-D): Mole-03 also keeps its own in-game scoreboard (+1 per block).
+# CTFd only sees a single static flag, so it awards the 500-and-decay once per
+# team no matter how many blocks they mine. Decide with the other GMs whether
+# the in-game points should count for anything (e.g. manual awards at the end).
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+# Must match FLAG in ../Remote-Mining/src/crypto_level3.py (the Mole-03 unit).
+flags:
+    - "flag{M0$t-V@1u!bl3-Ext4@ct04}"
+
+# ── Files the competitor downloads ───────────────────────────────────────
+# None: the unit is reached over SSH on THE-DRILL.
+files: []
+
+# ── Live service ─────────────────────────────────────────────────────────
+connection_info: "ssh -p 2222 'TEAM#01@localhost' (password from ../Remote-Mining/THE-DRILL/teams.txt), then select unit 3 (or run `dcu 3`)"
+# At the event one THE-DRILL server (DCU_UNITS=3) was shared by every team, because
+# the block race needs all teams on one server. To play locally, run THE-DRILL from
+# ../Remote-Mining (docker compose up -d --build) and log in with an account from
+# ../Remote-Mining/THE-DRILL/teams.txt.
+topics:
+    - "login:kalium-collector"
+    - "quest:Kalium Rush"
+
+# ── Challenge chain ──────────────────────────────────────────────────────
+requirements:
+    prerequisites:
+        - "High Value Deposit"
+        - "Remote Mining"
+    anonymize: true
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+# Difficulty: 16^10 candidates per block; impractical on CPU within a 30-minute
+# round, about 10 minutes worst case with hashcat on a laptop GPU (estimate).
+tags:
+    - hard
+    - sha256
+    - crypto-mining
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+state: hidden
+version: "0.1"

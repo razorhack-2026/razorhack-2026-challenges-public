@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lib.name }} · Employee Resources{% endblock %}
+{% block subtitle %}Employee Resources · {{ lib.name }}{% endblock %}
+
+{% block style %}
+<style>
+  a { color: inherit; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .topbar a { color: var(--muted); text-decoration: none; }
+  .topbar a:hover { color: var(--text); }
+  .topbar button { padding: 8px 16px; font-size: 14px; }
+
+  .docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; }
+  .doc-card {
+    display: flex; flex-direction: column; justify-content: space-between; gap: 18px; min-height: 120px;
+    padding: 18px; border-radius: 10px; text-decoration: none;
+    background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid var(--line);
+    transition: border-color .15s, transform .15s;
+  }
+  .doc-card:hover, .doc-card:focus-visible { border-color: var(--text); transform: translateY(-2px); }
+  .doc-card strong { font-size: 17px; line-height: 1.35; }
+  .kind { align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--muted);
+          border: 1px solid var(--line); border-radius: 4px; padding: 1px 8px; }
+  .lib-general { --lib: var(--green); } .lib-admin { --lib: var(--purple); }
+  .doc-card { border-left: 4px solid var(--lib, var(--line)); }
+
+  /* Converted document content */
+  .doc { background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid var(--line);
+         border-radius: 10px; padding: 28px 32px; line-height: 1.65; overflow-wrap: anywhere; }
+  .doc > :first-child { margin-top: 0; }
+  .doc > :last-child { margin-bottom: 0; }
+  .doc h1 { font-size: 30px; line-height: 1.2; margin: 0 0 16px; }
+  .doc h2 { font-size: 22px; margin: 32px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  .doc h3 { font-size: 18px; margin: 24px 0 8px; }
+  .doc a { color: var(--text); text-decoration-color: var(--muted); text-underline-offset: 3px; }
+  .doc img { max-width: 100%; border-radius: 8px; }
+  .doc blockquote { margin: 16px 0; padding: 4px 16px; border-left: 3px solid var(--lib, var(--muted)); color: var(--muted); }
+  .doc code { font: 14px/1.5 ui-monospace, "SFMono-Regular", Menlo, monospace; background: #0b0c0e;
+              border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+  .doc pre { background: #0b0c0e; border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; }
+  .doc pre code { border: 0; padding: 0; background: none; }
+  .doc hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
+  .doc .table-wrap { overflow-x: auto; }
+  .doc table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .doc th, .doc td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  .doc th { color: var(--muted); font-weight: 600; }
+  @media (max-width: 560px) { .doc { padding: 20px 18px; } }
+</style>
+{% endblock %}
+
+{% block script %}
+<script>
+async function signOut() {
+  await fetch("/api/logout", { method: "POST" }).catch(() => {});
+  location.href = "/";
+}
+document.querySelectorAll("[data-sign-out]").forEach((b) => (b.onclick = signOut));
+</script>
+{% endblock %}
