@@ -1,0 +1,21 @@
+name: "Lockpicking Station"
+author: "Davie Bowman"
+category: Misc
+description: |
+    Every good KOT crew member should know how to lockpick for unsuspicious and very legal reasons! Come on down to the Maintenance Bay (JBHT 237)!
+
+
+# In-person station: fixed points, not the uniform dynamic block.
+value: 200
+type: standard
+
+flags:
+    # The relay returns this in its tasking; deploy/run.sh passes it to the
+    # container from here, so this is the flag's only home.
+    - flag{future_escape_room_pro}
+
+state: hidden
+version: "0.1"
+
+topics:
+    - "quest:Odd Jobs"

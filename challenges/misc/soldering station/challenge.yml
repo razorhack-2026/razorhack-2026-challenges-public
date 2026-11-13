@@ -1,0 +1,21 @@
+name: "Soldering Station"
+author: "Davie Bowman"
+category: Misc
+description: |
+    Every good KOT crew member should know how to solder! Come on down to the Maintenance Bay in JBHT 237!
+
+# In-person station: fixed points, not the uniform dynamic block.
+value: 200
+type: standard
+
+flags:
+    - flag{I_4m_n0w_licensed}
+
+topics:
+    - "quest:Odd Jobs"
+
+tags:
+    - Easy
+
+state: hidden
+version: "0.1"
