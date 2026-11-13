@@ -1,0 +1,36 @@
+name:       "1 2 3 FOUR"
+author:     "Mort"
+category: Steganography
+description: |
+  Heard by microphone recording and transcribed to sheet music, a security officer noticed a familiar pattern in the beginning sounds. Can you determine whether this series of recorded sounds is benign and simply Avant-Garde, or covertly transmitting data?
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{usefourthnotepermeasure}
+  - flag{USEFOURTHNOTEPERMEASURE}
+  - FLAG{usefourthnotepermeasure}
+  - FLAG{USEFOURTHNOTEPERMEASURE}
+files:
+  - dist/123FOUR_4ppc_7divRand_12divData.pdf
+  - dist/123FOUR_4ppc_7divRand_12divData.mid
+hints:
+  - Do you notice a melodic pattern in the audio recording (or the PDF if you're acute to visual patterns)? What's common during each repetition?
+  - {content: "The 4th note in each measure spells out the message.", cost: 100}
+  - How would one convert letters to numbers, then convert the numbers to notes?
+requirements:
+  prerequisites:
+    - "Learn Your 7 (or 12) ABCs #1 - Tutorial"
+  anonymize: true
+next: null
+tags:
+  - medium
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+  - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"
+

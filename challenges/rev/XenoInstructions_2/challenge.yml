@@ -1,0 +1,41 @@
+name:       "XenoInstructions #2"
+author: "Mort"
+category:   Rev
+description: |
+  A program that resembles Assembly, coded in a Functional Paradigm, was found. However, it seems a logical block that defines functions was partially corrupted. Can you recover and run the fixed program? You should round the program's final output value (do not include any intermediary computations) to the nearest 100 (either with comma or without are both okay), and then wrap that rounded value in the text "flag{" and "}".
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{7,603.960}
+  - flag{7,603}
+  - flag{7,604}
+  - flag{7,600}
+  - flag{7,700}
+  - flag{7600}
+  - flag{7700}
+files:
+  - dist/XI2-barely__function-al.__program.asm
+hints:
+  - Blocks of text that begin with a dot (.) can be called sections. `fun` is a common shorthand for the word `function`.
+  - Maybe the instruction names correspond to a fundamental concept in Functional Programming?
+  - Try researching Functional Programming. Pay attention to how variables are named and used among functions' inputs and outputs.
+  - Example function `x -> x*2 - 0.5x` --- The left side of the rightarrow represents the function's input, and the text on the right side of the arrow represents the function's output. This function has no name, so you can only call this function once.
+  - Maybe converting the Assembly-like instruction calls into a Python script would be helpful. Though, you still have to consider OOO...
+  - {content: "Use Left-to-Right OOO for fundamental arithmetic operations like +-*/, but PEMDAS OOO for more complicated operations, like sqrt() and log(). ", cost: 200}
+requirements:
+  prerequisites:
+    - "XenoInstructions #1"
+  anonymize: true
+next:
+  - "XenoInstructions #3"
+topics:
+    - "quest:XenoInstructions"
+
+tags:
+  - hard
+state: hidden
+version: "0.1"
+

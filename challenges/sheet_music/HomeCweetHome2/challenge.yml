@@ -1,0 +1,47 @@
+name:       "Home Cweet Home 2"
+author:     "Mort"
+category: Steganography
+description: |
+  Heard by microphone recording and transcribed to sheet music by a staff member with perfect pitch, a security officer noticed that many notes gradually increased in pitch while seeming out of tune, possibly an issue with the microphone or the security team's transcriber, and that the notes after the ascent sounded like they were trying to form a song, but failing. The security officer also mentioned hearing the staff member mumbling about how he enjoyed getting to interact with microtones but that he still hated his job listening to these sounds.
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{distancefromtheletterabelowmiddlec}
+  - flag{DISTANCEFROMTHELETTERABELOWMIDDLEC}
+  - FLAG{distancefromtheletterabelowmiddlec}
+  - FLAG{DISTANCEFROMTHELETTERABELOWMIDDLEC}
+files:
+  - dist/HCH_2-Tutorial(NoFlag)-MeecroMicro.ly
+  - dist/HCH_2-Tutorial(NoFlag)-MeecroMicro.mid
+  - dist/HCH_2-Tutorial(NoFlag)-MeecroMicro.pdf
+  - dist/HomeCweetHome2.ly
+  - dist/HomeCweetHome2.pdf
+  - dist/HomeCweetHome2.mid
+hints:
+  - The hints from the previous challenge (HCH1) may help you solve this challenge.
+  - >-
+    The transcriber's note about microtones is key: this file uses a 24-TET (quarter-tone) scale with `qs` (quarter-sharp) and `tqs` (three-quarter-sharp) modifiers for (almost) every 12-TET (semi-tone) pitch.
+  - Watch out for duration suffixes like `a4` when writing regex; duration numbers are playback metadata, not pitch names.
+  - Correct 24-TET pitch scales handle enharmonics such that pitches B and E transition directly into pitches C and F without `bs`, `btqs`, `es`, or `etqs` names, though the quarter-sharps still exist (since they cover a smaller acoustic distance than a typical sharp).
+  - If extracting pitches from the `.ly` file with RegEx, Quarter-tone note names contain multiple pitch letters (e.g., `aqs`, `dtqs`); ensure your regex matches full letter groups with `[a-z]+` rather than single characters.
+  - If extracting pitches from the `.ly` file with RegEx, Isolate pitch names from duration metadata (e.g., extract `atqs` from `atqs16`) by explicitly matching only lower-case letters and octave apostrophes `[\',]*`.
+  - >-
+    If extracting pitches from the `.ly` file with RegEx, A robust Python regex to capture (index, note) pairs across flexible newlines is: `r'%\s*#(\d+)\s*(?:\n)*\s*([a-z]+[\',]*)'`.
+  - {content: "NoteNames at CommentIndices `% #0` through `% #25` define an enharmonically correct 24-TET chromatic alphabet mapping from English letters A to Z starting at the pitch `a` (which is right below Middle C (c')). Each 24TET note's integer offset from the `a` below Middle C is the number of the respective character in 0A_25Z encoding. Decode notes at CommentIndex % #26 onward using this lookup table and drop the 'FLAG' prefix to reveal the flag.", cost: 250}
+requirements:
+  prerequisites:
+    - "Home Cweet Home 1"
+  anonymize: true
+next: null
+tags:
+  - medium
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+  - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"
+

@@ -1,0 +1,46 @@
+name:       "Home Cweet Home 1"
+author:     "Mort"
+category:   Steganography
+description: |
+  Heard by microphone recording and transcribed to sheet music by a staff member with perfect pitch, a security officer noticed that many notes gradually increased in pitch while seeming out of tune, possibly an issue with the microphone or the security team's transcriber, and that the notes after the ascent sounded like they were trying to form a song, but failing. Can you determine whether this series of recorded sounds is benign and simply unpleasant, or covertly transmitting data?
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{distancefrommiddlec}
+  - flag{DISTANCEFROMMIDDLEC}
+  - FLAG{distancefrommiddlec}
+  - FLAG{DISTANCEFROMMIDDLEC}
+files:
+  - dist/HomeCweetHome1.ly
+  - dist/HomeCweetHome1.pdf
+  - dist/HomeCweetHome1.mid
+hints:
+  - You can solve this challenge with just the .pdf file, or just the .ly file. However, using both files and figuring out how note names are represented in the .pdf file by looking at the source .ly file's list of notes may help you.
+  - Convert the notes shown in the PDF file to what are called "Note Names", such as "C", "D#", etc.
+  - Figure out the number of notes used per octave (7? 12? 20? etc).
+  - How would one convert letters to numbers, then convert the numbers to notes?
+  - If looking inside the `.ly` file, the indexed single-line comments starting with `% #` are always followed by a note name (i.e., "pitch").
+  - If looking inside the `.ly` file, do not confuse note durations with encoding values; the integer `4` in `c'4` dictates note length (duration of how long a note is played), not character data.
+  - Remember that standard 12-TET chromatic scales do not contain unique note names for `bs` or `es` due to enharmonic equivalencies.
+  - If extracting pitches from the `.ly` file with RegEx, when extracting note pitches under `% #N` comments, avoid `\w+` in your regex; `\w` captures duration numbers like the `4` in `c'4`, which breaks dictionary lookups.
+  - If extracting pitches from the `.ly` file with RegEx, use `[a-z]+` to capture lower-case pitch names (like `cs` or `d`) and `[\',]*` for octave apostrophes or commas, forcing the regex to stop before note durations.
+  - >-
+    If extracting pitches from the `.ly` file with RegEx, account for flexible line breaks between the comment and the note using non-capturing groups such as `(?:\n)*\s*`.
+  - {content: "NoteNames at CommentIndices `% #0` through `% #25` define an enharmonically correct 12-TET chromatic alphabet mapping from English letters A to Z starting at the pitch Middle C (c'). Each 12TET note's integer offset from Middle C is the number of the respective character in 0A_25Z encoding. Decode notes at CommentIndex % #26 onward using this lookup table and drop the 'FLAG' prefix to reveal the flag.", cost: 250}
+requirements:
+  prerequisites:
+    - "Learn Your 7 (or 12) ABCs #1 - Tutorial"
+  anonymize: true
+next: 
+  - "Home Cweet Home 2"
+topics:
+    - "arc:2:Buildup"
+
+tags:
+  - medium
+state: hidden
+version: "0.1"
+

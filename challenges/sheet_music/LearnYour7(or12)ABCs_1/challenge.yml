@@ -1,0 +1,34 @@
+name:       "Learn Your 7 (or 12) ABCs #1 - Tutorial"
+author:     "Mort"
+category: Steganography
+description: |
+  Heard by ear and transcribed to sheet music, a security officer had a hunch that note names present in the sheet music covertly sound the song of the crew's flag. Can you verify their hunch?
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{cabbage}
+  - flag{CABBAGE}
+  - FLAG{cabbage}
+  - FLAG{CABBAGE}
+files:
+  - dist/LearnYour7(or12)ABCs_1-Tutorial.mid
+  - dist/LearnYour7(or12)ABCs_1-Tutorial.pdf
+hints:
+  - No sharps (#) nor flats (b) in flag.
+  - Don't overthink this. It's used to make sauerkraut.
+  - Convert the notes shown in the PDF file to what are called "Note Names"
+  - Each 12TET note name is the letter.
+next: 
+  - "Learn Your 7 (or 12) ABCs #2 - Shared Motif"
+tags:
+  - training
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+  - "arc:0:Training"
+
+state: hidden
+version: "0.1"
+

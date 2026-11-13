@@ -1,0 +1,33 @@
+name:       "Directional Slopes"
+author:     "Mort"
+category:   Steganography
+description: |
+  Heard by microphone recording and transcribed to sheet music, a security officer noticed an arpeggiated phenomenon in some sounds. Can you determine whether this series of recorded sounds is benign and simply unpleasant, or covertly transmitting data?
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{sl0p3s_N_D3r1v4t1v3s_R_Gr4T3!}
+files:
+  - dist/DirectionalSlopes_4ppb_7div_Noise.ly
+  - dist/DirectionalSlopes_4ppb_7div_Noise.pdf
+  - dist/DirectionalSlopes_4ppb_7div_Noise.mid
+hints:
+  - Do you notice a geometric pattern among the notes? What's different during each repetition?
+  - {content: "Slope of adjacent pitches indicates 0 or 1.  Ex: C,E,F,G (all in same octave) == 1.  G,E,C (all in same octave) == 0.  After getting 0s and 1s, convert to 8-bits-per-char ASCII.", cost: 200}
+  - How would one convert letters to numbers, then convert the numbers to notes?
+requirements:
+  prerequisites:
+    - "Learn Your 7 (or 12) ABCs #1 - Tutorial"
+  anonymize: true
+next: null
+topics:
+    - "arc:2:Buildup"
+
+tags:
+  - medium
+state: hidden
+version: "0.1"
+

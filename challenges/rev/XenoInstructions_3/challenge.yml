@@ -1,0 +1,38 @@
+name:       "XenoInstructions #3"
+author:     "Mort (StevieoXOR)"
+category:   Rev
+description: |
+  Our crew has reconstructed a program that resembles Assembly, but coded in a Functional Paradigm that defines and runs anonymous functions. However, the reconstructed code is still missing an Interpreter and microcode compiler. Can you figure out how to run the program? You should round the program's final output value (do not include any intermediary computations) to the nearest 100 (either with comma or without are both okay), and then wrap that rounded value in the text "flag{" and "}". If the final output value is a Complex Number (i.e., has both Real AND Imaginary parts), then you should round each component to the nearest 100 (fancy vector magnitude math is NOT needed), such as "flag{-19,200}", "flag{19200}", "flag{-19,200i}", "flag{19200i}", "flag{100+19,200i}", "flag{100+19200i}", "flag{-100-19200i}".
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+- flag{4,575.852}
+- flag{4,575}
+- flag{4,576}
+- flag{4,600}
+- flag{4,500}
+files:
+  - dist/XI3-barely__function-al.__program.asm
+hints:
+  - Blocks of text that begin with a dot (.) can be called sections. `fun` is a common shorthand for the word `function`.
+  - Maybe the instruction names correspond to a fundamental concept in Functional Programming?
+  - Try researching Functional Programming. Pay attention to how variables are named and used among functions' inputs and outputs.
+  - Example function `x -> x*2 - 0.5x` --- The left side of the rightarrow represents the function's input, and the text on the right side of the arrow represents the function's output. This function has no name, so you can only call this function once.
+  - Maybe converting the Assembly-like instruction calls into a Python script would be helpful. Though, you still have to consider OOO and certain types of numbers that are normally illegal in basic math...
+  - A complex number is a number that is comprised of two parts, a Real part and an Imaginary part. When adding the two parts together like 15.3 + -5i, that combo is called a Complex Number.
+  - {content: "The square root operation can be made to take negative numbers as input, returning an imaginary value as its output.", cost: 25}
+  - {content: "If you were to create an Order of Operations that was not PEMDAS, nor Left-to-Right, nor Right-to-Left, what could it be?", cost: 50}
+  - {content: "Order of Operations (OOO) = CollapseLeft,ThenCollapseRight (order `0 2 4 6 8 ... 9 7 5 3 1` rather than order `0 1 2 3 4 5 ...`),  ThenRepeat. However, PEMDAS (really, only the parentheses part) happens within each object, *after* determining left and right.", cost: 200}
+requirements:
+  prerequisites:
+    - "XenoInstructions #2"
+  anonymize: true
+next: null
+tags:
+  - insane
+state: hidden
+version: "0.1"
+

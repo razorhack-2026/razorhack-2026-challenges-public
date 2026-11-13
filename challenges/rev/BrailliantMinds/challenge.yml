@@ -1,0 +1,29 @@
+name:       "Brailliant Minds"
+author: "Mort"
+category:   Rev
+description: |
+  A stream of seemingly encoded data was intercepted from a known associate of Dr. Rootkit. The threat detection team used the data's embedded newline characters as a delimiter, forming ostensibly rectangular regions in the encoded text. Can you further decipher the message?
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{braille}
+  - flag{BRAILLE}
+  - FLAG{braille}
+  - FLAG{BRAILLE}
+files:
+  - dist/BrailliantMinds-v2.txt
+hints:
+  - Maybe you should look at how the challenge's name is spelled. Does that spelling seem familiar to any other English words?
+  - {content: "I wonder if there's an online program or web app that can convert between Braille and Latin (i.e., English) characters.", cost: 200}
+next: null
+topics:
+    - "arc:2:Buildup"
+
+tags:
+  - medium
+state: hidden
+version: "0.1"
+

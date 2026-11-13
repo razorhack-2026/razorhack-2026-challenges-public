@@ -1,0 +1,28 @@
+name:       "Conditionally Visible"
+author: "Mort"
+category: Steganography
+description: |
+  A technical document that explains four different privacy-preserving techniques was intercepted, but the file contained an ever-so-slightly larger number of newlines than one might expect in a technical report, as if it were generated from LaTeX. A security officer begrudgingly decided to push it up the chain for further analysis, only catching it due to security protocols mandating statistical analysis. Is there any secret data being communicated in this file, or is it exactly as it seems?
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{K-Anonymity+L-+T-[1053n3zz_I5_B3tt3R_Th4|\|_D1ff3r3|\|t141_Pr1\/4[`/_sumTimes}
+  - FLAG{K-Anonymity+L-+T-[1053n3zz_I5_B3tt3R_Th4|\|_D1ff3r3|\|t141_Pr1\/4[`/_sumTimes}
+files:
+  - dist/GuideTo_LossyAndNonlossy_PrivacyModels_T-K-L_Diff--Priv.md
+hints:
+  - Have you tried searching (CTRL+F, CTRL+A) for the flag? Does anything stick out about the highlighted text?
+  - What are some popular ways to encode plaintext? (e.g., ASCII, UTF-8, ...)
+  - {content: "Check the characters at the boundary of the end of each line.", cost: 200}
+next: null
+topics:
+    - "arc:2:Buildup"
+
+tags:
+  - medium
+state: hidden
+version: "0.1"
+

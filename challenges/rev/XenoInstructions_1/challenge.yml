@@ -1,0 +1,30 @@
+name:       "XenoInstructions #1"
+author: "Mort"
+category:   Rev
+description: |
+  A program that resembles Assembly, coded in a Functional Paradigm, was found. However, it seems a logical block that defines functions was partially corrupted. Can you recover and run the fixed program? You should wrap the program's final output value (do not include any intermediary computations) in "flag{" and "}".
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{42}
+files:
+  - dist/XI1-barely__function-al.__program.asm
+hints:
+  - Blocks of text that begin with a dot (.) can be called sections. `fun` is a common shorthand for the word `function`.
+  - Maybe the instruction names correspond to a fundamental concept in Functional Programming?
+  - Try researching Functional Programming. Pay attention to how variables are named and used among functions' inputs and outputs.
+  - Example function `x -> x*2 - 0.5x` --- The left side of the rightarrow represents the function's input, and the text on the right side of the arrow represents the function's output. This function has no name, so you can only call this function once.
+  - {content: "How many input values does a Nullary function take? What is the type of the very last instruction executed in the program?", cost: 200}
+next:
+  - "XenoInstructions #2"
+topics:
+    - "quest:XenoInstructions"
+
+tags:
+  - medium
+state: hidden
+version: "0.1"
+

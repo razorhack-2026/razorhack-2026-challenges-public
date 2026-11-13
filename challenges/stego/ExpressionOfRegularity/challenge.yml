@@ -1,0 +1,36 @@
+name:       "Expression of Regularity"
+author: "Mort"
+category: Steganography
+description: |
+  An informational explanatory document was intercepted, but contained a few sentences that didn't quite make sense, so a security officer decided to push it up the chain for further analysis.
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{gapsbetweenchars}
+  - flag{gapsbetweenCharss}
+  - flag{gapsbetweenChars}
+  - flag{gaps_between_chars}
+  - flag{gaps_between_Chars}
+  - flag{GapsBetweenChars}
+  - flag{gapsBetweenChars}
+files:
+  - dist/RegularFile.odt
+  - dist/RegularFile.txt
+hints:
+  - Try researching Regular Expressions. You will likely need to know about Non-Greedy Matching vs Greedy Matching. 
+  - Have you tried searching (CTRL+F) for the flag? If that doesn't work, what's a tweak you could make to your search parameters?
+  - Maybe you should stop the repetition at the sentence's boundary?
+  - {content: "Do you notice a repeated pattern among the gaps in the flag characters? What if you assumed those gap distances remained constant and extended past the letters f l a g?", cost: 200}
+next: null
+tags:
+  - hard
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+  - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"
+

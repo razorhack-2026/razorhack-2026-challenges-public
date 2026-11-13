@@ -1,0 +1,61 @@
+DEBUG
+a b c d e
+f g h i j
+k l m n o
+p q r s t
+u v w x y z
+
+1 2 3 4 5
+6 7 8 9 0
+
+. ! ? _ *
+@ # ~ ` $
+% ^ & | <
+[ ] { } >
+( ) : ; -
+/ \ ' " +
+
+qgggggallaqiueeAllaiggge
+qauiiiallapiuiiAllaquiuq
+qggqiiallapauuuAlla)qgq(
+qauiuiallaqaiiiAllaguiug
+qaiiiiallaqgggqAllagiuig
+
+qgggggAllaaatttAlla
+qA0.AllaattaAalla
+qAwwwAllawlaaAalla
+q-+9qAllaattaAalla
+egggggAllaaatttAlla
+
+qggqaAllaqggqaALaigggea
+qaaaqALaqaaalALaguXga
+qggg!AllaqggqaALaqgqgqa
+qa*aqaLaaqaalaALaquiuqa
+qqqqaAllaqaalaALaqiuiqa
+
+qqqqqAL;aqvaaee
+eaqaaALaayyaaee
+eeleaALlaqqeeaa
+e_g_aAL;avveeaa
+qgggqALaaqggqvv
+
+AL;aqqaaeeAL;aq7a7
+ALaayqaaeeAllaayqaaee
+ALlaqyeeaaALlaqg77
+AL;ayqeeaaAll;ayqeeaa
+ALaaqyqqqqALaaqyqqqq
+
+ALaaczzea/ea
+Allaaaazzzaaa
+AL;aaaalqraa
+Allaaaaattaea
+ALaa_*ttAia
+Anorstyznorst
+
+
+Checksum
+/ggqqAlla#(())ll;/qggqea
+qaaaaA-%-U*_lal:qaaaeqa
+qqgg!A-'-::'::al;qaaaaaa
+qa*aqammaAddrzal:qaaa)qa
+\qgqaA__aeafhrhl;\gggqa

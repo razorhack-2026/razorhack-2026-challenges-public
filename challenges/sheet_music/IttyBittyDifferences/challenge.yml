@@ -1,0 +1,34 @@
+name:       "Itty Bitty Differences"
+author:     "Mort"
+category:   Steganography
+description: |
+  Heard by ear and transcribed to sheet music, a security officer noticed a theme that was repeated with slight variations during each repeat, thinking that the composer may have somehow hidden a message in the thematic differences. Can you verify their hunch?
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{b1tw153_m0d1f1c4t10n5_f40m_th3_phr453}
+  - flag{B1TW153_M0D1F1C4T10N5_F40M_TH3_PHR453}
+  - FLAG{b1tw153_m0d1f1c4t10n5_f40m_th3_phr453}
+  - FLAG{B1TW153_M0D1F1C4T10N5_F40M_TH3_PHR453}
+files:
+  - dist/IttyBittyDifferences.ly
+  - dist/IttyBittyDifferences.pdf
+  - dist/IttyBittyDifferences.mid
+hints:
+  - Do you notice a melodic pattern that repeats? What's different during each repetition?
+  - {content: "Perturb the melody to store bits. NoteIsChangedFromMelody=bit1, NoteIsNotChangedFromMelody=bit0.", cost: 100}
+  - How would one convert letters to numbers, then convert the numbers to notes?
+  - Callback reference, but with perturbations
+requirements:
+  prerequisites:
+    - "Learn Your 7 (or 12) ABCs #1 - Tutorial"
+  anonymize: true
+next: null
+tags:
+  - medium
+state: hidden
+version: "0.1"
+

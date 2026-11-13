@@ -1,0 +1,37 @@
+name:       "Learn Your 7 (or 12) ABCs #2 - Shared Motif"
+author:     "Mort"
+category:   Steganography
+description: |
+  Heard by ear and transcribed to sheet music, a security officer had a hunch that note names present in the sheet music covertly sound the song of the crew's flag. Can you verify their hunch?
+type: dynamic
+extra:
+  initial: 500
+  decay:   100
+  minimum: 100
+flags:
+  - flag{bagdad}
+  - flag{BAGDAD}
+  - FLAG{bagdad}
+  - FLAG{BAGDAD}
+files:
+  - dist/LrnUrABCs_2-SharedMotif.pdf
+  - dist/LrnUrABCs_2-SharedMotif.mid
+hints:
+  - No sharps (#) nor flats (b) in flag.
+  - Don't overthink this. But if you want to anyway, this flag relates to a combination of 1) Vacuum cleaner component and 2) Parent.
+  - Convert the notes shown in the PDF file to what are called "Note Names"
+  - Some of the 12TET note names are the letters that make up the flag.
+requirements:
+  prerequisites:
+    - "Learn Your 7 (or 12) ABCs #1 - Tutorial"
+  anonymize: true
+next: null
+tags:
+  - training
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+  - "quest:Odd Jobs"
+
+state: hidden
+version: "0.1"
+
