@@ -1,0 +1,66 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+#
+# This file is what gets your challenge imported into CTFd automatically
+# (`ctf challenge install/sync`) instead of hand-entered. Copy it into your
+# challenge folder as `challenge.yml`, fill in the marked fields, delete the
+# comments you don't need.
+#
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+
+# ── Required — fill these in ─────────────────────────────────────────────
+name: "hey edward where r my keys"  # display name on the scoreboard
+author: "Grace"
+category: Forensics                 # exact string shown on the scoreboard, and CTFd
+                                    # is case-sensitive — use one of: Cryptography,
+                                    # Forensics, Network Forensics, Pwn, Rev, Web,
+                                    # OSINT, Stego, Wi-Fi, ICS, AI, Misc
+description: |
+    Your coworker Lain somehow lost their SSH keys to an important server in the ship. All you've got is
+    a coredump of OpenSSH's
+    [`ssh-agent`](https://github.com/openssh/openssh-portable/blob/master/ssh-agent.c) and, for whatever
+    reason, the public key the server uses `id_ed25519.pub`.
+
+    Log back in to the server to get your flag (SSH in as `iwakuralain` at the address in the connection info).
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+# Uniform dynamic scoring (GM meeting 2026-08-17): every challenge starts at
+# 500 and decays as more teams solve it. No per-challenge point values.
+# `decay` and `minimum` are set globally once registration numbers are known —
+# leave the placeholders alone; they'll be filled in one pass before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+# Plain string = static, case-sensitive (the default — use this unless you
+# have a reason not to). See the ctfcli spec for case-insensitive or regex.
+flags:
+    - flag{oh_my_keys_r_right_here}
+
+# ── Files the competitor downloads ───────────────────────────────────────
+# Paths relative to this file. Everything listed here gets uploaded to CTFd.
+# Only list things from dist/ — never src/ or solution/.
+files:
+    - dist/core.961.tar.gz
+    - dist/id_ed25519.pub
+
+# ── Optional: live-service challenges only ───────────────────────────────
+# If your challenge runs as a service (docker-compose.yml exists), tell
+# players how to reach it. Host/port get finalized at deploy time.
+connection_info: "ssh -p {port} iwakuralain@{host}"
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+# Difficulty goes here (easy / medium / hard) plus any technique tags.
+tags:
+    - insane
+
+topics:
+    - "arc:1:The Prologue"
+    - instance:hey-edward-where-r-my-keys
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+state: hidden       # challenges stay hidden until we flip them live for the
+                    # event; omitting this defaults to VISIBLE, so keep it
+version: "0.1"

@@ -1,0 +1,5 @@
+services:
+  ssh-agent-coredump:
+    build: .
+    image: ssh-agent-coredump:latest
+    container_name: edward

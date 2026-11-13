@@ -1,0 +1,33 @@
+name: "Hangman"
+author: "Grace"
+category: Pwn
+description: |
+    There's a secret hangman game deployed in the ship's servers. You don't have the
+    privileges to access the server, but you can still play it. See what you can find.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{0h_m4n_1_f33l_0v3rfl0w3d}
+
+files:
+    - dist/hangman.c
+
+# Live service (docker-compose.yml) — host/port finalized at deploy time.
+connection_info: "nc {host} {port}"
+
+tags:
+    - medium
+
+topics:
+    - "arc:2:Buildup"
+    - instance:hangman
+
+state: hidden
+version: "0.1"

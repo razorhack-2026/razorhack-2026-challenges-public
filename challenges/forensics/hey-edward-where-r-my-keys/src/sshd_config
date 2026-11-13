@@ -1,0 +1,6 @@
+PubkeyAuthentication yes
+PasswordAuthentication no
+PermitRootLogin no
+
+Match User iwakuralain
+    ForceCommand /bin/echo 'flag{oh_my_keys_r_right_here}'

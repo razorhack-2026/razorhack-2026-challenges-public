@@ -1,0 +1,33 @@
+name: "Grace's SHA256 Hash Collision Project"
+author: "Grace"
+category: Reverse Engineering
+description: |
+  I recently found this old website I made when I was trying to break SHA256 by
+  finding a hash collision. It's a lot harder than I thought... maybe you can
+  take a crack at it! If you can break SHA256, then maybe you can bypass some
+  of ICARUS's security systems. I think I also hid a little reward somewhere.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{wh4t_th3_h3ck_i5_w3b4ss3mb1y}
+
+# Live service (docker-compose.yml) — host/port finalized at deploy time.
+connection_info: "http://{host}:{port}"
+
+tags:
+    - medium
+    - webassembly
+
+topics:
+    - instance:graces-sha256-hash-collision-project
+    - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"

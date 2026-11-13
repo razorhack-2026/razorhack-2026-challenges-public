@@ -1,0 +1,8 @@
+services:
+  hash-collision:
+    build: .
+    image: hash-collision:latest
+    container_name: hash-collision
+    ports:
+      - "80:80"
+    restart: unless-stopped

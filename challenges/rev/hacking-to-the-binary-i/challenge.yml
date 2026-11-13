@@ -1,0 +1,31 @@
+name: "Hacking to the Binary I"
+author: "Grace"
+category: Rev
+description: |
+  I ran some experiments recently and got bucket-loads of data. I made a little data organizer
+  software a long time ago, but for some reason I password-protected it. Of course, I've forgotten the
+  password now. Can you try to crack it and see what the password was?
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{my_homemade_hash_sux}
+
+files:
+    - dist/gedo
+
+topics:
+    - "quest:Odd Jobs"
+
+tags:
+    - easy
+
+state: hidden
+version: "0.1"
+

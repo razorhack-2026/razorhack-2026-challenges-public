@@ -1,0 +1,275 @@
+# - Registers
+#   - 4 General Purpose Registers
+#   - Register Base Pointer + Register Stack Pointer
+#   - Program Counter Register
+#       - R[0] = R0; R[1] = R1; R[2] = R2; R[3] = R3
+#         R[4] = SP; R[5] = FP;
+#   - Program Counter is in its own thing
+# - Unified Memory
+#   - Data + Instructions
+# - Program Layout in Memory:
+#   1. Instructions
+#   2. Initial Data
+#   3. Input Data
+#   4. Zeroed Stack Space
+#
+# Instruction Set
+# ---------------
+# 0x0 halt Reg0
+# 0x1 movi Reg0 #Imm
+# 0x2 movr Reg0 Reg1
+# 0x3 ldr  Reg0 Reg1
+# 0x4 str  Reg0 Reg1
+# 0x5 add  Reg0 Reg1 Reg2
+# 0x6 mul  Reg0 Reg1 Reg2
+# 0x7 not  Reg0 Reg1
+# 0x8 and  Reg0 Reg1 Reg2
+# 0x9 or   Reg0 Reg1 Reg2
+# 0xa xor  Reg0 Reg1 Reg2
+# 0xb shl  Reg0 Reg1 Reg2
+# 0xc shr  Reg0 Reg1 Reg2
+# 0xd jmp  Reg0
+# 0xe jeq  Reg0 Reg1 Reg2
+
+.data
+label xored_flag_cstring: [0xf9, 0x1c, 0xde, 0x8c, 0xe4, 0x13, 0x94, 0xc0, 0xc0, 0x19, 0xcc, 0xb4, 0xfe, 0x1e, 0xe0, 0x82, 0xf1, 0x04, 0xda, 0x99, 0xef, 0x02, 0xda, 0x9f, 0xfa, 0x14, 0xe0, 0x87, 0xfe, 0x1e, 0xd8, 0x8a, 0xea, 0x17, 0xda, 0x96, 0x00]
+
+label bad_colors_cstring: [0x42, 0x61, 0x64, 0x20, 0x43, 0x6f, 0x6c, 0x6f, 0x72, 0x73, 0x21, 0x00]
+
+label edges: [0x6, 0xc, 0x6, 0xf, 0x3, 0x4, 0x4, 0x6, 0x3, 0xa, 0x3, 0xd, 0x8, 0x9, 0x0, 0x5, 0x2, 0x5, 0x2, 0xb, 0x1, 0x3, 0x1, 0x9, 0x0, 0xb, 0x2, 0xe, 0x2, 0x8, 0xa, 0xc, 0xd, 0xe, 0x6, 0x8, 0x7, 0xd, 0x4, 0x5, 0x5, 0x6, 0xc, 0xf, 0x5, 0x9, 0x3, 0xf, 0xe, 0xf, 0x0, 0x1, 0x0, 0x7, 0x8, 0xe, 0xa, 0xb, 0x0, 0x4, 0x0, 0xd, 0x2, 0xa, 0x1, 0x8, 0xb, 0xd, 0x7, 0x9, 0x4, 0x7, 0xc, 0xe, 0x3, 0xb, 0x4, 0xa, 0x3, 0xe, 0x5, 0x8, 0x5, 0xe, 0x9, 0xc, 0x1, 0x4, 0x0, 0x6, 0x9, 0xf, 0xa, 0xd, 0x1, 0x7, 0xb, 0xc, 0x2, 0xc, 0x1, 0xa, 0x2, 0xf, 0xd, 0xf, 0x7, 0xb, 0x6, 0x9, 0x7, 0x8]
+
+label nodes: [0x2, 0x0, 0x3, 0x1]
+
+
+# Input Data
+# [...] <- Nodes; Length = 12
+
+.text
+label entry:
+# stack/frame pointer shenanigans
+movi R0, 1
+add  R0, SP, R0
+str  FP, R0
+movr FP, SP
+
+# --- Verify Coloring ---
+# grow stack by 3
+movi R0, 3
+add  SP, SP, R0
+
+# [FP + 1] <- edges (Pointer)
+movi R0, @edges
+movi R1, 1
+add  R1, FP, R1
+str  R0, R1
+
+# [FP + 2] <- edges + 112
+movi R2, 112
+add  R0, R0, R2
+movi R1, 2
+add  R1, FP, R1
+str  R0, R1
+
+
+
+label start_edge_loop:
+# R1 <- [FP + 1]; R1 <- edges
+movi R0, 1
+add  R0, FP, R0
+ldr  R1, R0
+
+# R2 <- [FP + 2]; R1 <- edges + 112
+movi R0, 2
+add  R0, FP, R0
+ldr  R2, R0
+
+# if R1 == R2: goto end_edge_loop
+movi R0, @end_edge_loop
+jeq  R1, R2, R0
+
+label body_edge_loop:
+# R2 <- R1; R2 <- edges[0]
+ldr  R2, R1
+
+# R3 <- R1; R3 <- edges[1]
+movi R0, 1
+add  R1, R1, R0
+ldr  R3, R1
+
+# [FP + 1] <- edges + 2
+add  R1, R1, R0
+movi R0, 1
+add  R0, FP, R0
+str  R1, R0
+
+# R2 <- [nodes + R2]; R2 <- nodes[edges[0]]
+# R3 <- [nodes + R3]; R3 <- nodes[edges[1]]
+movi R0, @nodes
+add  R2, R0, R2
+ldr  R2, R2
+add  R3, R0, R3
+ldr  R3, R3
+
+# if R2 == R3: halt BAD; otherwise: goto start_edge_loop
+movi R0, @same_color
+jeq  R2, R3, R0
+
+movi R0, @start_edge_loop
+jmp  R0
+ 
+label same_color:
+movi R0, @bad_colors_cstring
+halt R0
+
+label end_edge_loop:
+# --- Verify Coloring ---
+
+# R2 has Concatenated Nodes
+
+# --- Concatenate Nodes ---
+# R0 <- nodes      (Pointer)
+# R1 <- nodes + 16 (Pointer)
+movi R0, @nodes
+movi R1, 16
+add  R1, R0, R1
+movi R2, 0
+
+label start_node_loop:
+# if R0 == R1: goto end_node_loop
+movi R3, @end_node_loop
+jeq  R0, R1, R3
+
+label body_node_loop:
+# R2 <- (R2 << 2) | nodes[0]
+movi R3, 2
+shl  R2, R2, R3
+ldr  R3, R0
+or   R2, R2, R3
+
+# nodes++
+movi R3, 1
+add  R0, R0, R3
+
+movi R3, @start_node_loop
+jmp  R3
+
+label end_node_loop:
+# --- Concatenate Nodes ---
+
+# --- LCG Loop ---
+movi R0, 0
+movi R1, 255
+label start_lcg_loop:
+movi R3, @end_lcg_loop
+jeq  R0, R1, R3
+
+label body_lcg_loop:
+# R0 <- (R0 * 0x19c60d)   & 0xffffffff
+movi R3, 0x19c60d
+mul  R2, R2, R3
+movi R3, 0xffffffff
+and  R2, R2, R3
+
+# R0 <- (R0 + 0x3c6ef35f) & 0xffffffff
+movi R3, 0x3c6ef35f
+add  R2, R2, R3
+movi R3, 0xffffffff
+and  R2, R2, R3
+
+movi R3, 1
+add  R0, R0, R3
+
+movi R3, @start_lcg_loop
+jmp  R3
+label end_lcg_loop:
+# --- LCG Loop ---
+
+# [FP + 3] <- LCG Loop result
+movi R0, 3
+add  R0, FP, R0
+str  R2, R0
+
+# --- XOR Flag ---
+movi R0, @xored_flag_cstring
+
+label start_xor_loop:
+movi R3, @end_xor_loop
+movi R2, 0
+ldr  R1, R0
+jeq  R1, R2, R3
+
+label body_xor_loop:
+# R1 <- [FP + 3]; R1 <- LCG Loop result
+movi R1, 3
+add  R1, FP, R1
+ldr  R1, R1
+
+# XOR 0
+movi R3, 0x00
+shr  R2, R1, R3
+movi R3, 0xff
+and  R2, R2, R3
+movi R3, 0
+add  R3, R0, R3
+ldr  R3, R3
+xor  R2, R3, R2
+movi R3, 0
+add  R3, R0, R3
+str  R2, R3
+
+# XOR 1
+movi R3, 0x08
+shr  R2, R1, R3
+movi R3, 0xff
+and  R2, R2, R3
+movi R3, 1
+add  R3, R0, R3
+ldr  R3, R3
+xor  R2, R3, R2
+movi R3, 1
+add  R3, R0, R3
+str  R2, R3
+
+
+# XOR 2
+movi R3, 0x10
+shr  R2, R1, R3
+movi R3, 0xff
+and  R2, R2, R3
+movi R3, 2
+add  R3, R0, R3
+ldr  R3, R3
+xor  R2, R3, R2
+movi R3, 2
+add  R3, R0, R3
+str  R2, R3
+
+# XOR 3
+movi R3, 0x18
+shr  R2, R1, R3
+movi R3, 0xff
+and  R2, R2, R3
+movi R3, 3
+add  R3, R0, R3
+ldr  R3, R3
+xor  R2, R3, R2
+movi R3, 3
+add  R3, R0, R3
+str  R2, R3
+
+movi R3, 4
+add  R0, R0, R3
+
+movi R3, @start_xor_loop
+jmp  R3
+
+label end_xor_loop:
+
+movr SP, FP
+movi R0, 1
+add  R0, SP, R0
+ldr  FP, R0
+# --- XOR Flag ---
+
+movi R0, @xored_flag_cstring
+halt R0
