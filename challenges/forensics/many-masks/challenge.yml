@@ -1,0 +1,36 @@
+name: "Many Masks"
+author: "Jebediah Kerman"
+category: Forensics
+description: |
+    Salvage pulled one file off the derelict's data core before the racks lost
+    power. The manifest listed it three times, under three different names, with
+    three different sizes — and only this survived.
+
+    Our tooling says it is an image and refuses to discuss it further. The
+    caption it displays starts something it never finishes.
+
+    Whatever the crew were hiding, they did not hide it in three files.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{0n3_f1l3_we4r5_m4ny_m45k5}
+
+files:
+    - dist/artifact.png
+
+tags:
+    - hard
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"

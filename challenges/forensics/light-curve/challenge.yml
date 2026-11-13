@@ -1,0 +1,32 @@
+name: "Light Curve"
+author: "Jebediah Kerman"
+category: Forensics
+description: |
+    A photometry station on the *variable star* monitoring array logged an unusually long
+    observing run before going quiet. Ops handed over the raw historian export — see if
+    there's anything in it besides the star.
+
+    `scaled_value` is exactly what it looks like. Registers carry more than one kind of
+    information.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{th3_r34l_s1gn4l_1s_1n_th3_n01s3}
+
+files:
+    - dist/light_curve.csv
+
+tags:
+    - medium
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"

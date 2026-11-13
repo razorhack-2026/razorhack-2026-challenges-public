@@ -1,0 +1,26 @@
+name: "Who's That Protocol #10"
+author: "Jebediah Kerman"
+category: Misc
+description: |
+    Need a break from the ads? Who's That Protocol?!
+
+    Name the protocol in the slide and wrap it in the standard flag format.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER - set globally before the event
+    minimum: 100    # PLACEHOLDER - set globally before the event
+flags:
+    - { type: regex, content: '^flag\{whisker([-_ ]?control)?([-_ ]?protocol)?\}$', data: case_insensitive }
+files:
+    - "dist/WTP #10.pdf"
+hints:
+    - "This one's a TCP/UDP port, not an IP protocol number. Look up port 3233."
+tags:
+    - hard
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Who's That Protocol"
+
+state: hidden
+version: "0.1"

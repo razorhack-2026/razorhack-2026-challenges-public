@@ -1,0 +1,34 @@
+name: "Flat Field"
+author: "Jebediah Kerman"
+category: Reverse Engineering
+description: |
+    Before downlink, the probe's imaging pipeline runs every frame through `lenscal`, a
+    lens-calibration utility that applies a calibration mask to the frame.
+
+    Ground received a calibrated frame of NGC 6872, the Condor Galaxy. The calibration mask
+    that went with it was lost in transit, and mission control needs it back. All you have is
+    the calibrated frame and the tool that produced it.
+
+    Image credit: NASA/JPL-Caltech (PIA16613), modified.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{the_mask_was_the_message}
+
+files:
+    - dist/condor_cal.png
+    - dist/lenscal
+
+topics:
+    - "arc:1:The Prologue"
+
+tags:
+    - hard
+
+state: hidden
+version: "0.1"

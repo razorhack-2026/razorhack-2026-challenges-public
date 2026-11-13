@@ -1,0 +1,26 @@
+name: "Who's That Protocol #8"
+author: "Jebediah Kerman"
+category: Misc
+description: |
+    Need a break from the ads? Who's That Protocol?!
+
+    Name the protocol in the slide and wrap it in the standard flag format.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER - set globally before the event
+    minimum: 100    # PLACEHOLDER - set globally before the event
+flags:
+    - { type: regex, content: '^flag\{(br[-_]?sat[-_]?mon|backrooms?[-_]?satnet[-_]?monitoring)\}$', data: case_insensitive }
+files:
+    - "dist/WTP #8.pdf"
+hints:
+    - "It's an IP protocol number, not a port. Look up IP protocol number 76 - and mind the name."
+tags:
+    - hard
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Who's That Protocol"
+
+state: hidden
+version: "0.1"

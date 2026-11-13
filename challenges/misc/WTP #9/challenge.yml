@@ -1,0 +1,26 @@
+name: "Who's That Protocol #9"
+author: "Jebediah Kerman"
+category: Misc
+description: |
+    Need a break from the ads? Who's That Protocol?!
+
+    Name the protocol in the slide and wrap it in the standard flag format.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER - set globally before the event
+    minimum: 100    # PLACEHOLDER - set globally before the event
+flags:
+    - { type: regex, content: '^flag\{(chargen|character[-_ ]?generator([-_ ]?protocol)?)\}$', data: case_insensitive }
+files:
+    - "dist/WTP #9.pdf"
+hints:
+    - "A testing/debug service that just streams characters at you. TCP/UDP port 19."
+tags:
+    - medium
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Who's That Protocol"
+
+state: hidden
+version: "0.1"

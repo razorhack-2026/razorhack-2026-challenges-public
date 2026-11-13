@@ -1,0 +1,36 @@
+name: "Houston, We Have a Problem"
+author: "Jebediah Kerman"
+category: Forensics
+description: |
+    The ship's technology maintenance team has noticed some anomalies on the library's public
+    research computers. We're having trouble pinpointing the cause of the issues and where they
+    started.
+
+    See if you can find anything in the event logs for these systems:
+
+    - `Security.evtx`
+    - `Microsoft-Windows-Sysmon-Operational.evtx`
+    - `Microsoft-Windows-PowerShell-Operational.evtx`
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{gr0und_c0ntr0l_t0_m4j0r_1ntrus10n}
+
+files:
+    - dist/Security.evtx
+    - dist/Microsoft-Windows-Sysmon-Operational.evtx
+    - dist/Microsoft-Windows-PowerShell-Operational.evtx
+
+topics:
+    - "arc:1:The Prologue"
+
+tags:
+    - hard
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,40 @@
+name: "Off-Sun"
+author: "Jebediah Kerman"
+category: ICS
+description: |
+    Ten hours before we lost the main bus, the solar arrays quietly walked off-sun
+    and our power budget went with them. Ops swears no one touched the pointing
+    controls — the engineering console shows only routine setpoint tweaks, all
+    inside limits.
+
+    But the arrays don't move themselves. Something on the control segment was
+    talking to the array controller, and it was very careful to look like it
+    belonged there.
+
+    We pulled a capture off the segment span port before the reboot. Find who was
+    really driving the arrays, and figure out what they left behind.
+
+    Files provided:
+    - `array_ctrl.pcap` — packet capture from the solar-array control network segment
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+flags:
+    - flag{d0nt_l00k_d1r3ctly_4t_th3_sun}
+
+files:
+    - dist/array_ctrl.pcap
+
+tags:
+    - hard
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:3:The Chaos"
+
+state: hidden
+version: "0.1"

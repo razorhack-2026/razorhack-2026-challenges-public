@@ -1,0 +1,37 @@
+name: "Black Box Recovery"
+author: "Jebediah Kerman"
+category: Forensics
+description: |
+    The probe came down hard. Salvage pulled its flight recorder out of the
+    wreckage and imaged the storage before anything else could go wrong.
+
+    In its last seconds the flight computer logged the abort sequence and the
+    self-destruct override code it accepted. Then the log was deleted, and the
+    crash finished the job on the drive's file table. Every recovery tool we own
+    finds the file, reports its size, and hands back nothing.
+
+    The recorder is stubborn, though. It kept what it could. Get us that
+    override code.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{the_black_box_kept_the_override_code}
+
+files:
+    - dist/blackbox.img.xz
+
+topics:
+    - "arc:1:The Prologue"
+
+tags:
+    - hard
+
+state: hidden
+version: "0.1"

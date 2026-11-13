@@ -1,0 +1,45 @@
+name: "Pulsar Dropbox"
+author: "Jebediah Kerman"
+category: Forensics
+description: |
+    The file share went down again, so Dr. Vance's colleague did what any
+    reasonable person does under deadline: mailed the observation over in
+    pieces. Then someone locked the last attachment "for safety" and went
+    on leave.
+
+    We pulled her inbox off the station relay before it was wiped. Whatever
+    she was sent is still in there somewhere, scattered between the payroll
+    reminders and the calibration logs. Put it back together, look at what
+    it shows you, and that will tell you how to open the rest.
+
+    The relay's clock was drifting during the dump, so the message
+    timestamps came out unreliable — don't trust the dates to tell you what
+    order anything arrived in.
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - flag{IC4nTB3liev3th1s1sR34LTechNologY!}
+
+files:
+    - dist/inbox.mbox
+
+hints:
+    - { content: "Once the thread is back in order you get an image — but the image isn't the answer, it's a pointer. It names a specific astronomical object by its catalogue designation. That object, not the picture, is what you carry to the next step.", cost: 50 }
+    - { content: "The last attachment is locked with repeating-key XOR, and the key is a single word: the name of the region of space — the constellation — that the object belongs to. Look its designation up in a public pulsar catalogue (e.g. the ATNF Pulsar Catalogue) to find the constellation.", cost: 100 }
+
+tags:
+    - medium
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:2:Buildup"
+
+state: hidden
+version: "0.1"
