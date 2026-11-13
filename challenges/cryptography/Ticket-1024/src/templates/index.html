@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Telescope Access</title>
+    <style>
+        body {
+            margin: 40px;
+            background: #eeeeee;
+            color: #222222;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        form {
+            width: 320px;
+            padding: 20px;
+            border: 1px solid #777777;
+            background: #ffffff;
+        }
+
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 8px;
+            border: 1px solid #777777;
+            font: inherit;
+        }
+
+        button {
+            padding: 7px 14px;
+            border: 1px solid #555555;
+            background: #dddddd;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <form id="form" method="post">
+        <input type="text" name="crewID" placeholder="Crew ID">
+        <button type="submit" onclick="requestAccess">Request Access</button>
+    </form>
+</body>
+
+<script>
+        const form = document.getElementById('form')
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const formData = new FormData(form)
+            await fetch('/requestAccess', {
+                method: 'POST',
+                body: formData
+            }).then(async res => {
+                const dashboardHtml = await res.text()
+
+                document.open()
+                document.write(dashboardHtml)
+                document.close()
+            }).catch(alert, 'Something went wrong. Please try again.')
+        })
+</script>
+
+</html>

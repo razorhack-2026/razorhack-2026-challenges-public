@@ -1,0 +1,3 @@
+# GM build and reference-solve dependencies; competitors choose their own tools.
+# Verified on Python 3.11.2 with NumPy 1.24.2.
+numpy==1.24.2

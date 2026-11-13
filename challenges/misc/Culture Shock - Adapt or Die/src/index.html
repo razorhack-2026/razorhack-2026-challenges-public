@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culture Shock: Adapt or Die — Calibration Lab</title>
+    <style>
+        :root {
+            --cell-size: 16px;
+            --paper: #07120c;
+            --alive: #4ade80;
+            --dead: #12271b;
+            --accent: #a3e635;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--paper);
+            color: #d1fae5;
+            font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        h1 {
+            font-size: 1.1rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .lede {
+            max-width: 780px;
+            font-size: 0.8rem;
+            line-height: 1.55;
+            opacity: 0.85;
+            margin: 0;
+        }
+
+        .lede em { color: var(--accent); font-style: normal; }
+
+        .law {
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            border: 1px dashed #2f6b45;
+            border-radius: 6px;
+            padding: 6px 12px;
+            color: #fca5a5;
+        }
+
+        .panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 14px;
+            background: #0b1a12;
+            border: 1px solid #2f6b45;
+            border-radius: 8px;
+            max-width: 100%;
+        }
+
+        .panel h2 {
+            margin: 0;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toolbar button,
+        .panel button {
+            background: #14301f;
+            color: #d1fae5;
+            border: 1px solid #2f6b45;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .toolbar button:hover:not(:disabled),
+        .panel button:hover:not(:disabled) { border-color: var(--accent); }
+
+        .toolbar button:disabled,
+        .panel button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .stats {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stats span { color: var(--accent); }
+
+        .grid {
+            display: grid;
+            gap: 1px;
+            background: #04100a;
+            padding: 3px;
+            border-radius: 4px;
+        }
+
+        .grid button {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            padding: 0;
+            border: none;
+            border-radius: 1px;
+            background: var(--dead);
+            cursor: pointer;
+        }
+
+        .grid button[aria-pressed="true"] { background: var(--alive); }
+
+        .clips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            max-width: 720px;
+        }
+
+        .clips button.selected { border-color: var(--accent); color: var(--accent); }
+
+        .clip-stage {
+            display: grid;
+            gap: 1px;
+            background: #04100a;
+            padding: 3px;
+            border-radius: 4px;
+        }
+
+        .clip-stage span {
+            width: 10px;
+            height: 10px;
+            border-radius: 1px;
+            background: var(--dead);
+        }
+
+        .clip-stage span.a { background: var(--alive); }
+
+        .note {
+            font-size: 0.72rem;
+            opacity: 0.7;
+            max-width: 460px;
+            text-align: center;
+            margin: 0;
+            min-height: 2.2em;
+        }
+
+        .status {
+            font-size: 0.78rem;
+            min-height: 2.4em;
+            margin: 0;
+            color: var(--accent);
+            max-width: 700px;
+            text-align: center;
+            white-space: pre-wrap;
+        }
+
+        .status.error { color: #fca5a5; }
+
+        .proposal { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+        .proposal input {
+            background: #04100a;
+            color: #d1fae5;
+            border: 1px solid #2f6b45;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font: inherit;
+            font-size: 0.85rem;
+            width: 200px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <h1>Culture Shock: Adapt or Die</h1>
+
+    <p class="lede">
+        The exobacteria that Patient Zero seeded have been through the Keeper of
+        Tomorrow's reactor and they no longer behave the way the biologists wrote
+        down. Every colony in the ship's archive follows a <em>different</em>
+        growth law, and nobody wrote down what it is. Reagent is short: you have a
+        handful of experiments and one chance to publish the correction. Watch the
+        archived cultures, design cheap experiments of your own, then submit the
+        notation that explains what the colonies are doing.
+    </p>
+
+    <div class="law">growth law: NOT IDENTIFIED</div>
+
+    <div class="panel">
+        <h2>Probe lab</h2>
+        <div class="stats">
+            <div>Reagent left: <span id="remaining">&mdash;</span></div>
+            <div>Generation: <span id="generation">0</span></div>
+            <div>Alive: <span id="population">0</span></div>
+        </div>
+        <div class="toolbar">
+            <button id="clear" type="button">Clear</button>
+            <button id="randomize" type="button">Random</button>
+            <button id="specimen" type="button">Load specimen</button>
+            <button id="observe-1" type="button">Observe 1 generation</button>
+            <button id="observe-3" type="button">Observe 3 generations</button>
+        </div>
+        <div id="grid" class="grid" role="grid" aria-label="Probe board"></div>
+        <p class="note">
+            Click cells to build a culture. Each observation spends one dose of
+            reagent and returns the colony afterwards &mdash; nothing else.
+        </p>
+    </div>
+
+    <div class="panel">
+        <h2>Archive cultures (recorded)</h2>
+        <div id="clip-list" class="clips"></div>
+        <div id="clip-stage" class="clip-stage" role="img" aria-label="Recorded culture"></div>
+        <div class="toolbar">
+            <button id="clip-prev" type="button">&#9664; previous</button>
+            <button id="clip-play" type="button">Play</button>
+            <button id="clip-next" type="button">next &#9654;</button>
+        </div>
+        <p id="clip-note" class="note"></p>
+    </div>
+
+    <div class="panel">
+        <h2>Correct the record</h2>
+        <div class="proposal">
+            <input id="rule-input" type="text" placeholder="e.g. B3/S23"
+                   aria-label="Proposed growth law" spellcheck="false" autocomplete="off">
+            <button id="propose" type="button">Submit growth law</button>
+        </div>
+        <p class="note">
+            Write it as B&lt;birth counts&gt;/S&lt;survival counts&gt; over the
+            radius-2 ring &mdash; the notation the earlier survey used.
+        </p>
+    </div>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <script>
+        "use strict";
+
+        // This page contains no simulation. It draws boards, posts them to the
+        // challenge service, and draws whatever comes back.
+
+        const DEFAULT_COLS = 16;
+        const DEFAULT_ROWS = 16;
+
+        // Mirrors the service's per-probe board limit.
+        const MAX_CELLS = 1600;
+
+        let COLS = DEFAULT_COLS;
+        let ROWS = DEFAULT_ROWS;
+
+        /** @type {Uint8Array} */
+        let cells = new Uint8Array(COLS * ROWS);
+        let generation = 0;
+        let remaining = null;
+
+        // When served by the challenge app this is its origin.
+        const API_BASE = /^https?:$/.test(location.protocol) ? location.origin : "";
+
+        const ALIVE_CHARS = "Oo#Xx1*";
+        const DEAD_CHARS = ".0 -";
+
+        const gridEl = document.getElementById("grid");
+        const remainingEl = document.getElementById("remaining");
+        const generationEl = document.getElementById("generation");
+        const populationEl = document.getElementById("population");
+        const statusEl = document.getElementById("status");
+        const ruleInput = document.getElementById("rule-input");
+        const proposeBtn = document.getElementById("propose");
+        const clipListEl = document.getElementById("clip-list");
+        const clipStageEl = document.getElementById("clip-stage");
+        const clipNoteEl = document.getElementById("clip-note");
+        const clipPrevEl = document.getElementById("clip-prev");
+        const clipPlayEl = document.getElementById("clip-play");
+        const clipNextEl = document.getElementById("clip-next");
+        const observeBtns = [
+            document.getElementById("observe-1"),
+            document.getElementById("observe-3"),
+        ];
+
+        /** @type {HTMLButtonElement[]} */
+        const buttons = [];
+
+        let statusTimer = null;
+
+        let clips = [];
+        let clipIndex = -1;
+        let frameIndex = 0;
+        let clipTimer = null;
+        /** @type {HTMLSpanElement[]} */
+        let clipCells = [];
+
+        function setStatus(message, isError = false, sticky = false) {
+            statusEl.textContent = message;
+            statusEl.classList.toggle("error", isError);
+            clearTimeout(statusTimer);
+            if (message && !sticky) {
+                statusTimer = setTimeout(() => {
+                    statusEl.textContent = "";
+                    statusEl.classList.remove("error");
+                }, 7000);
+            }
+        }
+
+        function updateRemaining(value) {
+            if (typeof value !== "number") return;
+            remaining = value;
+            remainingEl.textContent = String(value);
+            for (const button of observeBtns) button.disabled = value <= 0;
+            proposeBtn.disabled = value <= 0;
+        }
+
+        /** Rebuild the clickable board for the given dimensions. */
+        function buildBoard(cols, rows) {
+            COLS = cols;
+            ROWS = rows;
+            cells = new Uint8Array(COLS * ROWS);
+            generation = 0;
+            generationEl.textContent = "0";
+
+            buttons.length = 0;
+            gridEl.innerHTML = "";
+            gridEl.style.gridTemplateColumns = `repeat(${COLS}, var(--cell-size))`;
+
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const index = row * COLS + col;
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.setAttribute("role", "gridcell");
+                    button.setAttribute("aria-pressed", "false");
+                    button.setAttribute("aria-label", `row ${row + 1}, column ${col + 1}`);
+                    button.addEventListener("click", () => {
+                        cells[index] = cells[index] ? 0 : 1;
+                        button.setAttribute("aria-pressed", cells[index] ? "true" : "false");
+                        updatePopulation();
+                    });
+                    gridEl.appendChild(button);
+                    buttons[index] = button;
+                }
+            }
+
+            updatePopulation();
+        }
+
+        function updatePopulation() {
+            let alive = 0;
+            for (let i = 0; i < cells.length; i++) alive += cells[i];
+            populationEl.textContent = String(alive);
+        }
+
+        // Plain-text board format, shared with the service. Header lines are
+        // optional on the way in and carry no settings on the way out.
+        function serialize() {
+            const lines = [
+                "# culture v3",
+                `cols: ${COLS}`,
+                `rows: ${ROWS}`,
+                `generation: ${generation}`,
+            ];
+            for (let row = 0; row < ROWS; row++) {
+                let line = "";
+                for (let col = 0; col < COLS; col++) {
+                    line += cells[row * COLS + col] ? "O" : ".";
+                }
+                lines.push(line);
+            }
+            return lines.join("\n") + "\n";
+        }
+
+        function deserialize(text) {
+            const meta = {};
+            const rows = [];
+
+            for (const raw of text.split(/\r?\n/)) {
+                const line = raw.trim();
+                if (!line || line.startsWith("#")) continue;
+
+                if (rows.length === 0 && line.includes(":")) {
+                    const at = line.indexOf(":");
+                    const key = line.slice(0, at).trim().toLowerCase();
+                    if (/^[a-z0-9_]+$/.test(key)) {
+                        meta[key] = line.slice(at + 1).trim();
+                        continue;
+                    }
+                }
+
+                rows.push(line);
+            }
+
+            if (rows.length === 0) throw new Error("board state contains no rows");
+
+            const width = Math.max(...rows.map((row) => row.length));
+            if (width * rows.length > MAX_CELLS) {
+                throw new Error(`board is ${width}x${rows.length}, over the ${MAX_CELLS}-cell limit`);
+            }
+
+            const parsed = new Uint8Array(width * rows.length);
+            rows.forEach((line, row) => {
+                for (let col = 0; col < width; col++) {
+                    const ch = line[col] ?? ".";
+                    if (ALIVE_CHARS.includes(ch)) {
+                        parsed[row * width + col] = 1;
+                    } else if (!DEAD_CHARS.includes(ch)) {
+                        throw new Error(`unexpected character "${ch}" on row ${row + 1}`);
+                    }
+                }
+            });
+
+            const declaredCols = Number(meta.cols);
+            const declaredRows = Number(meta.rows);
+            if (Number.isFinite(declaredCols) && declaredCols !== width) {
+                throw new Error(`header says ${declaredCols} columns but the board has ${width}`);
+            }
+            if (Number.isFinite(declaredRows) && declaredRows !== rows.length) {
+                throw new Error(`header says ${declaredRows} rows but the board has ${rows.length}`);
+            }
+
+            const declaredGeneration = Number(meta.generation);
+
+            return {
+                cols: width,
+                rows: rows.length,
+                generation: Number.isFinite(declaredGeneration)
+                    ? Math.max(0, Math.trunc(declaredGeneration))
+                    : 0,
+                cells: parsed,
+            };
+        }
+
+        /** Show a serialized board, rebuilding the grid if its size changed. */
+        function loadBoard(text) {
+            const board = deserialize(text);
+
+            if (board.cols !== COLS || board.rows !== ROWS) {
+                buildBoard(board.cols, board.rows);
+            }
+
+            cells = board.cells;
+            generation = board.generation;
+            generationEl.textContent = String(generation);
+
+            for (let i = 0; i < cells.length; i++) {
+                buttons[i].setAttribute("aria-pressed", cells[i] ? "true" : "false");
+            }
+            updatePopulation();
+        }
+
+        // ── Archive cultures ────────────────────────────────────────────────
+        // Frames arrive from the service already recorded. Stepping through them
+        // is playback: this page never computes a generation itself.
+
+        function renderClipMenu() {
+            clipListEl.textContent = "";
+            clips.forEach((clip, index) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.textContent = clip.name;
+                button.addEventListener("click", () => selectClip(index));
+                clipListEl.appendChild(button);
+            });
+        }
+
+        function renderFrame() {
+            const clip = clips[clipIndex];
+            if (!clip) return;
+            const rows = clip.frames[frameIndex];
+            clipStageEl.style.gridTemplateColumns = `repeat(${clip.cols}, 10px)`;
+
+            let index = 0;
+            let alive = 0;
+            for (let row = 0; row < clip.rows; row++) {
+                for (let col = 0; col < clip.cols; col++) {
+                    const isAlive = rows[row][col] === "O";
+                    clipCells[index].className = isAlive ? "a" : "";
+                    if (isAlive) alive += 1;
+                    index += 1;
+                }
+            }
+
+            clipNoteEl.textContent =
+                `${clip.note} — frame ${frameIndex + 1} of ${clip.frames.length}, ` +
+                `${alive} alive.`;
+        }
+
+        function selectClip(index) {
+            if (clipTimer) playClip(true);
+            clipIndex = index;
+            frameIndex = 0;
+
+            const clip = clips[index];
+            for (const button of clipListEl.children) button.classList.remove("selected");
+            clipListEl.children[index].classList.add("selected");
+
+            clipStageEl.textContent = "";
+            clipCells = [];
+            for (let i = 0; i < clip.cols * clip.rows; i++) {
+                const cell = document.createElement("span");
+                clipStageEl.appendChild(cell);
+                clipCells.push(cell);
+            }
+
+            renderFrame();
+        }
+
+        function playClip(stop = false) {
+            if (stop) {
+                clearInterval(clipTimer);
+                clipTimer = null;
+                clipPlayEl.textContent = "Play";
+                return;
+            }
+            if (clipTimer) return;
+            clipPlayEl.textContent = "Pause";
+            clipTimer = setInterval(() => {
+                const clip = clips[clipIndex];
+                if (!clip) return;
+                frameIndex = (frameIndex + 1) % clip.frames.length;
+                renderFrame();
+            }, 900);
+        }
+
+        async function loadClips() {
+            if (!API_BASE) {
+                clipNoteEl.textContent =
+                    "Open this page from the challenge server to read the archive.";
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE}/clips`, { credentials: "same-origin" });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const payload = await response.json();
+                clips = payload.clips || [];
+                updateRemaining(payload.remaining);
+                renderClipMenu();
+                if (clips.length) selectClip(0);
+            } catch (err) {
+                clipNoteEl.textContent = `Archive unavailable: ${err.message}`;
+            }
+        }
+
+        // ── Experiments ─────────────────────────────────────────────────────
+
+        async function observe(generations) {
+            if (!API_BASE) {
+                setStatus("Open this page from the challenge server to run experiments.", true);
+                return;
+            }
+
+            for (const button of observeBtns) button.disabled = true;
+            setStatus("Observing…");
+
+            try {
+                const response = await fetch(
+                    `${API_BASE}/observe?generations=${generations}`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain" },
+                        body: serialize(),
+                        credentials: "same-origin",
+                    },
+                );
+                const result = await response.json();
+                updateRemaining(result.remaining);
+
+                if (!response.ok || result.status === "error") {
+                    setStatus(
+                        result.message || `Observation failed (HTTP ${response.status}).`,
+                        true,
+                    );
+                    return;
+                }
+
+                loadBoard(result.state);
+                setStatus(
+                    `Observed ${generations} generation(s). ` +
+                    `${result.remaining} dose(s) of reagent left.`,
+                );
+            } catch (err) {
+                setStatus(`Observation failed: ${err.message}`, true);
+            } finally {
+                const spent = remaining !== null && remaining <= 0;
+                for (const button of observeBtns) button.disabled = spent;
+            }
+        }
+
+        async function loadSpecimen() {
+            if (!API_BASE) {
+                setStatus("Open this page from the challenge server to load the specimen.", true);
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE}/specimen`, { credentials: "same-origin" });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const spec = await response.json();
+                updateRemaining(spec.remaining);
+                loadBoard(spec.state);
+                setStatus(`Loaded the recovered specimen (${spec.cols}×${spec.rows}).`);
+            } catch (err) {
+                setStatus(`Could not load the specimen: ${err.message}`, true);
+            }
+        }
+        async function propose() {
+            if (!API_BASE) {
+                setStatus("Open this page from the challenge server to submit.", true);
+                return;
+            }
+
+            const law = ruleInput.value.trim();
+            if (!law) {
+                setStatus("Type the growth law first.", true);
+                return;
+            }
+
+            proposeBtn.disabled = true;
+            setStatus("Testing the proposed law…");
+
+            try {
+                const response = await fetch(`${API_BASE}/submit`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ rule: law }),
+                    credentials: "same-origin",
+                });
+                const result = await response.json();
+                updateRemaining(result.remaining);
+
+                if (result.flag) {
+                    setStatus(`CORRECTION ACCEPTED\n${result.flag}`, false, true);
+                } else {
+                    setStatus(
+                        result.message || `Rejected (HTTP ${response.status}).`,
+                        true,
+                    );
+                }
+            } catch (err) {
+                setStatus(`Submission failed: ${err.message}`, true);
+            } finally {
+                proposeBtn.disabled = remaining !== null && remaining <= 0;
+            }
+        }
+
+        // ── Wiring ──────────────────────────────────────────────────────────
+
+        document.getElementById("clear").addEventListener("click", () => {
+            buildBoard(COLS, ROWS);
+            setStatus("");
+        });
+
+        document.getElementById("randomize").addEventListener("click", () => {
+            for (let i = 0; i < cells.length; i++) cells[i] = Math.random() < 0.12 ? 1 : 0;
+            generation = 0;
+            generationEl.textContent = "0";
+            for (let i = 0; i < cells.length; i++) {
+                buttons[i].setAttribute("aria-pressed", cells[i] ? "true" : "false");
+            }
+            updatePopulation();
+        });
+
+        document.getElementById("specimen").addEventListener("click", loadSpecimen);
+        observeBtns[0].addEventListener("click", () => observe(1));
+        observeBtns[1].addEventListener("click", () => observe(3));
+
+        clipPrevEl.addEventListener("click", () => {
+            const clip = clips[clipIndex];
+            if (!clip) return;
+            frameIndex = (frameIndex - 1 + clip.frames.length) % clip.frames.length;
+            renderFrame();
+        });
+
+        clipNextEl.addEventListener("click", () => {
+            const clip = clips[clipIndex];
+            if (!clip) return;
+            frameIndex = (frameIndex + 1) % clip.frames.length;
+            renderFrame();
+        });
+
+        clipPlayEl.addEventListener("click", () => {
+            if (clipTimer) playClip(true);
+            else playClip();
+        });
+
+        proposeBtn.addEventListener("click", propose);
+        ruleInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") propose();
+        });
+
+        buildBoard(DEFAULT_COLS, DEFAULT_ROWS);
+        loadClips();
+    </script>
+</body>
+</html>
+

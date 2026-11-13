@@ -1,0 +1,51 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+#
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+
+# ── Required — fill these in ─────────────────────────────────────────────
+name: "Culture Shock: Adapt or Die"
+author: "Lt. Niko Copernicus"
+category: Misc
+description: |
+    The biologists performed an experiment to test how the exobacterium's environment affects it by exposing a colony to intense radiation. The colony survived, but it seems to have mutated! The colony's growth has strayed from simulation, so its growth rules must have changed.
+
+    The biologists need the growth rule correction published before the next containment cycle. Build a culture on the probe board and ask the ship's imaging rig to run it forward one generation at a time; each observation costs a dose of reagent, and the doses are limited. The archive also holds a handful of cultures whose transitions have been pre-recorded which you can study for free. When you are confident, submit the notation that describes the new growth law — `B<birth counts>/S<survival counts>` over the same radius-2 ring the earlier survey used.
+# ── Scoring — do not edit ────────────────────────────────────────────────
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+flags:
+    - { type: static, content: "flag{subject_to_change}", data: case_insensitive }
+
+# ── Files the competitor downloads ───────────────────────────────────────
+files:
+    - dist/specimen.txt
+
+hints:
+    - {content: "Reagent is short because the imaging rig is slow, not because a board is limited to one question. One board can hold several cultures at once, as long as they are far enough apart that they never share a ring.", cost: 25}
+    - {content: "You do not need to guess the law: you need a transition for every neighbour count a ring can hold, for both a dead and a live cell. Decide how few observations that takes, then build each one to answer as much as it can.", cost: 75}
+
+# Live scoring service: POST a board to /observe, POST a proposed law to /submit.
+connection_info: "http://{host}:{port}"
+
+requirements:
+    prerequisites:
+        - "Culture Shock - Nowhere to Grow"
+    anonymize: true
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+tags:
+    - hard
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Culture Shock"
+    - instance:culture-shock-adapt-or-die
+
+state: hidden
+version: "0.1"

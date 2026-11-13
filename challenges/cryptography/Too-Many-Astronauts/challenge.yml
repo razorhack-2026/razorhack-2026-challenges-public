@@ -1,0 +1,41 @@
+name: "Too Many Astronauts in the Station"
+author: "Lt. Niko Copernicus"
+category: Cryptography
+description: |
+    Lt. Copernicus apparently has a message for you, but he wouldn't say anything about it. When I tried getting more details, he said "SHHHHH THEYRE LISTENING". He said that several members of the crew, including him, have a piece of the message and you have to figure out how to put them together. Go talk to these people and see if you can get the message out of them:
+
+    - Jebediah Kerman
+    - Grace
+    - WALL-D
+    - Voyager 2
+    - Tyrian Sol
+    - Lt. Niko Copernicus
+    - Lt. Rico Kopernicus (no relation)
+    - Andy Roid
+    - Davie Bowman
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+flags:
+    - { type: static, content: "flag{switch_up_ur_plaintext}", data: case_insensitive }
+# Shares are handed out by GMs in person; no CTFd downloads.
+files: []
+
+hints:
+    - "Each crew member has a piece of the message. Collect all pieces to reconstruct the original message."
+    - {content: "Look into Chinese Remainder Theorem (CRT) for combining the shares.", cost: 50}
+
+requirements:
+    anonymize: true
+
+tags:
+    - hard
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Drone Blockade"
+
+state: hidden
+version: "0.1"

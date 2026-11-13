@@ -1,0 +1,20 @@
+# Are We There Yet? - NFC tag payloads (GM-ONLY)
+#
+# Write the payload for each share as a single NDEF TEXT record.
+# Keep it exactly as written: <share index>, <0x-prefixed value>.
+# Field 1 is the evaluation point x; field 2 is the share value y.
+#
+# Threshold: 5 of 9 shares
+# Modulus: 0xa105db01c4ca6f21c129479c720f425a4b20ec314b326ee6080079cbadcb4b71
+#
+# These files must never be shipped to players or copied into dist/.
+
+1, 0x93c472d19327f95d33f48df3c5d828b6325af911d9971a9745efdd6e373116b0
+2, 0x9d3e8928e8a015768d6e481684b263c1f0a7bc8c97fde969cc45892ab74f256c
+3, 0xa0d832ac9bafdb07b4e83d5229b46f91fa3ea1b43982ab42fd8560a0910fc47
+4, 0x59c1a589f9ae03f4d33303bcdf9de0f3f97f2b3b87314a8eb16f41668d680d90
+5, 0x36b33c7ad40818c689bb6e959ed45bfd6167275308fac4165d210001265fc538
+6, 0x7e3173c17305444fbbd38c4576e210e53c8ee539c41f989d4a57cc5ea577e45a
+7, 0x7a5f34a712d00b9727bb98260597f8e2af6942124595b6466bce8c01b8e0bc95
+8, 0x664a920124ab2d0731ad5f763831b6fd4a2ca20ed8e7b39daf92b699a2a85dd0
+9, 0x2be1122dc55cc22a6189b221673713587291180ef1cff1cbef03626add23ff58

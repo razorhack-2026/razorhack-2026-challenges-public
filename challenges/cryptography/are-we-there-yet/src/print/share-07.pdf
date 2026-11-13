@@ -1,0 +1,230 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [9 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold /Encoding /WinAnsiEncoding >>
+endobj
+8 0 obj
+<< /Length 4752 >>
+stream
+0.055 0.13 0.24 rg
+0 774 612 18 re
+f
+1 1 1 rg
+BT /F2 10 Tf 36 779 Td (RAZERPOWERCO) Tj ET
+0.75 0.82 0.9 rg
+BT /F1 7 Tf 458 779.5 Td (NAV-FORM 09 / KEY RECOVERY) Tj ET
+0.42 0.42 0.42 rg
+BT /F2 8 Tf 36 752 Td (SHIPBOARD NAVIGATION INTEGRITY PROGRAM) Tj ET
+0 0.55 0.65 RG 1.2 w
+36 746 m 576 746 l S
+0.055 0.13 0.24 rg
+BT /F2 26 Tf 36 708 Td (ARE WE THERE YET?) Tj ET
+0 0.55 0.65 rg
+BT /F2 10 Tf 36 688 Td (PHYSICAL NAVIGATION KEY SHARE) Tj ET
+0.8 0.52 0.1 RG 1.2 w
+480 680 96 42 re
+S
+0.8 0.52 0.1 rg
+BT /F2 8 Tf 502.48 703 Td (ONE OF NINE) Tj ET
+0.42 0.42 0.42 rg
+BT /F1 6.5 Tf 504.678 689 Td (DO NOT REMOVE) Tj ET
+0.945 0.965 0.975 rg
+0.055 0.13 0.24 RG 1.6 w
+36 462 540 200 re
+B
+0.42 0.42 0.42 rg
+BT /F2 11 Tf 58 634 Td (SHARE) Tj ET
+0.055 0.13 0.24 rg
+BT /F2 92 Tf 58 532 Td (07) Tj ET
+0 0.55 0.65 rg
+BT /F2 18 Tf 174.72 536 Td (/ 09) Tj ET
+0.42 0.42 0.42 rg
+BT /F2 8 Tf 58 484 Td (RECORD THIS SHARE.) Tj ET
+0.7 0.74 0.78 RG 0.8 w
+262.8 480 m 262.8 644 l S
+0.7 0.74 0.78 RG 1.2 w
+[5 4] 0 d
+473.4 574 m 473.4 603.823 449.223 628 419.4 628 c 389.577 628 365.4 603.823 365.4 574 c 365.4 544.177 389.577 520 419.4 520 c 449.223 520 473.4 544.177 473.4 574 c
+S
+[] 0 d
+0.055 0.13 0.24 rg
+403.08 574 m 403.08 575.701 401.701 577.08 400 577.08 c 398.299 577.08 396.92 575.701 396.92 574 c 396.92 572.299 398.299 570.92 400 570.92 c 401.701 570.92 403.08 572.299 403.08 574 c
+f
+0.055 0.13 0.24 RG 2.6 w
+409.752 561.518 m
+416.646 566.904 417.868 576.858 412.482 583.752 c
+412.482 583.752 l
+411.687 584.77 410.77 585.687 409.752 586.482 c
+S
+0.055 0.13 0.24 RG 2.6 w
+417.879 551.116 m
+430.517 560.99 432.758 579.24 422.884 591.879 c
+422.884 591.879 l
+421.426 593.745 419.745 595.426 417.879 596.884 c
+S
+0.055 0.13 0.24 RG 2.6 w
+426.006 540.714 m
+444.389 555.077 447.648 581.622 433.286 600.006 c
+433.286 600.006 l
+431.165 602.72 428.72 605.165 426.006 607.286 c
+S
+0.055 0.13 0.24 rg
+BT /F2 9 Tf 382.86 508 Td (TAP PHONE HERE) Tj ET
+0.42 0.42 0.42 rg
+BT /F1 7.5 Tf 330.39 496 Td (Hold the top of your phone against the tag.) Tj ET
+0.7 0.74 0.78 RG 0.9 w
+36 292 540 150 re
+S
+0.9 0.93 0.96 rg
+36 418 540 24 re
+f
+0.055 0.13 0.24 rg
+BT /F2 10 Tf 50 426 Td (HOW TO READ THIS SHARE) Tj ET
+0.05 0.05 0.05 rg
+BT /F1 9 Tf 50 394 Td (1. Turn on NFC, then hold the TOP of your phone against the dashed circle above.) Tj ET
+0.05 0.05 0.05 rg
+BT /F1 9 Tf 50 378 Td (2. The tag returns one line: a share index, a comma, and a 0x-prefixed hex value.) Tj ET
+0.05 0.05 0.05 rg
+BT /F1 9 Tf 50 362 Td (3. Keep it exactly as written. Field 1 is x; field 2 is the share value y.) Tj ET
+0.05 0.05 0.05 rg
+BT /F1 9 Tf 50 346 Td (4. Nine shares exist; any FIVE distinct shares are enough to rebuild the key.) Tj ET
+0.05 0.05 0.05 rg
+BT /F1 9 Tf 50 330 Td (5. Leave this card mounted. If reaching it needs tools, it is not a share.) Tj ET
+0.945 0.965 0.975 rg
+36 212 540 68 re
+f
+0.42 0.42 0.42 rg
+BT /F2 9 Tf 50 262 Td (NAVIGATION MODULUS \(PUBLIC\)) Tj ET
+0.05 0.05 0.05 rg
+BT /F3 7.5 Tf 50 246 Td (0xa105db01c4ca6f21c129479c720f425a4b20ec314b326ee6080079cbadcb4b71) Tj ET
+0.42 0.42 0.42 rg
+BT /F1 8 Tf 50 228 Td (No key material is printed on this card. The share exists only on the NFC tag.) Tj ET
+0.42 0.42 0.42 rg
+BT /F4 9.5 Tf 36 186 Td (One of the nine. Alone, it is just noise.) Tj ET
+0.7 0.74 0.78 RG 0.8 w
+36 168 m 576 168 l S
+0.055 0.13 0.24 rg
+BT /F5 8 Tf 36 148 Td (SERIAL RPC-NAV-SHR-0007) Tj ET
+0.42 0.42 0.42 rg
+BT /F1 6.5 Tf 36 134 Td (PROPERTY OF RAZERPOWERCO - NAVIGATION INTEGRITY PROGRAM) Tj ET
+0.42 0.42 0.42 rg
+BT /F1 6.5 Tf 36 123 Td (Physical challenge prop. Do not dismantle, relocate, or remove the tag.) Tj ET
+0.055 0.13 0.24 rg
+426 100 0.8 38 re
+f
+0.055 0.13 0.24 rg
+432.1 100 1.4 20 re
+f
+0.055 0.13 0.24 rg
+438.2 100 0.8 26 re
+f
+0.055 0.13 0.24 rg
+444.3 100 2 15 re
+f
+0.055 0.13 0.24 rg
+450.4 100 0.8 41 re
+f
+0.055 0.13 0.24 rg
+456.5 100 2 23 re
+f
+0.055 0.13 0.24 rg
+462.6 100 2 14 re
+f
+0.055 0.13 0.24 rg
+468.7 100 1.4 24 re
+f
+0.055 0.13 0.24 rg
+474.8 100 2 45 re
+f
+0.055 0.13 0.24 rg
+480.9 100 2 21 re
+f
+0.055 0.13 0.24 rg
+487 100 2 31 re
+f
+0.055 0.13 0.24 rg
+493.1 100 2 27 re
+f
+0.055 0.13 0.24 rg
+499.2 100 2 37 re
+f
+0.055 0.13 0.24 rg
+505.3 100 1.4 15 re
+f
+0.055 0.13 0.24 rg
+511.4 100 1.4 23 re
+f
+0.055 0.13 0.24 rg
+517.5 100 2 41 re
+f
+0.055 0.13 0.24 rg
+523.6 100 2 41 re
+f
+0.055 0.13 0.24 rg
+529.7 100 0.8 14 re
+f
+0.055 0.13 0.24 rg
+535.8 100 1.4 26 re
+f
+0.055 0.13 0.24 rg
+541.9 100 0.8 16 re
+f
+0.055 0.13 0.24 rg
+548 100 0.8 34 re
+f
+0.055 0.13 0.24 rg
+554.1 100 0.8 45 re
+f
+0.055 0.13 0.24 rg
+560.2 100 0.8 15 re
+f
+0.055 0.13 0.24 rg
+566.3 100 1.4 33 re
+f
+0.42 0.42 0.42 rg
+BT /F3 6.5 Tf 426 84 Td (09-07-RPC) Tj ET
+0.055 0.13 0.24 rg
+0 0 612 12 re
+f
+0.8 0.87 0.95 rg
+BT /F1 5.5 Tf 234.654 4 Td (RAZERPOWERCO // LOST IN SPACE // RAZORHACK 2026) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R /F5 7 0 R >> >> /Contents 8 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000218 00000 n 
+0000000320 00000 n 
+0000000415 00000 n 
+0000000520 00000 n 
+0000000620 00000 n 
+0000005424 00000 n 
+trailer
+<< /Size 10 /Root 1 0 R >>
+startxref
+5590
+%%EOF

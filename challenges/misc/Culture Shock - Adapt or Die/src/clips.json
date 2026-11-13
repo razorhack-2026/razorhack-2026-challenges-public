@@ -1,0 +1,192 @@
+{
+  "generations": 1,
+  "clips": [
+    {
+      "id": "lone_spore",
+      "name": "Lone spore",
+      "note": "A single cell recovered from the asteroid core.",
+      "cols": 9,
+      "rows": 9,
+      "frames": [
+        [
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          "....O....",
+          ".........",
+          ".........",
+          ".........",
+          "........."
+        ],
+        [
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          "........."
+        ]
+      ]
+    },
+    {
+      "id": "arm_in_arm",
+      "name": "Two spores, arm in arm",
+      "note": "Two cells, two apart \u2014 the closest they can be and still see each other.",
+      "cols": 9,
+      "rows": 9,
+      "frames": [
+        [
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          "..O.O....",
+          ".........",
+          ".........",
+          ".........",
+          "........."
+        ],
+        [
+          ".........",
+          ".........",
+          "..OOO....",
+          ".........",
+          ".........",
+          ".........",
+          "..OOO....",
+          ".........",
+          "........."
+        ]
+      ]
+    },
+    {
+      "id": "tight_three",
+      "name": "Three spores, touching",
+      "note": "Three cells side by side.",
+      "cols": 9,
+      "rows": 9,
+      "frames": [
+        [
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          "...OOO...",
+          ".........",
+          ".........",
+          ".........",
+          "........."
+        ],
+        [
+          ".........",
+          ".........",
+          "..O...O..",
+          ".........",
+          ".........",
+          ".........",
+          "..O...O..",
+          ".........",
+          "........."
+        ]
+      ]
+    },
+    {
+      "id": "old_blinker",
+      "name": "The old blinker",
+      "note": "The three-cell pattern every textbook calls a blinker.",
+      "cols": 9,
+      "rows": 9,
+      "frames": [
+        [
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          "..O.O.O..",
+          ".........",
+          ".........",
+          ".........",
+          "........."
+        ],
+        [
+          ".........",
+          ".........",
+          "..OO.OO..",
+          "....O....",
+          "....O....",
+          "....O....",
+          "..OO.OO..",
+          ".........",
+          "........."
+        ]
+      ]
+    },
+    {
+      "id": "old_block",
+      "name": "The old block",
+      "note": "The four-cell square every textbook calls a block.",
+      "cols": 9,
+      "rows": 9,
+      "frames": [
+        [
+          ".........",
+          ".........",
+          ".........",
+          ".........",
+          "....OO...",
+          "....OO...",
+          ".........",
+          ".........",
+          "........."
+        ],
+        [
+          ".........",
+          ".........",
+          "...OOOO..",
+          "..O.OO.O.",
+          "..OO..OO.",
+          "..OO..OO.",
+          "..O.OO.O.",
+          "...OOOO..",
+          "........."
+        ]
+      ]
+    },
+    {
+      "id": "halo",
+      "name": "Halo",
+      "note": "Sixteen cells in a ring, two out from the center.",
+      "cols": 9,
+      "rows": 9,
+      "frames": [
+        [
+          ".........",
+          ".........",
+          "..OOOOO..",
+          "..O...O..",
+          "..O...O..",
+          "..O...O..",
+          "..OOOOO..",
+          ".........",
+          "........."
+        ],
+        [
+          ".O.....O.",
+          "OOOO.OOOO",
+          ".OOO.OOO.",
+          ".OOO.OOO.",
+          ".........",
+          ".OOO.OOO.",
+          ".OOO.OOO.",
+          "OOOO.OOOO",
+          ".O.....O."
+        ]
+      ]
+    }
+  ],
+  "note": "Recorded observations from the Keeper of Tomorrow's archive. Each frame is one generation: measured, not simulated."
+}

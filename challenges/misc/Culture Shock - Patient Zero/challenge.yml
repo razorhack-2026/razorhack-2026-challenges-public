@@ -1,0 +1,51 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+#
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+
+# ── Required — fill these in ─────────────────────────────────────────────
+name: "Culture Shock - Patient Zero"
+author: "Lt. Niko Copernicus"
+category: Misc
+description: |
+    Our biologists recently discovered a strain of exobacteria living in the core of a large nearby asteroid! The colony seems to grow in a chaotic but predictable manner, almost like it's playing a game of life... While trying to study the exobacterium, an intern was supposed to record the colony's size and shape at each generation. Unfortunately, they fell asleep at their desk overnight and were only able to capture the generation available in `target.txt`. We don't have the resources to perform the experiment again, but the biologists did figure out the rules by which the colony changes between each generation.
+
+    At each new generation, each cell is born, dies, or survives depending on the state of its neighbors in a ring of cells with Chebyshev distance exactly 2, excluding the 8 cells directly adjacent. A new cell is born in an empty grid space if it has exactly 3 live neighbors, and a live cell survives if it has exactly 2 or 3 live neighbors. Live cells with less than 2 or more than 3 neighbors are unable to obtain the resources it needs to survive by under- or overpopulation and dies in the next generation. Cells outside the recorded grid are always dead.
+
+    You need to reconstruct the colony as it looked exactly **3 generations before** the captured snapshot. The biologists have provided a simple web page at `http://<host>:40817` to submit your proposal for the seed state. The proposal will then be simulated for 3 generations to verify that it reaches the target state.
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+flags:
+    - { type: static, content: "flag{it's_alive!!!1!}", data: case_insensitive }
+
+# ── Files the competitor downloads ───────────────────────────────────────
+files:
+    - dist/target.txt
+
+hints:
+    - There may be many initial states that reach the target in 3 generations. The server only checks the final result against the target.
+    - {content: "The state of each cell in generation 3 is constrained by the values of its neighbors in generation 2, whose state is constrained by generation 1, and so on down to the seed at generation 0. Write out these constraints.", cost: 25}
+    - {content: "An SAT solver is a tool that can efficiently determine if a Boolean equation is satisfiable under given constraints.", cost: 75}
+
+# Live scoring service: POST the board state, get the flag back when the
+# 10-generation evolution matches the target.
+connection_info: "http://{host}:{port}"
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+tags:
+    - medium
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Culture Shock"
+    - instance:culture-shock-patient-zero
+
+state: hidden
+version: "0.1"

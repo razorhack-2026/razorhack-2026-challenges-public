@@ -1,0 +1,50 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+#
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+
+# ── Required — fill these in ─────────────────────────────────────────────
+name: "Culture Shock - Nowhere to Grow"
+author: "Lt. Niko Copernicus"
+category: Misc
+description: |
+    By analyzing the growth behavior of the seed colony you submitted, the biologists were able to measure the average rate at which it will grow. Unfortunately, simulations using this average rate have shown that the colony will soon grow out of containment! Luckily, the Keeper of Tomorrow is stocked with an emergency supply of a substance called SCP-9516. Experimentation has shown that any organic matter that comes into contact with SCP-9516 will immediately be relocated to an unknown location in the universe. You need to use this substance to prevent the exobacteria colony from breaching containment by removing cells such that no living cells are found in a 2-cell margin from the grid border for 20 generations. We have 16 doses of SCP-9516 on the ship and each dose can only remove 1 cell, so choose carefully... The fate of the ship may be at stake!
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+flags:
+    - { type: static, content: "flag{and_stay_there!}", data: case_insensitive }
+
+# ── Files the competitor downloads ───────────────────────────────────────
+files:
+    - dist/colony.txt
+
+hints:
+    - {content: "A border birth on the next generation needs exactly 3 live neighbors on its radius-2 ring. The frontier is built from overlapping triples, so one removal can cancel several births at once.", cost: 25}
+    - {content: "Solve each side as a small covering problem, then test the whole board for all 20 generations. Some optimal-looking covers leave leftover cells that interact at a corner on a later generation.", cost: 75}
+
+# Live scoring service: POST the edited board, get the flag back when it stays contained for 20 generations.
+connection_info: "http://{host}:{port}"
+
+requirements:
+    prerequisites:
+        - "Culture Shock - Patient Zero"
+    anonymize: true
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+tags:
+    - medium
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Culture Shock"
+    - instance:culture-shock-nowhere-to-grow
+
+state: hidden
+version: "0.1"

@@ -1,0 +1,13 @@
+services:
+  swarm-key-shuffle:
+    build: .
+    image: swarm-key-shuffle:latest
+    container_name: swarm-key-shuffle
+    environment:
+      - PORT=31337
+      - FLAG_FILE=/app/flag.txt
+    volumes:
+      - ./src/flag.txt:/app/flag.txt:ro
+    ports:
+      - "31337:31337"
+    restart: unless-stopped

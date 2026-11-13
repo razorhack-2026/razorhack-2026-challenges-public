@@ -1,0 +1,38 @@
+name: "WaveCode 2"
+author: "Lt. Niko Copernicus"
+category: Misc
+description: |
+    We managed to get a lock on the navigation beacon's signal, but it just started transmitting a new tone. The signal appears to use a deprecated data encoding that represents messages as a sum of sine waves. I dug up the encoding specification in `encoding.md`, see if you can decode the new transmission.
+
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - { type: static, content: "flag{distress_1e4ffc939df07235}", data: case_insensitive }
+
+files:
+    - dist/beacon.csv
+    - dist/encoding.md
+
+hints:
+    - {content: "An FFT returns complex numbers. Their magnitudes measure component strength; the real parts alone don't.", cost: 25}
+    - {content: "FFT output indices aren't automatically frequencies in hertz. Build a frequency axis using the sample spacing and total sample count.", cost: 50}
+    - {content: "Check your FFT's normalization convention. A full FFT splits a real sinusoid between positive and negative frequencies; a library's single-sided amplitude spectrum may already compensate for that. Account for each scaling factor exactly once.", cost: 75}
+
+requirements:
+    prerequisites:
+        - "WaveCode 1"
+    anonymize: true
+
+tags:
+    - medium
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:WaveCode"
+
+state: hidden
+version: "0.1"

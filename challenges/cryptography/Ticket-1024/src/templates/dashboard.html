@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telescope Control/Viewing Panel</title>
+    <style>
+        body {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+            background: #eeeeee;
+            color: #222222;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        h1, h3 {
+            font-family: "Courier New", monospace;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+            border: 2px solid #555555;
+        }
+
+        body > p {
+            width: fit-content;
+            margin: 5px 0;
+            padding: 5px 8px;
+            border: 1px solid #999999;
+            background: #ffffff;
+            font-family: "Courier New", monospace;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 7px 14px;
+            border: 1px solid #555555;
+            background: #dddddd;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #cccccc;
+        }
+
+        #admin {
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px solid #777777;
+            background: #ffffff;
+        }
+
+        li {
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome! Enjoy this view from the on-board telescope!</h1>
+    <img src="{{ url_for('static', filename='imgs/Cats-Eye-Nebula.webp') }}" alt="Cat's Eye Nebula">
+    <p>Crew ID: {{ crewID }}</p>
+    <p>Role: {{ 'Admin' if isAdmin else 'Viewer' }}</p>
+    <button id="logout" onclick="logout()">Logout</button>
+
+    {% if isAdmin %}
+        <div id="admin">
+            <h3>Admin Panel</h3>
+            <p>flag{ecb_not_for_me}</p>
+            <p>Status: Inoperable - Radiation damage detected. Emergency backup activated.</p>
+            <ul> Observation Metadata
+                <li>Telescope: HST</li>
+                <li>Target: NGC 6543</li>
+                <li>Instrument: WFPC2</li>
+                <li>Filter: F814W</li>
+                <li>Exposure Duration: 6.0s</li>
+                <li>Processing Status: CALIBRATED FLAT-FIELDED SINGLE EXPOSURE</li>
+            </ul>
+            <a href="{{ url_for('static', filename='errorLogs.zip') }}">errorLogs.zip</a>
+        </div>
+    {% endif %}
+</body>
+
+<script>
+    function logout() {
+        document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "/";
+    }
+</script>
+
+</html>

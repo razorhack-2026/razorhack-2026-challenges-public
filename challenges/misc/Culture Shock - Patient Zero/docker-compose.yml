@@ -1,0 +1,27 @@
+# Culture Shock: Patient Zero — board submission service.
+#
+# Local testing:  docker compose up -d --build     (then: docker compose logs -f)
+# Note: plain `up` without -d stays in the foreground streaming logs — that is
+# normal, not a hang. The first build also takes a minute while pip installs.
+#
+# The flag is mirrored in challenge.yml; set FLAG here (or in the environment)
+# if you need to rotate it for the event.
+services:
+  culture-shock:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: culture-shock-patient-zero
+    container_name: culture-shock-patient-zero
+    environment:
+      FLAG: "flag{it's_alive!!!1!}"
+      PORT: 40817
+    ports:
+      # host:container — uncommon high port, avoids clashing with other services
+      - "40817:40817"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: "1.0"
+    pids_limit: 128

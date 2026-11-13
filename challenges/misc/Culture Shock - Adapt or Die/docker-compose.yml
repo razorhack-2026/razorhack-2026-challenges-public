@@ -1,0 +1,24 @@
+# Culture Shock: Adapt or Die — growth-law calibration service.
+
+# Local testing: docker compose up -d --build (then: docker compose logs -f). Note: plain `up` without -d stays in the foreground streaming logs — that is normal, not a hang. The first build also takes a minute while pip installs.
+
+# The flag is mirrored in challenge.yml; set FLAG here (or in the environment) if you need to rotate it for the event.
+services:
+  culture-shock:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: culture-shock-adapt-or-die
+    container_name: culture-shock-adapt-or-die
+    environment:
+      FLAG: "flag{subject_to_change}"
+      PORT: 40819
+    ports:
+      # host:container — uncommon high port, avoids clashing with other services
+      - "40819:40819"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: "1.0"
+    pids_limit: 128

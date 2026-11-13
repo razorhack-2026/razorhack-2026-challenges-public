@@ -1,0 +1,3 @@
+# Server dependency for the board submission service.
+# Floors, not exact pins.
+Flask>=3.0,<4

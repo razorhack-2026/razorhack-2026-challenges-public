@@ -1,0 +1,38 @@
+name: "Recalculating... Make a U-Turn"
+author: "Lt. Niko Copernicus"
+category: Cryptography
+description: |
+    *Sigh* Just my luck... it looks like the flight plan backup was corrupted. Based on the archive's documentation, flight plan backups are encoded in 8-byte blocks that map to 12-symbol codewords via a Reed-Solomon-style code. Its arithmetic is done over the smallest prime field large enough to represent each symbol. The archive stores enough data to determine which symbols were damaged, but not their original values. Please recover the flight plan quickly, the captain is breathing down my neck!
+
+# Uniform dynamic scoring (GM meeting 2026-08-17) — do not edit.
+# decay/minimum are placeholders, set globally before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100
+    minimum: 100
+
+flags:
+    - { type: static, content: "flag{reed_between_the_lines}", data: case_insensitive }
+
+files:
+    - dist/flight_plan.dat
+
+hints:
+    - {content: "Number the symbol positions from 1 through 12. The eight original bytes correspond to a polynomial of degree at most seven, evaluated at those positions.", cost: 50}
+    - {content: "Interpret the surviving symbols as hexadecimal elements of GF(257). Use any eight surviving position-value pairs to interpolate the polynomial modulo 257; its coefficients, from constant term upward, are the original bytes.", cost: 100}
+
+requirements:
+    prerequisites:
+        - "Are We There Yet?"
+    anonymize: true
+
+tags:
+    - medium
+
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Flight Plan"
+
+state: hidden
+version: "0.1"

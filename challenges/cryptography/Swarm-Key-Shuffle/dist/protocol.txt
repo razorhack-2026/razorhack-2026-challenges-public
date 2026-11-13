@@ -1,0 +1,26 @@
+SWARM KEY SHUFFLE - RELAY PROTOCOL
+
+The relay is a line-oriented TCP service. Connect with `nc <host> <port>`;
+the banner lists the available commands.
+
+KEY MATERIAL
+    - e = d^-1 mod phi(N).
+    - The clearance token is 16 uniformly random bytes, encrypted raw:
+          c = token^e mod N
+      Submit the token as lowercase hex. It is independent of the flag; a
+      correct token authorizes the relay to release the flag.
+
+SESSION LIFETIME
+    - A session you never AUTH against expires after about 2 minutes, so
+      abandoned handshakes do not pile up on the relay.
+    - Once you send an AUTH for a session, it stays usable for the relay's
+      full 30-minute window, or until you exhaust its attempts.
+    - `KEY` can be called again at any time, subject to a short per-connection
+      cooldown and a per-connection session cap, if you need fresh key
+      material.
+
+SUBMISSION FORMAT
+    - AUTH <session> <token-hex>
+    - Malformed token hex is rejected with ERROR and does not consume an
+      attempt. A well-formed but incorrect token consumes one of the
+      session's attempts.

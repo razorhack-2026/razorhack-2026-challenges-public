@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culture Shock - Nowhere to Grow — Ring Life</title>
+    <style>
+        :root {
+            --cell-size: 18px;
+            --gap: 2px;
+            --paper: #07120c;
+            --alive: #4ade80;
+            --dead: #12271b;
+            --dead-hover: #1c3a29;
+            --accent: #a3e635;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--paper);
+            color: #d1fae5;
+            font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        h1 {
+            font-size: 1.1rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--accent);
+        }
+
+        .rule {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin: -8px 0 0;
+            text-align: center;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toolbar button {
+            background: #14301f;
+            color: #d1fae5;
+            border: 1px solid #2f6b45;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .toolbar button:hover { border-color: var(--accent); }
+        .toolbar button:active { background: #1e462d; }
+
+        .toolbar label {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.85;
+        }
+
+        .stats {
+            font-size: 0.75rem;
+            opacity: 0.75;
+            display: flex;
+            gap: 18px;
+        }
+
+        .stats span { color: var(--accent); }
+
+        .status {
+            font-size: 0.75rem;
+            min-height: 1em;
+            margin: 0;
+            color: var(--accent);
+            opacity: 0.9;
+        }
+
+        .status.error { color: #fca5a5; }
+
+        .preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px;
+            background: #0b1a12;
+            border: 1px solid #2f6b45;
+            border-radius: 8px;
+        }
+
+        .preview h2 {
+            margin: 0;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #d1fae5;
+            opacity: 0.8;
+        }
+
+        /* Read-only, scaled-down copy of the given colony. */
+        .preview-grid {
+            display: grid;
+            gap: 1px;
+        }
+
+        .preview-grid span {
+            width: var(--preview-cell, 6px);
+            height: var(--preview-cell, 6px);
+            border-radius: 1px;
+            background: var(--dead);
+        }
+
+        .preview-grid span.alive { background: var(--alive); }
+
+        .preview-note {
+            margin: 0;
+            font-size: 0.7rem;
+            opacity: 0.65;
+        }
+
+        .preview-note.error { color: #fca5a5; opacity: 1; }
+
+        #grid {
+            display: grid;
+            gap: var(--gap);
+            padding: var(--gap);
+            background: #0e2116;
+            border: 1px solid #2f6b45;
+            border-radius: 8px;
+            touch-action: none;
+        }
+
+        /* Every cell is a real <button> so it is focusable and keyboard-reachable. */
+        #grid button {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            padding: 0;
+            border: 0;
+            border-radius: 3px;
+            background: var(--dead);
+            cursor: pointer;
+            transition: background 80ms linear;
+        }
+
+        #grid button:hover { background: var(--dead-hover); }
+        #grid button[aria-pressed="true"] { background: var(--alive); }
+        #grid button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    </style>
+</head>
+<body>
+    <h1>Culture Shock - Nowhere to Grow</h1>
+    <p class="rule">B3/S23 &middot; neighbors = ring of radius R=2 &middot; keep the two outermost rows and columns on every side dead for 20 generations</p>
+
+    <div class="toolbar">
+        <button id="play" type="button">Play</button>
+        <button id="step" type="button">Step</button>
+        <button id="clear" type="button">Clear</button>
+        <button id="random" type="button">Randomize</button>
+        <button id="export" type="button">Export</button>
+        <button id="import" type="button">Import</button>
+        <button id="submit" type="button">Submit</button>
+        <input id="file-input" type="file" accept=".txt,text/plain" hidden>
+        <label>Speed <input id="speed" type="range" min="50" max="1000" step="50" value="250"></label>
+    </div>
+
+    <div class="stats">
+        <div>Generation: <span id="generation">0</span></div>
+        <div>Alive: <span id="population">0</span></div>
+    </div>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div id="grid" role="grid" aria-label="Game of Life board"></div>
+
+    <section class="preview">
+        <h2>Given colony</h2>
+        <div id="preview" class="preview-grid" role="img" aria-label="Colony preview"></div>
+        <p id="target-note" class="preview-note">Loading colony…</p>
+    </section>
+
+    <script>
+        "use strict";
+        const DEFAULT_COLS = 34;
+        const DEFAULT_ROWS = 34;
+
+        // Current board dimensions — an imported file may change these.
+        let COLS = DEFAULT_COLS;
+        let ROWS = DEFAULT_ROWS;
+
+        // Refuse imports larger than this many cells so a bad file cannot hang the page.
+        const MAX_CELLS = 40000;
+
+        const MAX_TIME_STEP = 1050;
+
+        // Radius of the neighbor ring. R = 1 gives the classic 8 neighbors; this challenge uses R = 2, i.e. the 16 cells on the border of a 5x5 block.
+        const RING_RADIUS = 2;
+
+        // Cells outside the grid are permanently dead — the board edges are hard walls, not a torus.
+        const WRAP = false;
+
+        /** Offsets of every cell whose Chebyshev distance from the centre is exactly `r` — the "ring" at radius r. For r = 1 that is the 8 surrounding cells, for r = 2 the 16 cells of the 5x5 border. */
+        function ringOffsets(r) {
+            const offsets = [];
+            for (let dy = -r; dy <= r; dy++) {
+                for (let dx = -r; dx <= r; dx++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dy)) === r) {
+                        offsets.push([dx, dy]);
+                    }
+                }
+            }
+            return offsets;
+        }
+
+        const neighborS = ringOffsets(RING_RADIUS);
+
+        const gridEl = document.getElementById("grid");
+        const playBtn = document.getElementById("play");
+        const stepBtn = document.getElementById("step");
+        const clearBtn = document.getElementById("clear");
+        const randomBtn = document.getElementById("random");
+        const speedEl = document.getElementById("speed");
+        const generationEl = document.getElementById("generation");
+        const populationEl = document.getElementById("population");
+
+        /** @type {Uint8Array} */
+        let cells = new Uint8Array(COLS * ROWS);
+        let generation = 0;
+        let running = false;
+        let timer = null;
+
+        const statusEl = document.getElementById("status");
+        const exportBtn = document.getElementById("export");
+        const importBtn = document.getElementById("import");
+        const fileEl = document.getElementById("file-input");
+        const submitBtn = document.getElementById("submit");
+        const previewEl = document.getElementById("preview");
+        const targetNoteEl = document.getElementById("target-note");
+
+        // When the page is served by the Flask app this resolves to its origin. Opened straight from disk (file://) there is nothing to post to.
+        const API_BASE = /^https?:$/.test(location.protocol) ? location.origin : "";
+
+        /** @type {HTMLButtonElement[]} */
+        const buttons = [];
+
+        let statusTimer = null;
+
+        function setStatus(message, isError = false, sticky = false) {
+            statusEl.textContent = message;
+            statusEl.classList.toggle("error", isError);
+            clearTimeout(statusTimer);
+            if (message && !sticky) {
+                statusTimer = setTimeout(() => {
+                    statusEl.textContent = "";
+                    statusEl.classList.remove("error");
+                }, 5000);
+            }
+        }
+
+        /** Rebuild the button grid for the given dimensions and start from an empty board. Used at startup, by "Clear", and when a file changes the board size. */
+        function buildBoard(cols, rows) {
+            COLS = cols;
+            ROWS = rows;
+            cells = new Uint8Array(COLS * ROWS);
+            generation = 0;
+            generationEl.textContent = "0";
+
+            buttons.length = 0;
+            gridEl.innerHTML = "";
+            gridEl.style.gridTemplateColumns = `repeat(${COLS}, var(--cell-size))`;
+
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const index = row * COLS + col;
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.setAttribute("role", "gridcell");
+                    button.setAttribute("aria-pressed", "false");
+                    button.setAttribute("aria-label", `row ${row + 1}, column ${col + 1}`);
+                    button.addEventListener("click", () => {
+                        setCell(index, cells[index] ? 0 : 1);
+                    });
+                    gridEl.appendChild(button);
+                    buttons[index] = button;
+                }
+            }
+
+            updatePopulation();
+        }
+
+        buildBoard(DEFAULT_COLS, DEFAULT_ROWS);
+
+        function setCell(index, value) {
+            cells[index] = value;
+            buttons[index].setAttribute("aria-pressed", value ? "true" : "false");
+            updatePopulation();
+        }
+
+        function updatePopulation() {
+            let alive = 0;
+            for (let i = 0; i < cells.length; i++) alive += cells[i];
+            populationEl.textContent = String(alive);
+        }
+
+        // ── Board serialization (plain-text, round-trippable) ────────────────
+        //
+        //   # ringlife v1
+        //   # rule: B3/S23, neighbor ring r=2, wrap=false
+        //   cols: 34
+        //   rows: 34
+        //   generation: 12
+        //   .O..
+        //   OO..
+        //
+        // `O` = alive, `.` = dead. Header lines are optional on import.
+
+        const ALIVE_CHARS = "Oo#Xx1*";
+        const DEAD_CHARS = ".0 -";
+
+        function serialize() {
+            const lines = [
+                "# ringlife v1",
+                `# rule: B3/S23, neighbor ring r=${RING_RADIUS}, wrap=${WRAP}`,
+                `cols: ${COLS}`,
+                `rows: ${ROWS}`,
+                `generation: ${generation}`,
+            ];
+
+            for (let row = 0; row < ROWS; row++) {
+                let line = "";
+                for (let col = 0; col < COLS; col++) {
+                    line += cells[row * COLS + col] ? "O" : ".";
+                }
+                lines.push(line);
+            }
+
+            return lines.join("\n") + "\n";
+        }
+
+        /** Parse a serialized board into { cols, rows, generation, cells }. */
+        function deserialize(text) {
+            const meta = {};
+            const rows = [];
+
+            for (const raw of text.split(/\r?\n/)) {
+                const line = raw.trim();
+                if (!line || line.startsWith("#")) continue;
+
+                const header = rows.length === 0 ? /^([A-Za-z_]+)\s*:\s*(.+)$/.exec(line) : null;
+                if (header) {
+                    meta[header[1].toLowerCase()] = header[2].trim();
+                    continue;
+                }
+
+                rows.push(line);
+            }
+
+            if (rows.length === 0) {
+                throw new Error("file contains no board rows");
+            }
+
+            const width = Math.max(...rows.map((line) => line.length));
+            if (width * rows.length > MAX_CELLS) {
+                throw new Error(`board is ${width}x${rows.length}, larger than the ${MAX_CELLS}-cell limit`);
+            }
+
+            const parsed = new Uint8Array(width * rows.length);
+            rows.forEach((line, row) => {
+                const padded = line.padEnd(width, ".");
+                for (let col = 0; col < width; col++) {
+                    const ch = padded[col];
+                    if (ALIVE_CHARS.includes(ch)) {
+                        parsed[row * width + col] = 1;
+                    } else if (!DEAD_CHARS.includes(ch)) {
+                        throw new Error(`unexpected character "${ch}" on row ${row + 1}, column ${col + 1}`);
+                    }
+                }
+            });
+
+            const declaredCols = Number(meta.cols);
+            const declaredRows = Number(meta.rows);
+            if (Number.isFinite(declaredCols) && declaredCols !== width) {
+                throw new Error(`header says ${declaredCols} columns but the board has ${width}`);
+            }
+            if (Number.isFinite(declaredRows) && declaredRows !== rows.length) {
+                throw new Error(`header says ${declaredRows} rows but the board has ${rows.length}`);
+            }
+
+            const declaredGeneration = Number(meta.generation);
+
+            return {
+                cols: width,
+                rows: rows.length,
+                generation: Number.isFinite(declaredGeneration) ? Math.max(0, Math.trunc(declaredGeneration)) : 0,
+                cells: parsed,
+            };
+        }
+
+        /** Load a serialized board, rebuilding the grid if its size differs. */
+        function loadBoard(text) {
+            const board = deserialize(text);
+
+            pause();
+            buildBoard(board.cols, board.rows);
+
+            cells = board.cells;
+            generation = board.generation;
+            generationEl.textContent = String(generation);
+
+            for (let i = 0; i < cells.length; i++) {
+                buttons[i].setAttribute("aria-pressed", cells[i] ? "true" : "false");
+            }
+            updatePopulation();
+        }
+
+        // ── Given colony ─────────────────────────────────────────────────────
+        // The server hands out the starting colony (it also ships as dist/colony.txt). We load it straight into the editor so the player can start removing cells, and render a small read-only copy too.
+
+        const PREVIEW_MAX_PX = 280; // keeps the preview compact at any board size
+
+        function renderPreview(board) {
+            const cellSize = Math.max(3, Math.min(8, Math.floor(PREVIEW_MAX_PX / board.cols)));
+
+            previewEl.textContent = "";
+            previewEl.style.setProperty("--preview-cell", `${cellSize}px`);
+            previewEl.style.gridTemplateColumns = `repeat(${board.cols}, ${cellSize}px)`;
+            previewEl.setAttribute("aria-label", `Given colony, ${board.cols} by ${board.rows} cells`);
+
+            let alive = 0;
+            for (let i = 0; i < board.cells.length; i++) {
+                const cell = document.createElement("span");
+                if (board.cells[i]) {
+                    cell.className = "alive";
+                    alive += 1;
+                }
+                previewEl.appendChild(cell);
+            }
+
+            targetNoteEl.classList.remove("error");
+            targetNoteEl.textContent =
+                `${board.cols}×${board.rows} · ${alive} alive · remove at most ${board.removal_limit ?? 16} cells`;
+        }
+
+        async function loadColony() {
+            if (!API_BASE) {
+                targetNoteEl.classList.add("error");
+                targetNoteEl.textContent =
+                    "Open this page from the challenge server to load the colony.";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/colony`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const board = await response.json();
+
+                // Start the editor on the given colony, not an empty board.
+                loadBoard(board.state);
+                renderPreview(board);
+                setStatus(
+                    `Loaded the given colony. Remove at most ${board.removal_limit ?? 16} cells, then Submit.`,
+                );
+            } catch (err) {
+                targetNoteEl.classList.add("error");
+                targetNoteEl.textContent = `Colony unavailable: ${err.message}`;
+            }
+        }
+
+        function wrap(value, limit) {
+            return ((value % limit) + limit) % limit;
+        }
+
+        /** How many cells of the radius-RING_RADIUS ring around `index` are alive. */
+        function countneighbors(index) {
+            const row = Math.floor(index / COLS);
+            const col = index % COLS;
+            let count = 0;
+
+            for (const [dx, dy] of neighborS) {
+                let nRow = row + dy;
+                let nCol = col + dx;
+
+                if (WRAP) {
+                    nRow = wrap(nRow, ROWS);
+                    nCol = wrap(nCol, COLS);
+                } else if (nRow < 0 || nRow >= ROWS || nCol < 0 || nCol >= COLS) {
+                    continue; // cells outside the board are always dead
+                }
+
+                count += cells[nRow * COLS + nCol];
+            }
+
+            return count;
+        }
+
+        /** One generation of B3/S23 using the radius-2 neighbor ring. */
+        function step() {
+            const next = new Uint8Array(cells.length);
+
+            for (let i = 0; i < cells.length; i++) {
+                const alive = cells[i] === 1;
+                const neighbors = countneighbors(i);
+
+                // B3: a dead cell with exactly 3 neighbors is born. S23: a live cell with 2 or 3 neighbors survives.
+                next[i] = neighbors === 3 || (alive && neighbors === 2) ? 1 : 0;
+            }
+
+            cells = next;
+            generation += 1;
+            generationEl.textContent = String(generation);
+
+            for (let i = 0; i < cells.length; i++) {
+                buttons[i].setAttribute("aria-pressed", cells[i] ? "true" : "false");
+            }
+            updatePopulation();
+        }
+
+        function play() {
+            if (running) return;
+            running = true;
+            playBtn.textContent = "Pause";
+            timer = setInterval(step, Number(MAX_TIME_STEP - speedEl.value));
+        }
+
+        function pause() {
+            running = false;
+            playBtn.textContent = "Play";
+            clearInterval(timer);
+            timer = null;
+        }
+
+        playBtn.addEventListener("click", () => (running ? pause() : play()));
+
+        stepBtn.addEventListener("click", () => {
+            pause();
+            step();
+        });
+
+        clearBtn.addEventListener("click", () => {
+            pause();
+            cells = new Uint8Array(COLS * ROWS);
+            generation = 0;
+            generationEl.textContent = "0";
+            for (let i = 0; i < cells.length; i++) {
+                buttons[i].setAttribute("aria-pressed", "false");
+            }
+            updatePopulation();
+        });
+
+        randomBtn.addEventListener("click", () => {
+            pause();
+            cells = new Uint8Array(COLS * ROWS);
+            for (let i = 0; i < cells.length; i++) {
+                cells[i] = Math.random() < 0.18 ? 1 : 0;
+                buttons[i].setAttribute("aria-pressed", cells[i] ? "true" : "false");
+            }
+            generation = 0;
+            generationEl.textContent = "0";
+            updatePopulation();
+        });
+
+        speedEl.addEventListener("change", () => {
+            if (running) {
+                pause();
+                play();
+            }
+        });
+
+        exportBtn.addEventListener("click", () => {
+            pause();
+            const blob = new Blob([serialize()], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `ringlife-${COLS}x${ROWS}-gen${generation}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            setStatus(`Exported ${COLS}x${ROWS} board at generation ${generation}.`);
+        });
+
+        importBtn.addEventListener("click", () => fileEl.click());
+
+        fileEl.addEventListener("change", async () => {
+            const file = fileEl.files && fileEl.files[0];
+            if (!file) return;
+
+            try {
+                loadBoard(await file.text());
+                setStatus(`Loaded "${file.name}" (${COLS}x${ROWS}, generation ${generation}).`);
+            } catch (err) {
+                setStatus(`Import failed: ${err.message}`, true);
+            } finally {
+                fileEl.value = ""; // allow re-importing the same file
+            }
+        });
+
+        submitBtn.addEventListener("click", async () => {
+            if (!API_BASE) {
+                setStatus("Open this page from the challenge server to submit.", true);
+                return;
+            }
+
+            pause();
+            submitBtn.disabled = true;
+            setStatus("Submitting board…");
+
+            try {
+                const response = await fetch(`${API_BASE}/submit`, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: serialize(),
+                });
+                const result = await response.json();
+
+                if (result.flag) {
+                    setStatus(`FLAG: ${result.flag}`, false, true);
+                } else {
+                    setStatus(
+                        result.message || `Server rejected the board (HTTP ${response.status}).`,
+                        !response.ok || result.status === "error",
+                    );
+                }
+            } catch (err) {
+                setStatus(`Submit failed: ${err.message}`, true);
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        updatePopulation();
+        loadColony();
+    </script>
+</body>
+</html>

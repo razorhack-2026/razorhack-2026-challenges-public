@@ -1,0 +1,8 @@
+OVERRIDE ACCEPTED
+Stellar-intercept burn cancelled.
+Local command authority restored.
+
+POST-OVERRIDE INTEGRITY CHECK
+Unauthorized recovery-record writes traced to the uplink
+that installed the stellar-intercept flight plan.
+Uplink fingerprint matches Dr. Rootkit's flagship!

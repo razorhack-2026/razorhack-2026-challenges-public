@@ -1,0 +1,5 @@
+services:
+    ticket-1024:
+      build: .
+      ports:
+        - "8000:8000"

@@ -1,0 +1,24 @@
+# Culture Shock - Nowhere to Grow — colony containment service.
+
+# Local testing: docker compose up -d --build (then: docker compose logs -f). Note: plain `up` without -d stays in the foreground streaming logs — that is normal, not a hang. The first build also takes a minute while pip installs.
+
+# The flag is mirrored in challenge.yml; set FLAG here (or in the environment) if you need to rotate it for the event.
+services:
+  culture-shock:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: culture-shock-nowhere-to-grow
+    container_name: culture-shock-nowhere-to-grow
+    environment:
+      FLAG: "flag{and_stay_there!}"
+      PORT: 40818
+    ports:
+      # host:container — uncommon high port, avoids clashing with other services
+      - "40818:40818"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: "1.0"
+    pids_limit: 128

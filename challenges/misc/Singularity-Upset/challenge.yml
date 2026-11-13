@@ -1,0 +1,55 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+#
+# This file is what gets your challenge imported into CTFd automatically
+# (`ctf challenge install/sync`) instead of hand-entered. Copy it into your
+# challenge folder as `challenge.yml`, fill in the marked fields, delete the
+# comments you don't need.
+#
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+
+# ── Required — fill these in ─────────────────────────────────────────────
+name: "Singularity Upset"           # display name on the scoreboard
+author: "Lt. Niko Copernicus"
+category: Misc                      # exact string shown on the scoreboard, and CTFd
+                                    # is case-sensitive — use one of: Cryptography,
+                                    # Forensics, Network Forensics, Pwn, Rev, Web,
+                                    # OSINT, Stego, Wi-Fi, ICS, AI, Misc
+description: |
+    Communications just detected a distress signal coming from a nearby black hole. The data from this signal is stored in `msg.txt`. The only problem is that the radiation and relativistic effects of the black hole have corrupted the data. Can you help us recover the original message?
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+# Uniform dynamic scoring (GM meeting 2026-08-17): every challenge starts at
+# 500 and decays as more teams solve it. No per-challenge point values.
+# `decay` and `minimum` are set globally once registration numbers are known —
+# leave the placeholders alone; they'll be filled in one pass before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+# Plain string = static, case-sensitive (the default — use this unless you
+# have a reason not to). See the ctfcli spec for case-insensitive or regex.
+flags:
+    - { type: static, content: "flag{BRUH}", data: case_insensitive }
+
+# ── Files the competitor downloads ───────────────────────────────────────
+# Paths relative to this file. Everything listed here gets uploaded to CTFd.
+# Only list things from dist/ — never src/ or solution/.
+files:
+    - dist/msg.txt
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+# Difficulty goes here (easy / medium / hard) plus any technique tags.
+tags:
+    - easy
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "arc:3:The Chaos"
+
+state: hidden       # challenges stay hidden until we flip them live for the
+                    # event; omitting this defaults to VISIBLE, so keep it
+version: "0.1"

@@ -1,0 +1,2 @@
+# Server dependency for the calibration service. Floors, not exact pins.
+Flask>=3.0,<4

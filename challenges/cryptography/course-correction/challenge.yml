@@ -1,0 +1,78 @@
+# challenge.yml — RazorHack 2026 metadata format (ctfcli-compatible)
+#
+# This file is what gets your challenge imported into CTFd automatically
+# (`ctf challenge install/sync`) instead of hand-entered. Copy it into your
+# challenge folder as `challenge.yml`, fill in the marked fields, delete the
+# comments you don't need.
+#
+# Spec reference: https://github.com/CTFd/ctfcli (ctfcli/spec/challenge-example.yml)
+
+# ── Required — fill these in ─────────────────────────────────────────────
+name: "Course Correction"           # display name on the scoreboard
+author: "Lt. Niko Copernicus"
+category: Cryptography                 # exact string shown on the scoreboard, and CTFd
+                                    # is case-sensitive — use one of: Cryptography,
+                                    # Forensics, Network Forensics, Pwn, Rev, Web,
+                                    # OSINT, Stego, Wi-Fi, ICS, AI, Misc
+description: |
+    I need your help again! I sent that flight plan backup to navigation and we're on a collision course with the nearest star! Navigation has been trying to override the flight plan but they're reporting that the navigation system is refusing the override key! The override key is distributed between the 63 controllers around the ship but it can be reconstructed from the data on any 31 of them. The controllers are reporting that 16 of the shares have been modified and are no longer valid. We need to find the valid shares and reconstruct the override key so we can get back on course! We will collide with the star in 24 hours so get to it!
+    
+    The controllers store the shares in a custom graphical format. Engineering has provided the image files for each of the 63 controllers as well as the specification for the format. The specification is in the `encoding.md` file and the image files are in the `shares/` directory. They have also provided the modulus for the shares, which is `0x8c0cbcbc4f4769ccc6e6f767f426ff71febf667c07aa311582d768f2a5b9ea97`. I included a simulation of the navigation console in the `navigation_console.py` file. The simulation will accept the override key and report whether it is valid or not. You can use this to verify that you have reconstructed the correct override key.
+    
+    Navigation also supplied `navigation_log.zip`, an AES-256 encrypted ZIP archive containing `navigation_log.txt`. Open it with the exact override key text as the password to read the recovery log. Use an AES ZIP-compatible tool such as 7-Zip; the password is the hexadecimal override key without the flag wrapper.
+    
+    The flag is flag{<override_key>}. The override key is a 16-byte hexadecimal string.
+
+# ── Scoring — do not edit ────────────────────────────────────────────────
+# Uniform dynamic scoring (GM meeting 2026-08-17): every challenge starts at
+# 500 and decays as more teams solve it. No per-challenge point values.
+# `decay` and `minimum` are set globally once registration numbers are known —
+# leave the placeholders alone; they'll be filled in one pass before the event.
+type: dynamic
+extra:
+    initial: 500
+    decay: 100      # PLACEHOLDER — set globally before the event
+    minimum: 100    # PLACEHOLDER — set globally before the event
+
+# ── Flag ─────────────────────────────────────────────────────────────────
+# Plain string = static, case-sensitive (the default — use this unless you
+# have a reason not to). See the ctfcli spec for case-insensitive or regex.
+flags:
+    - { type: static, content: "flag{73e735e93f3ff5ffcb423148e379ef3f}", data: case_insensitive }
+
+# ── Files the competitor downloads ───────────────────────────────────────
+# Paths relative to this file. Everything listed here gets uploaded to CTFd.
+# Only list things from dist/ — never src/ or solution/.
+files:
+    - dist/dist.zip
+# ── Optional: hints ──────────────────────────────────────────────────────
+# Free or point-cost. Delete if unused.
+hints:
+    - { content: "Shamir secret sharing and Reed-Solomon encoding both evaluate a low-degree polynomial at distinct points. Can your earlier error-correction work repair these shares?", cost: 25 }
+    - { content: "The Berlekamp-Welch algorithm can be used to find the modified shares.", cost: 75 }
+
+# ── Optional: live-service challenges only ───────────────────────────────
+# If your challenge runs as a service (docker-compose.yml exists), tell
+# players how to reach it. Host/port get finalized at deploy time.
+# connection_info: nc <host> <port>
+
+# ── Optional: challenge chains ───────────────────────────────────────────
+# Require another challenge to be solved first (use its `name`).
+requirements:
+    prerequisites:
+        - "Recalculating... Make a U-Turn"
+    anonymize: true
+
+# ── Tags (public) ────────────────────────────────────────────────────────
+# Difficulty goes here (easy / medium / hard) plus any technique tags.
+tags:
+    - hard
+
+# ── Housekeeping — leave as-is ───────────────────────────────────────────
+# Story board (Razorhack-CTFd story.py): admin-only, players never see topics.
+topics:
+    - "quest:Flight Plan"
+
+state: hidden       # challenges stay hidden until we flip them live for the
+                    # event; omitting this defaults to VISIBLE, so keep it
+version: "0.1"

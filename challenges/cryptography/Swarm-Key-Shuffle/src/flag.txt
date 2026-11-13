@@ -1,0 +1,1 @@
+flag{shuffle_off_this_mortal_lattice}
